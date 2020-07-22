@@ -7,19 +7,28 @@ import tensorflow.keras.layers as layers
 import tensorflow.keras.models as models
 
 
-def create_discriminator(input_shape):
-    discriminator = models.Sequential(name='discriminator')
+class GAN(object):
+    def __init__(self):
+        pass
 
-    discriminator.add(layers.Flatten(input_shape=input_shape))
+    @classmethod
+    def name():
+        return ('gan')
 
-    discriminator.add(layers.Dense(units=1024))
-    discriminator.add(layers.LeakyReLU(alpha=0.2))
+    @classmethod
+    def create_discriminator(cls, input_shape):
+        discriminator = models.Sequential(name='discriminator')
 
-    discriminator.add(layers.Dense(units=512))
-    discriminator.add(layers.LeakyReLU(alpha=0.2))
+        discriminator.add(layers.Flatten(input_shape=input_shape))
 
-    discriminator.add(layers.Dense(units=256))
-    discriminator.add(layers.LeakyReLU(alpha=0.2))
+        discriminator.add(layers.Dense(units=1024))
+        discriminator.add(layers.LeakyReLU(alpha=0.2))
 
-    discriminator.add(layers.Dense(units=1, activation='sigmoid'))
-    return (discriminator)
+        discriminator.add(layers.Dense(units=512))
+        discriminator.add(layers.LeakyReLU(alpha=0.2))
+
+        discriminator.add(layers.Dense(units=256))
+        discriminator.add(layers.LeakyReLU(alpha=0.2))
+
+        discriminator.add(layers.Dense(units=1, activation='sigmoid'))
+        return (discriminator)
