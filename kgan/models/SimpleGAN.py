@@ -9,10 +9,7 @@ import tensorflow.keras.models as models
 import numpy as np
 
 
-class GAN(object):
-    def __init__(self, input_shape, latent_shape):
-        self._discriminator = GAN.create_discriminator(input_shape)
-        self._generator = GAN.create_generator(input_shape, latent_shape)
+class SimpleGAN(object):
 
     @classmethod
     def name(cls):
@@ -57,3 +54,7 @@ class GAN(object):
         generator.add(layers.Reshape(input_shape))
 
         return (generator)
+
+    def __init__(self, input_shape, latent_shape):
+        self._discriminator = SimpleGAN.create_discriminator(input_shape)
+        self._generator = SimpleGAN.create_generator(input_shape, latent_shape)
