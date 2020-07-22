@@ -12,7 +12,7 @@ class GAN(object):
         pass
 
     @classmethod
-    def name():
+    def name(cls):
         return ('gan')
 
     @classmethod
