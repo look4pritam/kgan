@@ -17,9 +17,9 @@ class SimpleGAN(object):
     def name(cls):
         return ('gan')
 
-    def __init__(self, input_shape, latent_shape):
+    def __init__(self, input_shape, latent_dimension):
         self._input_shape = input_shape
-        self._latent_shape = latent_shape
+        self._latent_shape = latent_dimension
 
         self._discriminator = self._create_discriminator(self.input_shape())
         self._generator = self._create_generator(self.input_shape(),

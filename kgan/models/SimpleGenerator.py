@@ -15,10 +15,11 @@ class SimpleGenerator(object):
         pass
 
     @classmethod
-    def create(cls, input_shape, latent_shape):
+    def create(cls, input_shape, latent_dimension):
         generator = models.Sequential(name='generator')
 
-        generator.add(layers.Dense(units=256, input_shape=latent_shape))
+        generator.add(
+            layers.Dense(units=256, input_shape=(latent_dimension, )))
         generator.add(layers.LeakyReLU(alpha=0.2))
         generator.add(layers.BatchNormalization(momentum=0.8))
 

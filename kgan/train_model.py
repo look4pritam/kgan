@@ -6,11 +6,9 @@ from kgan.models.GANFactory import GANFactory
 from kgan.datasets.DatasetFactory import DatasetFactory
 
 input_shape = (28, 28, 1)
-
 latent_dimension = 100
-latent_shape = (latent_dimension)
 
-gan = GANFactory.create('gan', input_shape, latent_shape)
+gan = GANFactory.create('gan', input_shape, latent_dimension)
 
 batch_size = 64
 dataset = DatasetFactory.create('mnist')

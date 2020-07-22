@@ -10,12 +10,12 @@ class GANFactory(object):
         pass
 
     @classmethod
-    def create(cls, name, input_shape, latent_shape):
+    def create(cls, name, input_shape, latent_dimension):
         gan = None
 
         if (name == SimpleGAN.name()):
-            gan = SimpleGAN(input_shape, latent_shape)
+            gan = SimpleGAN(input_shape, latent_dimension)
         else:
-            gan = SimpleGAN(input_shape, latent_shape)
+            gan = SimpleGAN(input_shape, latent_dimension)
 
         return (gan)
