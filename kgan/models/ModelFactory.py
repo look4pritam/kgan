@@ -20,7 +20,7 @@ class ModelFactory(object):
         return (discriminator)
 
     @classmethod
-    def create_generator(cls, noise_shape, input_shape):
+    def create_generator(cls, name, noise_shape, input_shape):
         generator = None
         if (name == GAN.name()):
             generator = GAN.create_generator(noise_shape, input_shape)
