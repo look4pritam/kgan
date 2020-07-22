@@ -94,5 +94,16 @@ class SimpleGAN(object):
             'discriminator_loss': discriminator_loss
         }
 
-    def train(self, dataset, epochs):
-        pass
+    def train(self,
+              train_dataset,
+              epochs,
+              learning_rate=0.0002,
+              validation_dataset=None):
+        self._generator_optimizer = self._create_optimizer(learning_rate)
+        self._discriminator_optimizer = self._create_optimizer(learning_rate)
+
+        for current_epoch in range(epochs):
+            for current_batch in train_dataset:
+                losses = self._train_on_batch(current_batch)
+
+        return (True)
