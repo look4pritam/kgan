@@ -32,6 +32,8 @@ class SimpleGAN(object):
         self._generator = self._create_generator(self.input_shape(),
                                                  self.latent_shape())
 
+        self._batch_size = 0
+
     def _create_discriminator(self, input_shape):
         discriminator = SimpleDiscriminator.create(input_shape)
         return (discriminator)
@@ -40,11 +42,52 @@ class SimpleGAN(object):
         generator = SimpleGenerator.create(input_shape, latent_shape)
         return (generator)
 
-    def train_on_batch(self, input_batch):
-        pass
-
     def input_shape(self):
         return (self._input_shape)
 
     def latent_shape(self):
         return (self._latent_shape)
+
+    def batch_size(self):
+        return (self._batch_size)
+
+    def _generator_loss(self, fake_predictions):
+        pass
+
+    def _discriminator_loss(self, real_predictions, fake_predictions):
+        pass
+
+    def _train_on_batch(self, input_batch):
+        real_samples = input_batch
+        generator_inputs = tf.random.normal(
+            [self.batch_size(), self.latent_shape()])
+
+        with tf.GradientTape(persistent=True) as tape:
+            fake_samples = self._generator(generator_inputs, training=True)
+
+            real_predictions = self._discriminator(real_samples, training=True)
+            fake_predictions = self._discriminator(fake_samples, training=True)
+
+            generator_loss = self._generator_loss(fake_predictions)
+            discriminator_loss = self._discriminator_loss(
+                real_predictions, fake_predictions)
+
+        generator_loss_gradients = tape.gradient(
+            target=generator_loss, sources=self.generator.trainable_variables)
+        discriminator_loss_gradients = tape.gradient(
+            target=discriminator_loss,
+            sources=self.discriminator.trainable_variables)
+
+        self._generator_optimizer.apply_gradients(
+            zip(generator_loss_gradients, self._generator.trainable_variables))
+        self._discriminator_optimizer.apply_gradients(
+            zip(discriminator_loss_gradients,
+                self._discriminator.trainable_variables))
+
+        return {
+            'generator_loss': generator_loss,
+            'discriminator_loss': discriminator_loss
+        }
+
+    def train(self, dataset, epochs):
+        pass
