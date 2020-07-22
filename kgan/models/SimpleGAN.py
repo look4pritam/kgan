@@ -19,11 +19,11 @@ class SimpleGAN(object):
 
     def __init__(self, input_shape, latent_dimension):
         self._input_shape = input_shape
-        self._latent_shape = latent_dimension
+        self._latent_dimension = latent_dimension
 
         self._discriminator = self._create_discriminator(self.input_shape())
         self._generator = self._create_generator(self.input_shape(),
-                                                 self.latent_shape())
+                                                 self.latent_dimension())
 
         self._batch_size = 0
 
@@ -35,15 +35,15 @@ class SimpleGAN(object):
         discriminator = SimpleDiscriminator.create(input_shape)
         return (discriminator)
 
-    def _create_generator(self, input_shape, latent_shape):
-        generator = SimpleGenerator.create(input_shape, latent_shape)
+    def _create_generator(self, input_shape, latent_dimension):
+        generator = SimpleGenerator.create(input_shape, latent_dimension)
         return (generator)
 
     def input_shape(self):
         return (self._input_shape)
 
-    def latent_shape(self):
-        return (self._latent_shape)
+    def latent_dimension(self):
+        return (self._latent_dimension)
 
     def batch_size(self):
         return (self._batch_size)
@@ -64,7 +64,7 @@ class SimpleGAN(object):
     def _train_on_batch(self, input_batch):
         real_samples = input_batch
         generator_inputs = tf.random.normal(
-            [self.batch_size(), self.latent_shape()])
+            [self.batch_size(), self.latent_dimension()])
 
         with tf.GradientTape(persistent=True) as tape:
             fake_samples = self._generator(generator_inputs, training=True)
@@ -78,10 +78,10 @@ class SimpleGAN(object):
                 real_predictions, fake_predictions)
 
         generator_loss_gradients = tape.gradient(
-            target=generator_loss, sources=self.generator.trainable_variables)
+            target=generator_loss, sources=self._generator.trainable_variables)
         discriminator_loss_gradients = tape.gradient(
             target=discriminator_loss,
-            sources=self.discriminator.trainable_variables)
+            sources=self._discriminator.trainable_variables)
 
         self._generator_optimizer.apply_gradients(
             zip(generator_loss_gradients, self._generator.trainable_variables))
