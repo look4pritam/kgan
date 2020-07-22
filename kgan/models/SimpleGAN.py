@@ -95,12 +95,12 @@ class SimpleGAN(object):
         }
 
     def train(self,
-              train_dataset,
+              train_dataset, batch_size
               epochs,
               learning_rate=0.0002,
               validation_dataset=None):
 
-        self._batch_size = train_dataset.batch_size()
+        self._batch_size = batch_size
 
         self._generator_optimizer = self._create_optimizer(learning_rate)
         self._discriminator_optimizer = self._create_optimizer(learning_rate)
