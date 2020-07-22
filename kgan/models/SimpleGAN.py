@@ -17,10 +17,6 @@ class SimpleGAN(object):
     def name(cls):
         return ('gan')
 
-    def _create_optimizer(learning_rate=0.0002):
-        optimizer = Adam(learning_rate=learning_rate, beta_1=0.5)
-        return (optimizer)
-
     def __init__(self, input_shape, latent_shape):
         self._input_shape = input_shape
         self._latent_shape = latent_shape
@@ -30,6 +26,10 @@ class SimpleGAN(object):
                                                  self.latent_shape())
 
         self._batch_size = 0
+
+    def _create_optimizer(self, learning_rate=0.0002):
+        optimizer = Adam(learning_rate=learning_rate, beta_1=0.5)
+        return (optimizer)
 
     def _create_discriminator(self, input_shape):
         discriminator = SimpleDiscriminator.create(input_shape)
