@@ -95,7 +95,8 @@ class SimpleGAN(object):
         }
 
     def train(self,
-              train_dataset, batch_size
+              train_dataset,
+              batch_size,
               epochs,
               learning_rate=0.0002,
               validation_dataset=None):
