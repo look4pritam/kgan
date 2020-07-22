@@ -7,12 +7,9 @@ from kgan.models.SimpleGenerator import SimpleGenerator
 
 import tensorflow as tf
 
-import tensorflow.keras.layers as layers
-import tensorflow.keras.models as models
-
 from tensorflow.keras.optimizers import Adam
 
-import numpy as np
+cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
 
 
 class SimpleGAN(object):
@@ -52,10 +49,17 @@ class SimpleGAN(object):
         return (self._batch_size)
 
     def _generator_loss(self, fake_predictions):
-        pass
+        generator_loss = cross_entropy(
+            tf.ones_like(fake_predictions), fake_predictions)
+        return (generator_loss)
 
     def _discriminator_loss(self, real_predictions, fake_predictions):
-        pass
+        real_loss = cross_entropy(
+            tf.ones_like(real_predictions), real_predictions)
+        fake_loss = cross_entropy(
+            tf.zeros_like(fake_predictions), fake_predictions)
+        discriminator_loss = 0.5 * (real_loss + fake_loss)
+        return (discriminator_loss)
 
     def _train_on_batch(self, input_batch):
         real_samples = input_batch
@@ -69,6 +73,7 @@ class SimpleGAN(object):
             fake_predictions = self._discriminator(fake_samples, training=True)
 
             generator_loss = self._generator_loss(fake_predictions)
+
             discriminator_loss = self._discriminator_loss(
                 real_predictions, fake_predictions)
 
