@@ -11,12 +11,11 @@ class DatasetFactory(object):
 
     @classmethod
     def create(cls, name):
-        train_dataset = None
-        validation_dataset = None
+        dataset = None
 
         if (name == MNISTDataset.name()):
-            train_dataset, validation_dataset = MNISTDataset()
+            dataset = MNISTDataset()
         else:
-            train_dataset, validation_dataset = MNISTDataset()
+            dataset = MNISTDataset()
 
-        return (train_dataset, validation_dataset)
+        return (dataset)
