@@ -3,6 +3,7 @@ from __future__ import division
 from __future__ import print_function
 
 from kgan.models.SimpleDiscriminator import SimpleDiscriminator
+from kgan.models.SimpleGenerator import SimpleGenerator
 
 import tensorflow as tf
 
@@ -19,34 +20,7 @@ class SimpleGAN(object):
     def name(cls):
         return ('gan')
 
-    @classmethod
-    def create_discriminator(cls, input_shape):
-        discriminator = SimpleDiscriminator.create(input_shape)
-        return (discriminator)
-
-    @classmethod
-    def create_generator(cls, input_shape, latent_shape):
-        generator = models.Sequential(name='generator')
-
-        generator.add(layers.Dense(units=256, input_shape=latent_shape))
-        generator.add(layers.LeakyReLU(alpha=0.2))
-        generator.add(layers.BatchNormalization(momentum=0.8))
-
-        generator.add(layers.Dense(units=512))
-        generator.add(layers.LeakyReLU(alpha=0.2))
-        generator.add(layers.BatchNormalization(momentum=0.8))
-
-        generator.add(layers.Dense(units=1024))
-        generator.add(layers.LeakyReLU(alpha=0.2))
-        generator.add(layers.BatchNormalization(momentum=0.8))
-
-        input_size = np.prod(input_shape)
-        generator.add(layers.Dense(input_size, activation='tanh'))
-        generator.add(layers.Reshape(input_shape))
-
-        return (generator)
-
-    def create_optimizer(learning_rate=0.0002):
+    def _create_optimizer(learning_rate=0.0002):
         optimizer = Adam(learning_rate=learning_rate, beta_1=0.5)
         return (optimizer)
 
@@ -54,10 +28,17 @@ class SimpleGAN(object):
         self._input_shape = input_shape
         self._latent_shape = latent_shape
 
-        self._discriminator = SimpleGAN.create_discriminator(
-            self.input_shape())
-        self._generator = SimpleGAN.create_generator(self.input_shape(),
-                                                     self.latent_shape())
+        self._discriminator = self._create_discriminator(self.input_shape())
+        self._generator = self._create_generator(self.input_shape(),
+                                                 self.latent_shape())
+
+    def _create_discriminator(self, input_shape):
+        discriminator = SimpleDiscriminator.create(input_shape)
+        return (discriminator)
+
+    def _create_generator(self, input_shape, latent_shape):
+        generator = SimpleGenerator.create(input_shape, latent_shape)
+        return (generator)
 
     def train_on_batch(self, input_batch):
         pass
