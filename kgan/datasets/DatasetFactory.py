@@ -10,15 +10,13 @@ class DatasetFactory(object):
         pass
 
     @classmethod
-    def create(cls, name, image_shape, batch_size):
+    def create(cls, name):
         train_dataset = None
         validation_dataset = None
 
         if (name == MNISTDataset.name()):
-            train_dataset, validation_dataset = MNISTDataset(
-                image_shape, batch_size)
+            train_dataset, validation_dataset = MNISTDataset()
         else:
-            train_dataset, validation_dataset = MNISTDataset(
-                image_shape, batch_size)
+            train_dataset, validation_dataset = MNISTDataset()
 
         return (train_dataset, validation_dataset)
