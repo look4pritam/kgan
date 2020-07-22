@@ -109,5 +109,8 @@ class SimpleGAN(object):
         for current_epoch in range(epochs):
             for current_batch in train_dataset:
                 losses = self._train_on_batch(current_batch)
+                print('generator loss -', losses['generator_loss'].numpy())
+                print('discriminator loss -',
+                      losses['discriminator_loss'].numpy())
 
         return (True)
