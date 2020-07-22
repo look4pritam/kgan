@@ -8,7 +8,7 @@ from kgan.datasets.DatasetFactory import DatasetFactory
 input_shape = (28, 28, 1)
 
 latent_dimension = 100
-latent_shape = (latent_dimension, )
+latent_shape = (latent_dimension)
 
 gan = GANFactory.create('gan', input_shape, latent_shape)
 
@@ -18,5 +18,6 @@ train_dataset, validation_dataset = dataset.load(input_shape, batch_size)
 
 epochs = 10
 learning_rate = 0.0002
-status = gan.train(train_dataset, batch_size, epochs, learning_rate, validation_dataset)
+status = gan.train(train_dataset, batch_size, epochs, learning_rate,
+                   validation_dataset)
 print(status)
