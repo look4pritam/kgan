@@ -21,22 +21,22 @@ class SimpleGAN(object):
         self._input_shape = input_shape
         self._latent_dimension = latent_dimension
 
-        self._discriminator = self._create_discriminator(self.input_shape())
-        self._generator = self._create_generator(self.input_shape(),
-                                                 self.latent_dimension())
+        self._discriminator = self._create_discriminator()
+        self._generator = self._create_generator()
 
         self._batch_size = 0
 
-    def _create_optimizer(self, learning_rate=0.0002):
-        optimizer = Adam(learning_rate=learning_rate, beta_1=0.5)
+    def _create_optimizer(self, learning_rate):
+        optimizer = Adam(learning_rate=learning_rate)
         return (optimizer)
 
-    def _create_discriminator(self, input_shape):
-        discriminator = SimpleDiscriminator.create(input_shape)
+    def _create_discriminator(self):
+        discriminator = SimpleDiscriminator.create(self.input_shape())
         return (discriminator)
 
-    def _create_generator(self, input_shape, latent_dimension):
-        generator = SimpleGenerator.create(input_shape, latent_dimension)
+    def _create_generator(self):
+        generator = SimpleGenerator.create(self.input_shape(),
+                                           self.latent_dimension())
         return (generator)
 
     def input_shape(self):
@@ -58,7 +58,7 @@ class SimpleGAN(object):
             tf.ones_like(real_predictions), real_predictions)
         fake_loss = cross_entropy(
             tf.zeros_like(fake_predictions), fake_predictions)
-        discriminator_loss = 0.5 * (real_loss + fake_loss)
+        discriminator_loss = real_loss + fake_loss
         return (discriminator_loss)
 
     def _train_on_batch(self, input_batch):
@@ -98,7 +98,7 @@ class SimpleGAN(object):
               train_dataset,
               batch_size,
               epochs,
-              learning_rate=0.0002,
+              learning_rate=0.0001,
               validation_dataset=None):
 
         self._batch_size = batch_size
