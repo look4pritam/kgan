@@ -3,8 +3,11 @@ from __future__ import division
 from __future__ import print_function
 
 import tensorflow as tf
+
 import tensorflow.keras.layers as layers
 import tensorflow.keras.models as models
+
+from tensorflow.keras.optimizers import Adam
 
 import numpy as np
 
@@ -53,6 +56,10 @@ class SimpleGAN(object):
         generator.add(layers.Reshape(input_shape))
 
         return (generator)
+
+    def create_optimizer(learning_rate=0.0002):
+        optimizer = Adam(learning_rate=learning_rate, beta_1=0.5)
+        return (optimizer)
 
     def __init__(self, input_shape, latent_shape):
         self._input_shape = input_shape
