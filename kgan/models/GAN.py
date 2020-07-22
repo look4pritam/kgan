@@ -10,8 +10,9 @@ import numpy as np
 
 
 class GAN(object):
-    def __init__(self):
-        pass
+    def __init__(self, input_shape, latent_shape):
+        self._discriminator = GAN.create_discriminator(input_shape)
+        self._generator = GAN.create_generator(input_shape, latent_shape)
 
     @classmethod
     def name(cls):
@@ -36,10 +37,10 @@ class GAN(object):
         return (discriminator)
 
     @classmethod
-    def create_generator(cls, noise_shape, input_shape):
+    def create_generator(cls, input_shape, latent_shape):
         generator = models.Sequential(name='generator')
 
-        generator.add(layers.Dense(units=256, input_shape=noise_shape))
+        generator.add(layers.Dense(units=256, input_shape=latent_shape))
         generator.add(layers.LeakyReLU(alpha=0.2))
         generator.add(layers.BatchNormalization(momentum=0.8))
 

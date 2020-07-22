@@ -10,21 +10,12 @@ class ModelFactory(object):
         pass
 
     @classmethod
-    def create_discriminator(cls, name, input_shape):
-        discriminator = None
+    def create_gan(cls, name, input_shape, latent_shape):
+        gan = None
+
         if (name == GAN.name()):
-            discriminator = GAN.create_discriminator(input_shape)
+            gan = GAN(input_shape, latent_shape)
         else:
-            discriminator = GAN.create_discriminator(input_shape)
+            gan = GAN(input_shape, latent_shape)
 
-        return (discriminator)
-
-    @classmethod
-    def create_generator(cls, name, noise_shape, input_shape):
-        generator = None
-        if (name == GAN.name()):
-            generator = GAN.create_generator(noise_shape, input_shape)
-        else:
-            generator = GAN.create_generator(noise_shape, input_shape)
-
-        return (generator)
+        return (gan)
