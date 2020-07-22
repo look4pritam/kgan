@@ -99,6 +99,9 @@ class SimpleGAN(object):
               epochs,
               learning_rate=0.0002,
               validation_dataset=None):
+
+        self._batch_size = train_dataset.batch_size()
+
         self._generator_optimizer = self._create_optimizer(learning_rate)
         self._discriminator_optimizer = self._create_optimizer(learning_rate)
 
