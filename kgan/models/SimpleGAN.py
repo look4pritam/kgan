@@ -68,6 +68,7 @@ class SimpleGAN(object):
         generated_images = self._generator.predict(generator_inputs)
         generated_images = generated_images.reshape(
             number_of_samples, self._input_shape[0], self._input_shape[1])
+        generated_images = ((generated_images + 1.) / 2.) * 255.
         return (generated_images)
 
     def _train_on_batch(self, input_batch):
