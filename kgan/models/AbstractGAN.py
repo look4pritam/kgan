@@ -8,13 +8,19 @@ from tensorflow.keras.optimizers import Adam
 class AbstractGAN(object):
 
     __default_batch_size = 128
+    __default_generation_frequency = 1000
 
     @classmethod
     def default_batch_size(cls):
         return (cls.__default_batch_size)
 
+    @classmethod
+    def default_generation_frequency(cls):
+        return (cls.__default_generation_frequency)
+
     def __init__(self):
         self._batch_size = AbstractGAN.default_batch_size()
+        self._generation_frequency = AbstractGAN.default_generation_frequency()
 
         self._generator_optimizer = None
         self._discriminator_optimizer = None
@@ -27,6 +33,16 @@ class AbstractGAN(object):
 
     def batch_size(self):
         return (self._batch_size)
+
+    def set_generation_frequency(self, generation_frequency):
+        if (generation_frequency > 0):
+            self._generation_frequency = generation_frequency
+        else:
+            self._generation_frequency = AbstractDataset.default_generation_frequency(
+            )
+
+    def generation_frequency(self):
+        return (self._generation_frequency)
 
     def _create_optimizer(self, learning_rate):
         optimizer = Adam(learning_rate=learning_rate)
@@ -50,7 +66,7 @@ class AbstractGAN(object):
             for current_batch in train_dataset:
                 losses = self._train_on_batch(current_batch)
                 batch_index = batch_index + 1
-                if (batch_index % generation_frequency == 0):
+                if (batch_index % self.generation_frequency() == 0):
                     self.save_generated()
 
             #print('generator loss -', losses['generator_loss'].numpy())

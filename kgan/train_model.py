@@ -52,6 +52,13 @@ def parse_arguments(argv):
         help='Maximum epochs used for training the model.',
         default=100)
 
+    parser.add_argument(
+        '--generation_frequency',
+        type=int,
+        help=
+        'Sample generation frequency in terms of number of batches processed.',
+        default=1000)
+
     return (parser.parse_args(argv))
 
 
@@ -59,6 +66,7 @@ def main(args):
 
     model_shape = (28, 28, 1)
     gan = GANFactory.create(args.model, model_shape, args.latent_dimension)
+    gan.set_generation_frequency(args.generation_frequency)
 
     dataset = DatasetFactory.create(args.dataset)
     train_dataset, validation_dataset = dataset.load(args.batch_size)
