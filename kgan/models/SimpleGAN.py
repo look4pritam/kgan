@@ -102,7 +102,10 @@ class SimpleGAN(object):
             'discriminator_loss': discriminator_loss
         }
 
-    def show_generated(number_of_samples=10, dim=(1, 10), figsize=(12, 2)):
+    def show_generated(self,
+                       number_of_samples=10,
+                       dim=(1, 10),
+                       figsize=(12, 2)):
         generated_images = self.generate(number_of_samples)
 
         plot.figure(figsize=figsize)
@@ -134,7 +137,7 @@ class SimpleGAN(object):
                 batch_index = batch_index + 1
                 if (batch_index % generation_frequency == 0):
                     #generated_images = self.generate(10)
-                    show_generated()
+                    self.show_generated()
 
             #print('generator loss -', losses['generator_loss'].numpy())
             #print('discriminator loss -', losses['discriminator_loss'].numpy())
