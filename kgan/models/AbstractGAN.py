@@ -67,6 +67,7 @@ class AbstractGAN(object):
                 losses = self._train_on_batch(current_batch)
                 batch_index = batch_index + 1
                 if (batch_index % self.generation_frequency() == 0):
+                    print('generating samples at', str(batch_index))
                     self.save_generated()
 
             #print('generator loss -', losses['generator_loss'].numpy())
