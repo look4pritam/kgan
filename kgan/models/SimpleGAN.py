@@ -75,6 +75,58 @@ class SimpleGAN(AbstractGAN):
         for key_value, loss_value in losses.items():
             print(key_value, '-', loss_value.numpy())
 
+    def _update_discriminator(self, input_batch):
+        real_samples = input_batch
+        generator_inputs = tf.random.normal(
+            [self.batch_size(), self.latent_dimension()])
+
+        with tf.GradientTape(persistent=True) as tape:
+            fake_samples = self._generator.predict(generator_inputs)
+
+            real_predictions = self._discriminator(real_samples, training=True)
+            fake_predictions = self._discriminator(fake_samples, training=True)
+
+            discriminator_loss = self._discriminator_loss(
+                real_predictions, fake_predictions)
+
+        discriminator_loss_gradients = tape.gradient(
+            target=discriminator_loss,
+            sources=self._discriminator.trainable_variables)
+
+        self._discriminator_optimizer.apply_gradients(
+            zip(discriminator_loss_gradients,
+                self._discriminator.trainable_variables))
+
+        return (discriminator_loss)
+
+    def _update_generator(self, input_batch):
+        generator_inputs = tf.random.normal(
+            [self.batch_size() * 2,
+             self.latent_dimension()])
+
+        with tf.GradientTape(persistent=True) as tape:
+            fake_samples = self._generator(generator_inputs, training=True)
+            fake_predictions = self._discriminator.predict(fake_samples)
+            generator_loss = self._generator_loss(fake_predictions)
+
+        generator_loss_gradients = tape.gradient(
+            target=generator_loss, sources=self._generator.trainable_variables)
+
+        self._generator_optimizer.apply_gradients(
+            zip(generator_loss_gradients, self._generator.trainable_variables))
+
+        return (generator_loss)
+
+    def _train_on_batch(self, input_batch):
+        discriminator_loss = self._update_discriminator(input_batch)
+        generator_loss = self._update_generator(input_batch)
+
+        return {
+            'generator': generator_loss,
+            'discriminator': discriminator_loss
+        }
+
+    '''
     def _train_on_batch(self, input_batch):
         real_samples = input_batch
         generator_inputs = tf.random.normal(
@@ -107,3 +159,4 @@ class SimpleGAN(AbstractGAN):
             'generator': generator_loss,
             'discriminator': discriminator_loss
         }
+    '''
