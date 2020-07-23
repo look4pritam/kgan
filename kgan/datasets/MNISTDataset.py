@@ -6,23 +6,30 @@ import tensorflow as tf
 import tensorflow_datasets as tfds
 
 
-class MNISTDataset(object):
+class MNISTDataset(AbstractDataset):
+
+    __default_image_shape = (28, 28, 1)
+
+    @classmethod
+    def default_image_shape(cls):
+        return (cls.__default_image_shape)
+
     @classmethod
     def name(cls):
         return ('mnist')
 
     def __init__(self):
-        self._image_shape = None
-        self._batch_size = None
-        self._buffer_size = None
+        super(MNISTDataset, self).__init__()
+        self._image_shape = MNISTDataset.default_image_shape()
 
-    def batch_size(self):
-        return (self._batch_size)
-
-    def load(self, image_shape, batch_size, buffer_size=1024):
+    def set_image_shape(self, image_shape):
         self._image_shape = image_shape
-        self._batch_size = batch_size
-        self._buffer_size = buffer_size
+
+    def image_shape(self):
+        return (self._image_shape)
+
+    def load(self, batch_size):
+        self.set_batch_size(batch_size)
 
         train_dataset, validation_dataset = tfds.load(
             name="mnist", split=['train', 'test'], as_supervised=True)
