@@ -6,6 +6,7 @@ from kgan.models.SimpleDiscriminator import SimpleDiscriminator
 from kgan.models.SimpleGenerator import SimpleGenerator
 
 import tensorflow as tf
+import matplotlib.pyplot as plot
 
 from tensorflow.keras.optimizers import Adam
 
