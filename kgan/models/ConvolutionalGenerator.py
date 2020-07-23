@@ -38,7 +38,6 @@ class ConvolutionalGenerator(object):
                 strides=(1, 1),
                 padding='same',
                 use_bias=False))
-
         generator.add(layers.BatchNormalization())
         generator.add(layers.LeakyReLU())
 
