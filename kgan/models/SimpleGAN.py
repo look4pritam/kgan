@@ -107,7 +107,7 @@ class SimpleGAN(object):
     def save_generated(self, number_of_samples=10):
         generated_images = self.generate(number_of_samples)
         for index, image in enumerate(generated_images):
-            filename = 'image' + str(index) + '.png'
+            filename = 'image-' + str(index) + '.png'
             cv2.imwrite(filename, image)
 
     def train(self,
@@ -129,7 +129,6 @@ class SimpleGAN(object):
                 losses = self._train_on_batch(current_batch)
                 batch_index = batch_index + 1
                 if (batch_index % generation_frequency == 0):
-                    #generated_images = self.generate(10)
                     self.save_generated()
 
             #print('generator loss -', losses['generator_loss'].numpy())
