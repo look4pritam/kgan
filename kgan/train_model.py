@@ -22,6 +22,13 @@ def parse_arguments(argv):
         default=GANFactory.default_model())
 
     parser.add_argument(
+        '--dataset',
+        type=str,
+        choices=DatasetFactory.datasets(),
+        help='Dataset used for training the model.',
+        default=DatasetFactory.default_dataset())
+
+    parser.add_argument(
         '--latent_dimension',
         type=int,
         help='Latent dimension used for generating the image.',
@@ -53,7 +60,7 @@ def main(args):
     input_shape = (28, 28, 1)
     gan = GANFactory.create(args.model, input_shape, args.latent_dimension)
 
-    dataset = DatasetFactory.create('mnist')
+    dataset = DatasetFactory.create(args.dataset)
     train_dataset, validation_dataset = dataset.load(input_shape,
                                                      args.batch_size)
 
