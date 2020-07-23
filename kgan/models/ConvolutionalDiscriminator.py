@@ -14,7 +14,7 @@ class ConvolutionalDiscriminator(object):
 
     @classmethod
     def create(cls, input_shape):
-        discriminator = tf.keras.Sequential(name='discriminator')
+        discriminator = models.Sequential(name='discriminator')
 
         discriminator.add(
             layers.Conv2D(
