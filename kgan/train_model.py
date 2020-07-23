@@ -57,7 +57,7 @@ def main(args):
     train_dataset, validation_dataset = dataset.load(input_shape,
                                                      args.batch_size)
 
-    status = gan.train(train_dataset, batch_size, args.maximum_epochs,
+    status = gan.train(train_dataset, args.batch_size, args.maximum_epochs,
                        args.learning_rate, validation_dataset)
     print(status)
 
