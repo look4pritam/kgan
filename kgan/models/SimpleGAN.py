@@ -6,9 +6,9 @@ from kgan.models.SimpleDiscriminator import SimpleDiscriminator
 from kgan.models.SimpleGenerator import SimpleGenerator
 
 import tensorflow as tf
-import matplotlib.pyplot as plot
-
 from tensorflow.keras.optimizers import Adam
+
+import cv2
 
 cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
 
@@ -117,7 +117,7 @@ class SimpleGAN(object):
               validation_dataset=None):
 
         self._batch_size = batch_size
-        generation_frequency = 2000
+        generation_frequency = 100
 
         self._generator_optimizer = self._create_optimizer(learning_rate)
         self._discriminator_optimizer = self._create_optimizer(learning_rate)
