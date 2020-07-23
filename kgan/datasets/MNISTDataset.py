@@ -36,7 +36,7 @@ class MNISTDataset(AbstractDataset):
         train_dataset, validation_dataset = tfds.load(
             name="mnist", split=['train', 'test'], as_supervised=True)
 
-        train_dataset = train_dataset.shuffle(buffer_size).batch(
+        train_dataset = train_dataset.shuffle(self.buffer_size()).batch(
             self.batch_size())
         train_dataset = train_dataset.map(self._augment_image)
 
