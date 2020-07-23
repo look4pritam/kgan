@@ -61,6 +61,14 @@ class SimpleGAN(object):
         discriminator_loss = 0.5 * (real_loss + fake_loss)
         return (discriminator_loss)
 
+    def generate(self, number_of_samples):
+        generator_inputs = tf.random.normal(
+            [number_of_samples, self.latent_dimension()])
+        generated_images = self._generator.predict(generator_inputs)
+        generated_images = generated_images.reshape(
+            number_of_samples, self._input_shape[0], self._input_shape[1])
+        return (generated_images)
+
     def _train_on_batch(self, input_batch):
         real_samples = input_batch
         generator_inputs = tf.random.normal(
@@ -94,6 +102,19 @@ class SimpleGAN(object):
             'discriminator_loss': discriminator_loss
         }
 
+    def show_generated(number_of_samples=10, dim=(1, 10), figsize=(12, 2)):
+        generated_images = self.generate(number_of_samples)
+
+        plot.figure(figsize=figsize)
+        for i in range(number_of_samples):
+            plot.subplot(dim[0], dim[1], i + 1)
+            plot.imshow(
+                generated_images[i], interpolation='nearest', cmap='gray_r')
+            plot.axis('off')
+
+        plot.tight_layout()
+        plot.show()
+
     def train(self,
               train_dataset,
               batch_size,
@@ -102,14 +123,20 @@ class SimpleGAN(object):
               validation_dataset=None):
 
         self._batch_size = batch_size
+        generation_frequency = 2000
 
         self._generator_optimizer = self._create_optimizer(learning_rate)
         self._discriminator_optimizer = self._create_optimizer(learning_rate)
-
+        batch_index = 0
         for current_epoch in range(epochs):
             for current_batch in train_dataset:
                 losses = self._train_on_batch(current_batch)
-            print('generator loss -', losses['generator_loss'].numpy())
-            print('discriminator loss -', losses['discriminator_loss'].numpy())
+                batch_index = batch_index + 1
+                if (batch_index % generation_frequency == 0):
+                    #generated_images = self.generate(10)
+                    show_generated()
+
+            #print('generator loss -', losses['generator_loss'].numpy())
+            #print('discriminator loss -', losses['discriminator_loss'].numpy())
 
         return (True)
