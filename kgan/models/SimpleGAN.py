@@ -103,21 +103,11 @@ class SimpleGAN(object):
             'discriminator_loss': discriminator_loss
         }
 
-    def show_generated(self,
-                       number_of_samples=10,
-                       dim=(1, 10),
-                       figsize=(12, 2)):
+    def save_generated(self, number_of_samples=10):
         generated_images = self.generate(number_of_samples)
-
-        plot.figure(figsize=figsize)
-        for i in range(number_of_samples):
-            plot.subplot(dim[0], dim[1], i + 1)
-            plot.imshow(
-                generated_images[i], interpolation='nearest', cmap='gray_r')
-            plot.axis('off')
-
-        plot.tight_layout()
-        plot.show()
+        for index, image in enumerate(generated_images):
+            filename = 'image' + str(index) + '.png'
+            cv2.imwrite(filename, image)
 
     def train(self,
               train_dataset,
@@ -131,6 +121,7 @@ class SimpleGAN(object):
 
         self._generator_optimizer = self._create_optimizer(learning_rate)
         self._discriminator_optimizer = self._create_optimizer(learning_rate)
+
         batch_index = 0
         for current_epoch in range(epochs):
             for current_batch in train_dataset:
@@ -138,7 +129,7 @@ class SimpleGAN(object):
                 batch_index = batch_index + 1
                 if (batch_index % generation_frequency == 0):
                     #generated_images = self.generate(10)
-                    self.show_generated()
+                    self.save_generated()
 
             #print('generator loss -', losses['generator_loss'].numpy())
             #print('discriminator loss -', losses['discriminator_loss'].numpy())
