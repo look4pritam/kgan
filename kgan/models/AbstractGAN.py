@@ -10,7 +10,7 @@ class AbstractGAN(object):
     __default_batch_size = 128
 
     __default_generation_frequency = 1000
-    __default_plot_frequency = 1000
+    __default_loss_scan_frequency = 1000
 
     @classmethod
     def default_batch_size(cls):
@@ -21,14 +21,14 @@ class AbstractGAN(object):
         return (cls.__default_generation_frequency)
 
     @classmethod
-    def default_plot_frequency(cls):
-        return (cls.__default_plot_frequency)
+    def default_loss_scan_frequency(cls):
+        return (cls.__default_loss_scan_frequency)
 
     def __init__(self):
         self._batch_size = AbstractGAN.default_batch_size()
 
         self._generation_frequency = AbstractGAN.default_generation_frequency()
-        self._plot_frequency = AbstractGAN.default_plot_frequency()
+        self._loss_scan_frequency = AbstractGAN.default_loss_scan_frequency()
 
         self._generator_optimizer = None
         self._discriminator_optimizer = None
@@ -52,14 +52,15 @@ class AbstractGAN(object):
     def generation_frequency(self):
         return (self._generation_frequency)
 
-    def set_plot_frequency(self, plot_frequency):
-        if (plot_frequency > 0):
-            self._plot_frequency = plot_frequency
+    def set_loss_scan_frequency(self, loss_scan_frequency):
+        if (loss_scan_frequency > 0):
+            self._loss_scan_frequency = loss_scan_frequency
         else:
-            self._plot_frequency = AbstractDataset.default_plot_frequency()
+            self._loss_scan_frequency = AbstractDataset.default_loss_scan_frequency(
+            )
 
-    def plot_frequency(self):
-        return (self._plot_frequency)
+    def loss_scan_frequency(self):
+        return (self._loss_scan_frequency)
 
     def _create_optimizer(self, learning_rate):
         optimizer = Adam(learning_rate=learning_rate)
@@ -82,18 +83,18 @@ class AbstractGAN(object):
         for current_epoch in range(epochs):
             for current_batch in train_dataset:
 
-                losses = self._train_on_batch(current_batch)
+                current_losses = self._train_on_batch(current_batch)
                 batch_index = batch_index + 1
 
                 if self.generation_frequency() and (
                         batch_index % self.generation_frequency() == 0):
-                    print('generating samples at', str(batch_index))
                     self.save_generated()
+                    print('generated samples at', str(batch_index))
 
-                if self.plot_frequency() and (
-                        batch_index % self.plot_frequency() == 0):
-                    print('loss values at', str(batch_index))
-                    self._print_losses(losses)
+                if self.loss_scan_frequency() and (
+                        batch_index % self.loss_scan_frequency() == 0):
+                    print('current loss values at', str(batch_index))
+                    self._print_losses(current_losses)
 
         return (True)
 

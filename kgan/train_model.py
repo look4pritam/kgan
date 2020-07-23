@@ -60,9 +60,10 @@ def parse_arguments(argv):
         default=1000)
 
     parser.add_argument(
-        '--plot_frequency',
+        '--loss_scan_frequency',
         type=int,
-        help='Plot frequency in terms of number of batches processed.',
+        help=
+        'Model loss scanning frequency in terms of number of batches processed.',
         default=1000)
 
     return (parser.parse_args(argv))
@@ -73,7 +74,7 @@ def main(args):
     model_shape = (28, 28, 1)
     gan = GANFactory.create(args.model, model_shape, args.latent_dimension)
     gan.set_generation_frequency(args.generation_frequency)
-    gan.set_plot_frequency(args.plot_frequency)
+    gan.set_loss_scan_frequency(args.loss_scan_frequency)
 
     dataset = DatasetFactory.create(args.dataset)
     train_dataset, validation_dataset = dataset.load(args.batch_size)
