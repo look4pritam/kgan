@@ -71,6 +71,10 @@ class SimpleGAN(AbstractGAN):
             filename = 'image-' + str(index) + '.png'
             cv2.imwrite(filename, image)
 
+    def _print_losses(self, losses):
+        for key_value, loss_value in losses:
+            print(key_value, '-', loss_value.numpy())
+
     def _train_on_batch(self, input_batch):
         real_samples = input_batch
         generator_inputs = tf.random.normal(
@@ -100,6 +104,6 @@ class SimpleGAN(AbstractGAN):
                 self._discriminator.trainable_variables))
 
         return {
-            'generator_loss': generator_loss,
-            'discriminator_loss': discriminator_loss
+            'generator': generator_loss,
+            'discriminator': discriminator_loss
         }

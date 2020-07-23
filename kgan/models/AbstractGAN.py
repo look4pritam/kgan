@@ -8,7 +8,9 @@ from tensorflow.keras.optimizers import Adam
 class AbstractGAN(object):
 
     __default_batch_size = 128
+
     __default_generation_frequency = 1000
+    __default_plot_frequency = 1000
 
     @classmethod
     def default_batch_size(cls):
@@ -18,9 +20,15 @@ class AbstractGAN(object):
     def default_generation_frequency(cls):
         return (cls.__default_generation_frequency)
 
+    @classmethod
+    def default_plot_frequency(cls):
+        return (cls.__default_plot_frequency)
+
     def __init__(self):
         self._batch_size = AbstractGAN.default_batch_size()
+
         self._generation_frequency = AbstractGAN.default_generation_frequency()
+        self._plot_frequency = AbstractGAN.default_plot_frequency()
 
         self._generator_optimizer = None
         self._discriminator_optimizer = None
@@ -44,6 +52,15 @@ class AbstractGAN(object):
     def generation_frequency(self):
         return (self._generation_frequency)
 
+    def set_plot_frequency(self, plot_frequency):
+        if (plot_frequency > 0):
+            self._plot_frequency = plot_frequency
+        else:
+            self._plot_frequency = AbstractDataset.default_plot_frequency()
+
+    def plot_frequency(self):
+        return (self._plot_frequency)
+
     def _create_optimizer(self, learning_rate):
         optimizer = Adam(learning_rate=learning_rate)
         return (optimizer)
@@ -64,14 +81,17 @@ class AbstractGAN(object):
         batch_index = 0
         for current_epoch in range(epochs):
             for current_batch in train_dataset:
+
                 losses = self._train_on_batch(current_batch)
                 batch_index = batch_index + 1
+
                 if (batch_index % self.generation_frequency() == 0):
                     print('generating samples at', str(batch_index))
                     self.save_generated()
 
-            #print('generator loss -', losses['generator_loss'].numpy())
-            #print('discriminator loss -', losses['discriminator_loss'].numpy())
+                if (batch_index % self.plot_frequency() == 0):
+                    print('loss values at', str(batch_index))
+                    self._print_losses(losses)
 
         return (True)
 
@@ -79,6 +99,9 @@ class AbstractGAN(object):
         raise NotImplementedError('Must be implemented by the subclass.')
 
     def save_generated(self, number_of_samples=10):
+        raise NotImplementedError('Must be implemented by the subclass.')
+
+    def _print_losses(self, losses):
         raise NotImplementedError('Must be implemented by the subclass.')
 
     def _create_discriminator(self):
