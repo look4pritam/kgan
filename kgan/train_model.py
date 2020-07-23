@@ -5,6 +5,8 @@ from __future__ import print_function
 import os
 import sys
 
+import argparse
+
 from kgan.models.GANFactory import GANFactory
 from kgan.datasets.DatasetFactory import DatasetFactory
 
