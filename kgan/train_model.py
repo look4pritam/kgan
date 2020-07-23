@@ -2,20 +2,63 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import os
+
 from kgan.models.GANFactory import GANFactory
 from kgan.datasets.DatasetFactory import DatasetFactory
 
-input_shape = (28, 28, 1)
-latent_dimension = 100
 
-gan = GANFactory.create('gan', input_shape, latent_dimension)
+def parse_arguments(argv):
+    parser = argparse.ArgumentParser()
 
-batch_size = 64
-dataset = DatasetFactory.create('mnist')
-train_dataset, validation_dataset = dataset.load(input_shape, batch_size)
+    parser.add_argument(
+        '--model',
+        type=str,
+        choices=GANFactory.models(),
+        help='GAN model.',
+        default=GANFactory.default_model())
 
-epochs = 10
-learning_rate = 0.0001
-status = gan.train(train_dataset, batch_size, epochs, learning_rate,
-                   validation_dataset)
-print(status)
+    parser.add_argument(
+        '--latent_dimension',
+        type=int,
+        help='Latent dimension used for generating the image.',
+        default=100)
+
+    parser.add_argument(
+        '--learning_rate',
+        type=float,
+        help='Learning rate used for training the model.',
+        default=0.0002)
+
+    parser.add_argument(
+        '--batch_size',
+        type=int,
+        help='Batch size used for training the model.',
+        default=64)
+
+    parser.add_argument(
+        '--maximum_epochs',
+        type=int,
+        help='Maximum epochs used for training the model.',
+        default=30000)
+
+    return (parser.parse_args(argv))
+
+
+def main(args):
+
+    input_shape = (28, 28, 1)
+    gan = GANFactory.create(args.model, input_shape, args.latent_dimension)
+
+    dataset = DatasetFactory.create('mnist')
+    train_dataset, validation_dataset = dataset.load(input_shape,
+                                                     args.batch_size)
+
+    status = gan.train(train_dataset, batch_size, args.maximum_epochs,
+                       args.learning_rate, validation_dataset)
+    print(status)
+
+
+if __name__ == '__main__':
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+    main(parse_arguments(sys.argv[1:]))

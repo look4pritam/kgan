@@ -6,8 +6,22 @@ from kgan.models.SimpleGAN import SimpleGAN
 
 
 class GANFactory(object):
+
+    __models = []
+
     def __init__(self):
         pass
+
+    @classmethod
+    def models(cls):
+        if (len(cls.__models) == 0):
+            cls.__models.append(SimpleGAN.name())
+
+        return (cls.__models)
+
+    @classmethod
+    def default_model(cls):
+        return (SimpleGAN.name())
 
     @classmethod
     def create(cls, name, input_shape, latent_dimension):
