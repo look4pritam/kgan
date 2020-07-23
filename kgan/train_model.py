@@ -59,6 +59,12 @@ def parse_arguments(argv):
         'Sample generation frequency in terms of number of batches processed.',
         default=1000)
 
+    parser.add_argument(
+        '--plot_frequency',
+        type=int,
+        help='Plot frequency in terms of number of batches processed.',
+        default=1000)
+
     return (parser.parse_args(argv))
 
 
@@ -67,6 +73,7 @@ def main(args):
     model_shape = (28, 28, 1)
     gan = GANFactory.create(args.model, model_shape, args.latent_dimension)
     gan.set_generation_frequency(args.generation_frequency)
+    gan.set_plot_frequency(args.plot_frequency)
 
     dataset = DatasetFactory.create(args.dataset)
     train_dataset, validation_dataset = dataset.load(args.batch_size)

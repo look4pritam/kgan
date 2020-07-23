@@ -85,11 +85,13 @@ class AbstractGAN(object):
                 losses = self._train_on_batch(current_batch)
                 batch_index = batch_index + 1
 
-                if (batch_index % self.generation_frequency() == 0):
+                if self.generation_frequency() and (
+                        batch_index % self.generation_frequency() == 0):
                     print('generating samples at', str(batch_index))
                     self.save_generated()
 
-                if (batch_index % self.plot_frequency() == 0):
+                if self.plot_frequency() and (
+                        batch_index % self.plot_frequency() == 0):
                     print('loss values at', str(batch_index))
                     self._print_losses(losses)
 
