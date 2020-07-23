@@ -72,7 +72,7 @@ class SimpleGAN(AbstractGAN):
             cv2.imwrite(filename, image)
 
     def _print_losses(self, losses):
-        for key_value, loss_value in losses:
+        for key_value, loss_value in losses.items():
             print(key_value, '-', loss_value.numpy())
 
     def _train_on_batch(self, input_batch):
