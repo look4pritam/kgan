@@ -5,6 +5,8 @@ from __future__ import print_function
 import tensorflow as tf
 import tensorflow_datasets as tfds
 
+from kgan.datasets.AbstractDataset import AbstractDataset
+
 
 class MNISTDataset(AbstractDataset):
 
