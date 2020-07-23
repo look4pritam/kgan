@@ -50,7 +50,7 @@ def parse_arguments(argv):
         '--maximum_epochs',
         type=int,
         help='Maximum epochs used for training the model.',
-        default=30000)
+        default=100)
 
     return (parser.parse_args(argv))
 
