@@ -58,7 +58,7 @@ class SimpleGAN(object):
             tf.ones_like(real_predictions), real_predictions)
         fake_loss = cross_entropy(
             tf.zeros_like(fake_predictions), fake_predictions)
-        discriminator_loss = real_loss + fake_loss
+        discriminator_loss = 0.5 * (real_loss + fake_loss)
         return (discriminator_loss)
 
     def _train_on_batch(self, input_batch):
