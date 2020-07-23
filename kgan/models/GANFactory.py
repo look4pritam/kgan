@@ -3,6 +3,7 @@ from __future__ import division
 from __future__ import print_function
 
 from kgan.models.SimpleGAN import SimpleGAN
+from kgan.models.DCGAN import DCGAN
 
 
 class GANFactory(object):
@@ -16,6 +17,7 @@ class GANFactory(object):
     def models(cls):
         if (len(cls.__models) == 0):
             cls.__models.append(SimpleGAN.name())
+            cls.__models.append(DCGAN.name())
 
         return (cls.__models)
 
@@ -29,6 +31,8 @@ class GANFactory(object):
 
         if (name == SimpleGAN.name()):
             gan = SimpleGAN(input_shape, latent_dimension)
+        elif (name == DCGAN.name()):
+            gan = DCGAN(input_shape, latent_dimension)
         else:
             gan = SimpleGAN(input_shape, latent_dimension)
 
