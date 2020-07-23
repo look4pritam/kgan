@@ -57,16 +57,14 @@ def parse_arguments(argv):
 
 def main(args):
 
-    input_shape = (28, 28, 1)
-    gan = GANFactory.create(args.model, input_shape, args.latent_dimension)
+    model_shape = (28, 28, 1)
+    gan = GANFactory.create(args.model, model_shape, args.latent_dimension)
 
     dataset = DatasetFactory.create(args.dataset)
-    train_dataset, validation_dataset = dataset.load(input_shape,
-                                                     args.batch_size)
+    train_dataset, validation_dataset = dataset.load(args.batch_size)
 
     status = gan.train(train_dataset, args.batch_size, args.maximum_epochs,
                        args.learning_rate, validation_dataset)
-    print(status)
 
 
 if __name__ == '__main__':
