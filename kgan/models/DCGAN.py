@@ -5,7 +5,7 @@ from __future__ import print_function
 from kgan.models.AbstractGAN import AbstractGAN
 
 from kgan.models.ConvolutionalDiscriminator import ConvolutionalDiscriminator
-from kgan.models.SimpleGenerator import SimpleGenerator
+from kgan.models.ConvolutionalGenerator import ConvolutionalGenerator
 
 import tensorflow as tf
 
@@ -33,8 +33,7 @@ class DCGAN(AbstractGAN):
         return (discriminator)
 
     def _create_generator(self):
-        generator = SimpleGenerator.create(self.input_shape(),
-                                           self.latent_dimension())
+        generator = ConvolutionalGenerator.create(self.latent_dimension())
         return (generator)
 
     def input_shape(self):
