@@ -58,11 +58,21 @@ class WGANGP(AbstractGAN):
 
         discriminator.add(layers.Flatten())
 
-        discriminator.add(layers.Dense(units=1024))
+        discriminator.add(
+            layers.Dense(
+                units=1024,
+                kernel_initializer=tf.keras.initializers.RandomNormal(
+                    stddev=0.02),
+                bias_initializer=tf.keras.initializers.Constant(value=0.0)))
         discriminator.add(BatchNormalization(is_training=is_training))
         discriminator.add(layers.LeakyReLU(alpha=0.2))
 
-        discriminator.add(layers.Dense(units=1))
+        discriminator.add(
+            layers.Dense(
+                units=1,
+                kernel_initializer=tf.keras.initializers.RandomNormal(
+                    stddev=0.02),
+                bias_initializer=tf.keras.initializers.Constant(value=0.0)))
 
         return (discriminator)
 
