@@ -4,12 +4,12 @@ from __future__ import print_function
 
 from kgan.models.AbstractGAN import AbstractGAN
 
-from kgan.models.ConvolutionalDiscriminator import ConvolutionalDiscriminator
-from kgan.models.ConvolutionalGenerator import ConvolutionalGenerator
+from kgan.layers.BatchNormalization import BatchNormalization
 
 import tensorflow as tf
 
-import cv2
+import tensorflow.keras.layers as layers
+import tensorflow.keras.models as models
 
 cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
 
@@ -29,7 +29,29 @@ class WGANGP(AbstractGAN):
         self._generator = self._create_generator()
 
     def _create_discriminator(self):
-        discriminator = ConvolutionalDiscriminator.create(self.input_shape())
+        discriminator = models.Sequential(name='discriminator')
+
+        discriminator.add(
+            layers.Conv2D(
+                filters=64,
+                kernel_size=(4, 4),
+                strides=(2, 2),
+            ))
+        discriminator.add(layers.LeakyReLU(alpha=0.2))
+
+        discriminator.add(
+            layers.Conv2D(filters=128, kernel_size=(4, 4), strides=(2, 2)))
+        discriminator.add(BatchNormalization(is_training=is_training))
+        discriminator.add(layers.LeakyReLU(alpha=0.2))
+
+        discriminator.add(layers.Flatten())
+
+        discriminator.add(layers.Dense(units=1024))
+        discriminator.add(BatchNormalization(is_training=is_training))
+        discriminator.add(layers.LeakyReLU(alpha=0.2))
+
+        discriminator.add(layers.Dense(units=1))
+
         return (discriminator)
 
     def _create_generator(self):
