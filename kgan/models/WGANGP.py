@@ -53,7 +53,7 @@ class WGANGP(AbstractGAN):
                     stddev=0.02),
                 use_bias=True,
                 bias_initializer=tf.keras.initializers.Constant(value=0.0)))
-        discriminator.add(BatchNormalization(is_training=is_training))
+        discriminator.add(BatchNormalization(is_training=true))
         discriminator.add(layers.LeakyReLU(alpha=0.2))
 
         discriminator.add(layers.Flatten())
@@ -64,7 +64,7 @@ class WGANGP(AbstractGAN):
                 kernel_initializer=tf.keras.initializers.RandomNormal(
                     stddev=0.02),
                 bias_initializer=tf.keras.initializers.Constant(value=0.0)))
-        discriminator.add(BatchNormalization(is_training=is_training))
+        discriminator.add(BatchNormalization(is_training=true))
         discriminator.add(layers.LeakyReLU(alpha=0.2))
 
         discriminator.add(
@@ -78,6 +78,54 @@ class WGANGP(AbstractGAN):
 
     def _create_generator(self):
         generator = ConvolutionalGenerator.create(self.latent_dimension())
+
+        generator = models.Sequential(name='generator')
+
+        generator.add(
+            Dense(
+                units=1024,
+                kernel_initializer=tf.keras.initializers.RandomNormal(
+                    stddev=0.02),
+                bias_initializer=tf.keras.initializers.Constant(value=0.0)))
+        generator.add(BatchNormalization(is_training=true))
+        generator.add(layers.ReLU())
+
+        generator.add(
+            Dense(
+                units=128 * 7 * 7,
+                kernel_initializer=tf.keras.initializers.RandomNormal(
+                    stddev=0.02),
+                bias_initializer=tf.keras.initializers.Constant(value=0.0)))
+        generator.add(BatchNormalization(is_training=true))
+        generator.add(layers.ReLU())
+
+        generator.add(layers.Reshape((7, 7, 128)))
+
+        generator.add(
+            UpConv2D(
+                filters=64,
+                kernel_size=(4, 4),
+                strides=(2, 2),
+                padding='same',
+                kernel_initializer=tf.keras.initializers.RandomNormal(
+                    stddev=0.02),
+                use_bias=True,
+                bias_initializer=tf.keras.initializers.Constant(value=0.0)))
+        generator.add(BatchNormalization(is_training=true))
+        generator.add(layers.ReLU())
+
+        generator.add(
+            UpConv2D(
+                filters=1,
+                kernel_size=(4, 4),
+                strides=(2, 2),
+                padding='same',
+                kernel_initializer=tf.keras.initializers.RandomNormal(
+                    stddev=0.02),
+                use_bias=True,
+                bias_initializer=tf.keras.initializers.Constant(value=0.0)))
+        generator.add(tf.keras.activations.tanh())
+
         return (generator)
 
     def input_shape(self):
