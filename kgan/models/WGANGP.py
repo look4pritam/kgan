@@ -36,11 +36,23 @@ class WGANGP(AbstractGAN):
                 filters=64,
                 kernel_size=(4, 4),
                 strides=(2, 2),
-            ))
+                padding='same',
+                kernel_initializer=tf.keras.initializers.TruncatedNormal(
+                    stddev=0.02),
+                use_bias=True,
+                bias_initializer=tf.keras.initializers.Constant(value=0.0)))
         discriminator.add(layers.LeakyReLU(alpha=0.2))
 
         discriminator.add(
-            layers.Conv2D(filters=128, kernel_size=(4, 4), strides=(2, 2)))
+            layers.Conv2D(
+                filters=128,
+                kernel_size=(4, 4),
+                strides=(2, 2),
+                padding='same',
+                kernel_initializer=tf.keras.initializers.TruncatedNormal(
+                    stddev=0.02),
+                use_bias=True,
+                bias_initializer=tf.keras.initializers.Constant(value=0.0)))
         discriminator.add(BatchNormalization(is_training=is_training))
         discriminator.add(layers.LeakyReLU(alpha=0.2))
 
