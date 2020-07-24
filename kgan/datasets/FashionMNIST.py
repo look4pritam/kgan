@@ -8,7 +8,7 @@ import tensorflow_datasets as tfds
 from kgan.datasets.AbstractDataset import AbstractDataset
 
 
-class MNIST(AbstractDataset):
+class FashionMNIST(AbstractDataset):
 
     __default_image_shape = (28, 28, 1)
 
@@ -18,11 +18,11 @@ class MNIST(AbstractDataset):
 
     @classmethod
     def name(cls):
-        return ('mnist')
+        return ('fashion_mnist')
 
     def __init__(self):
-        super(MNIST, self).__init__()
-        self._image_shape = MNIST.default_image_shape()
+        super(FashionMNIST, self).__init__()
+        self._image_shape = FashionMNIST.default_image_shape()
 
     def set_image_shape(self, image_shape):
         self._image_shape = image_shape
@@ -34,7 +34,7 @@ class MNIST(AbstractDataset):
         self.set_batch_size(batch_size)
 
         train_dataset, validation_dataset = tfds.load(
-            name="mnist", split=['train', 'test'], as_supervised=True)
+            name="fashion_mnist", split=['train', 'test'], as_supervised=True)
 
         train_dataset = train_dataset.shuffle(self.buffer_size()).batch(
             self.batch_size())

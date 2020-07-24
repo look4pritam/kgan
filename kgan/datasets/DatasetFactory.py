@@ -3,6 +3,7 @@ from __future__ import division
 from __future__ import print_function
 
 from kgan.datasets.MNIST import MNIST
+from kgan.datasets.FashionMNIST import FashionMNIST
 
 
 class DatasetFactory(object):
@@ -13,6 +14,7 @@ class DatasetFactory(object):
     def datasets(cls):
         if (len(cls.__datasets) == 0):
             cls.__datasets.append(MNIST.name())
+            cls.__datasets.append(FashionMNIST.name())
 
         return (cls.__datasets)
 
@@ -29,6 +31,8 @@ class DatasetFactory(object):
 
         if (name == MNIST.name()):
             dataset = MNIST()
+        elif (name == FashionMNIST.name()):
+            dataset = FashionMNIST()
         else:
             dataset = MNIST()
 
