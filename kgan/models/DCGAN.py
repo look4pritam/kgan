@@ -79,27 +79,27 @@ class DCGAN(AbstractGAN):
         generator_inputs = tf.random.normal(
             [self.batch_size(), self.latent_dimension()])
 
-        with tf.GradientTape(persistent=True) as tape:
+        with tf.GradientTape() as generator_tape, tf.GradientTape(
+        ) as discriminator_tape:
             fake_samples = self._generator(generator_inputs, training=True)
 
             real_predictions = self._discriminator(real_samples, training=True)
             fake_predictions = self._discriminator(fake_samples, training=True)
 
             generator_loss = self._generator_loss(fake_predictions)
-
             discriminator_loss = self._discriminator_loss(
                 real_predictions, fake_predictions)
 
-        generator_loss_gradients = tape.gradient(
+        gradients_of_generator = generator_tape.gradient(
             target=generator_loss, sources=self._generator.trainable_variables)
-        discriminator_loss_gradients = tape.gradient(
+        gradients_of_discriminator = discriminator_tape.gradient(
             target=discriminator_loss,
             sources=self._discriminator.trainable_variables)
 
         self._generator_optimizer.apply_gradients(
-            zip(generator_loss_gradients, self._generator.trainable_variables))
+            zip(gradients_of_generator, self._generator.trainable_variables))
         self._discriminator_optimizer.apply_gradients(
-            zip(discriminator_loss_gradients,
+            zip(gradients_of_discriminator,
                 self._discriminator.trainable_variables))
 
         return {
