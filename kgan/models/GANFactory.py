@@ -4,6 +4,7 @@ from __future__ import print_function
 
 from kgan.models.SimpleGAN import SimpleGAN
 from kgan.models.DCGAN import DCGAN
+from kgan.models.WGANGP import WGANGP
 
 
 class GANFactory(object):
@@ -18,6 +19,7 @@ class GANFactory(object):
         if (len(cls.__models) == 0):
             cls.__models.append(SimpleGAN.name())
             cls.__models.append(DCGAN.name())
+            cls.__models.append(WGANGP.name())
 
         return (cls.__models)
 
@@ -33,6 +35,8 @@ class GANFactory(object):
             gan = SimpleGAN(input_shape, latent_dimension)
         elif (name == DCGAN.name()):
             gan = DCGAN(input_shape, latent_dimension)
+        elif (name == WGANGP.name()):
+            gan = WGANGP(input_shape, latent_dimension)
         else:
             gan = SimpleGAN(input_shape, latent_dimension)
 
