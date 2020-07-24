@@ -2,7 +2,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from kgan.datasets.MNISTDataset import MNISTDataset
+from kgan.datasets.MNIST import MNIST
 
 
 class DatasetFactory(object):
@@ -12,13 +12,13 @@ class DatasetFactory(object):
     @classmethod
     def datasets(cls):
         if (len(cls.__datasets) == 0):
-            cls.__datasets.append(MNISTDataset.name())
+            cls.__datasets.append(MNIST.name())
 
         return (cls.__datasets)
 
     @classmethod
     def default_dataset(cls):
-        return (MNISTDataset.name())
+        return (MNIST.name())
 
     def __init__(self):
         pass
@@ -27,9 +27,9 @@ class DatasetFactory(object):
     def create(cls, name):
         dataset = None
 
-        if (name == MNISTDataset.name()):
-            dataset = MNISTDataset()
+        if (name == MNIST.name()):
+            dataset = MNIST()
         else:
-            dataset = MNISTDataset()
+            dataset = MNIST()
 
         return (dataset)
