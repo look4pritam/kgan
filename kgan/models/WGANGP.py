@@ -101,7 +101,7 @@ class WGANGP(ImageGAN):
         generator.add(layers.Reshape(generator_shape))
 
         generator.add(
-            layers.UpConv2D(
+            layers.Conv2DTranspose(
                 filters=64,
                 kernel_size=(4, 4),
                 strides=(2, 2),
@@ -114,7 +114,7 @@ class WGANGP(ImageGAN):
         generator.add(layers.ReLU())
 
         generator.add(
-            layers.UpConv2D(
+            layers.Conv2DTranspose(
                 filters=1,
                 kernel_size=(4, 4),
                 strides=(2, 2),
