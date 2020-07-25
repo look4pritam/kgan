@@ -17,9 +17,7 @@ class SimpleGAN(ImageGAN):
 
     def __init__(self, input_shape, latent_dimension):
         super(SimpleGAN, self).__init__()
-
-        self._discriminator = self._create_discriminator()
-        self._generator = self._create_generator()
+        pass
 
     def _create_discriminator(self):
         discriminator = SimpleDiscriminator.create(self.input_shape())

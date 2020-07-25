@@ -21,11 +21,7 @@ class WGANGP(ImageGAN):
 
     def __init__(self, input_shape, latent_dimension):
         super(WGANGP, self).__init__()
-
         self._gradient_penalty_weight = 10.
-
-        self._discriminator = self._create_discriminator()
-        self._generator = self._create_generator()
 
     def _create_discriminator(self):
         discriminator = models.Sequential(name='discriminator')

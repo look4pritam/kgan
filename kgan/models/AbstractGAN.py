@@ -70,14 +70,21 @@ class AbstractGAN(object):
         optimizer = Adam(learning_rate=learning_rate)
         return (optimizer)
 
+    def _create_models(self):
+        self._discriminator = self._create_discriminator()
+        self._generator = self._create_generator()
+        return (True)
+
     def train(self,
               train_dataset,
               batch_size,
               epochs,
               learning_rate=0.0001,
               validation_dataset=None):
+        status = True
 
         self.set_batch_size(batch_size)
+        status = self._create_models() and status
 
         self._generator_optimizer = self._create_generator_optimizer(
             learning_rate)
