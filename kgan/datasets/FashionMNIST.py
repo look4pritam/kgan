@@ -33,11 +33,25 @@ class FashionMNIST(AbstractDataset):
     def load(self, batch_size):
         self.set_batch_size(batch_size)
 
-        train_dataset, validation_dataset = tfds.load(
-            name="fashion_mnist", split=['train', 'test'], as_supervised=True)
+        (train_images, train_labels), (
+            validation_images,
+            validation_labels) = tf.keras.datasets.fashion_mnist.load_data()
 
+        train_images = train_images.reshape(train_images.shape[0], 28, 28,
+                                            1).astype('float32')
+        train_labels = tf.one_hot(train_labels, depth=10)
+        train_dataset = tf.data.Dataset.from_tensor_slices((train_images,
+                                                            train_labels))
+
+        validation_images = validation_images.reshape(
+            train_images.shape[0], 28, 28, 1).astype('float32')
+        validation_labels = tf.one_hot(validation_labels, depth=10)
+        validation_dataset = tf.data.Dataset.from_tensor_slices(
+            (validation_images, validation_labels))
+
+        self._buffer_size = train_images.shape[0]
         train_dataset = train_dataset.shuffle(self.buffer_size()).batch(
-            self.batch_size())
+            self.batch_size(), drop_remainder=True)
         train_dataset = train_dataset.map(self._augment_image)
 
         validation_dataset = validation_dataset.batch(self.batch_size())
