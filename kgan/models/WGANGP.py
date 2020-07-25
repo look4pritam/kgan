@@ -158,7 +158,7 @@ class WGANGP(ImageGAN):
             generator_loss = tf.reduce_mean(-fake_predictions)
 
             with tf.GradientTape() as gp_tape:
-                alpha = tf.random.uniform([batch_size],
+                alpha = tf.random.uniform([self.batch_size()],
                                           0.,
                                           1.,
                                           dtype=tf.float32)
