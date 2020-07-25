@@ -33,6 +33,23 @@ class FashionMNIST(AbstractDataset):
     def load(self, batch_size):
         self.set_batch_size(batch_size)
 
+        train_dataset, validation_dataset = tfds.load(
+            name="fashion_mnist", split=['train', 'test'], as_supervised=True)
+
+        train_dataset = train_dataset.shuffle(self.buffer_size()).batch(
+            self.batch_size(), drop_remainder=True)
+        train_dataset = train_dataset.map(self._augment_image)
+
+        validation_dataset = validation_dataset.batch(
+            self.batch_size(), drop_remainder=True)
+        validation_dataset = validation_dataset.map(self._normalize_image)
+
+        return (train_dataset, validation_dataset)
+
+    '''
+    def load(self, batch_size):
+        self.set_batch_size(batch_size)
+
         (train_images, train_labels), (
             validation_images,
             validation_labels) = tf.keras.datasets.fashion_mnist.load_data()
@@ -58,6 +75,7 @@ class FashionMNIST(AbstractDataset):
         validation_dataset = validation_dataset.map(self._normalize_image)
 
         return (train_dataset, validation_dataset)
+    '''
 
     def _normalize_image(self, image, label):
         image = (tf.cast(image, tf.float32) - 127.5) / 127.5
