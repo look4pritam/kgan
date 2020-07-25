@@ -140,8 +140,7 @@ class WGANGP(ImageGAN):
 
     def _train_on_batch(self, input_batch):
         generator_inputs = tf.random.uniform(
-            minval=-1, maxval=1,
-            [self.batch_size(), self.latent_dimension()])
+            [self.batch_size(), self.latent_dimension()], minval=-1, maxval=1)
 
         real_samples = batch_images
         with tf.GradientTape() as generator_tape, tf.GradientTape(
