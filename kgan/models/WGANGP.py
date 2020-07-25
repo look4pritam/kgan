@@ -49,7 +49,7 @@ class WGANGP(ImageGAN):
                     stddev=0.02),
                 use_bias=True,
                 bias_initializer=tf.keras.initializers.Constant(value=0.0)))
-        discriminator.add(BatchNormalization(is_training=true))
+        discriminator.add(BatchNormalization(is_training=True))
         discriminator.add(layers.LeakyReLU(alpha=0.2))
 
         discriminator.add(layers.Flatten())
@@ -60,7 +60,7 @@ class WGANGP(ImageGAN):
                 kernel_initializer=tf.keras.initializers.RandomNormal(
                     stddev=0.02),
                 bias_initializer=tf.keras.initializers.Constant(value=0.0)))
-        discriminator.add(BatchNormalization(is_training=true))
+        discriminator.add(BatchNormalization(is_training=True))
         discriminator.add(layers.LeakyReLU(alpha=0.2))
 
         discriminator.add(
@@ -84,7 +84,7 @@ class WGANGP(ImageGAN):
                 kernel_initializer=tf.keras.initializers.RandomNormal(
                     stddev=0.02),
                 bias_initializer=tf.keras.initializers.Constant(value=0.0)))
-        generator.add(BatchNormalization(is_training=true))
+        generator.add(BatchNormalization(is_training=True))
         generator.add(layers.ReLU())
 
         generator.add(
@@ -93,7 +93,7 @@ class WGANGP(ImageGAN):
                 kernel_initializer=tf.keras.initializers.RandomNormal(
                     stddev=0.02),
                 bias_initializer=tf.keras.initializers.Constant(value=0.0)))
-        generator.add(BatchNormalization(is_training=true))
+        generator.add(BatchNormalization(is_training=True))
         generator.add(layers.ReLU())
 
         generator.add(layers.Reshape(generator_shape))
@@ -108,7 +108,7 @@ class WGANGP(ImageGAN):
                     stddev=0.02),
                 use_bias=True,
                 bias_initializer=tf.keras.initializers.Constant(value=0.0)))
-        generator.add(BatchNormalization(is_training=true))
+        generator.add(BatchNormalization(is_training=True))
         generator.add(layers.ReLU())
 
         generator.add(
