@@ -62,7 +62,11 @@ class AbstractGAN(object):
     def loss_scan_frequency(self):
         return (self._loss_scan_frequency)
 
-    def _create_optimizer(self, learning_rate):
+    def _create_generator_optimizer(self, learning_rate):
+        optimizer = Adam(learning_rate=learning_rate)
+        return (optimizer)
+
+    def _create_discriminator_optimizer(self, learning_rate):
         optimizer = Adam(learning_rate=learning_rate)
         return (optimizer)
 
@@ -74,10 +78,11 @@ class AbstractGAN(object):
               validation_dataset=None):
 
         self.set_batch_size(batch_size)
-        generation_frequency = 100
 
-        self._generator_optimizer = self._create_optimizer(learning_rate)
-        self._discriminator_optimizer = self._create_optimizer(learning_rate)
+        self._generator_optimizer = self._create_generator_optimizer(
+            learning_rate)
+        self._discriminator_optimizer = self._create_discriminator_optimizer(
+            learning_rate)
 
         batch_index = 0
         for current_epoch in range(epochs):

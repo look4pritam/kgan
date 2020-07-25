@@ -72,6 +72,9 @@ class WGANGP(ImageGAN):
         return (discriminator)
 
     def _create_generator(self):
+        generator_shape = (7, 7, 128)
+        generator_size = np.prod(generator_shape)
+
         generator = models.Sequential(name='generator')
 
         generator.add(
@@ -85,14 +88,14 @@ class WGANGP(ImageGAN):
 
         generator.add(
             Dense(
-                units=128 * 7 * 7,
+                units=generator_size,
                 kernel_initializer=tf.keras.initializers.RandomNormal(
                     stddev=0.02),
                 bias_initializer=tf.keras.initializers.Constant(value=0.0)))
         generator.add(BatchNormalization(is_training=true))
         generator.add(layers.ReLU())
 
-        generator.add(layers.Reshape((7, 7, 128)))
+        generator.add(layers.Reshape(generator_shape))
 
         generator.add(
             UpConv2D(
