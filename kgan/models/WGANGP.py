@@ -10,6 +10,7 @@ import tensorflow as tf
 
 import tensorflow.keras.layers as layers
 import tensorflow.keras.models as models
+
 from tensorflow.keras.optimizers import RMSprop
 
 
@@ -20,6 +21,8 @@ class WGANGP(ImageGAN):
 
     def __init__(self, input_shape, latent_dimension):
         super(WGANGP, self).__init__()
+
+        self._gradient_penalty_weight = 10.
 
         self._discriminator = self._create_discriminator()
         self._generator = self._create_generator()
@@ -133,33 +136,59 @@ class WGANGP(ImageGAN):
         optimizer = RMSprop(learning_rate=learning_rate)
         return (optimizer)
 
+    def set_gradient_penalty_weight(self, gradient_penalty_weight):
+        self._gradient_penalty_weight = gradient_penalty_weight
+
+    def gradient_penalty_weight(self):
+        return (self._gradient_penalty_weight)
+
     def _train_on_batch(self, input_batch):
-        real_samples = input_batch
-        generator_inputs = tf.random.normal(
+        generator_inputs = tf.random.uniform(
+            minval=-1, maxval=1,
             [self.batch_size(), self.latent_dimension()])
 
+        real_samples = batch_images
         with tf.GradientTape() as generator_tape, tf.GradientTape(
         ) as discriminator_tape:
             fake_samples = self._generator(generator_inputs, training=True)
 
-            real_predictions = self._discriminator(real_samples, training=True)
             fake_predictions = self._discriminator(fake_samples, training=True)
+            real_predictions = self._discriminator(real_samples, training=True)
 
-            generator_loss = self._generator_loss(fake_predictions)
-            discriminator_loss = self._discriminator_loss(
-                real_predictions, fake_predictions)
+            discriminator_loss = tf.reduce_mean(
+                -real_predictions) + tf.reduce_mean(fake_predictions)
+            generator_loss = tf.reduce_mean(-fake_predictions)
 
-        gradients_of_generator = generator_tape.gradient(
-            target=generator_loss, sources=self._generator.trainable_variables)
+            with tf.GradientTape() as gp_tape:
+                alpha = tf.random.uniform([batch_size],
+                                          0.,
+                                          1.,
+                                          dtype=tf.float32)
+                alpha = tf.reshape(alpha, (-1, 1, 1, 1))
+                sample_images = real_samples + alpha * (
+                    fake_samples - real_samples)
+
+                gp_tape.watch(sample_images)
+                sample_predictions = self._discriminator(
+                    sample_images, training=False)
+
+            gradients = gp_tape.gradient(sample_predictions, sample_images)
+            grad_l2 = tf.sqrt(
+                tf.reduce_sum(tf.square(gradients), axis=[1, 2, 3]))
+            gradient_penalty = tf.reduce_mean((grad_l2 - 1)**2)
+            discriminator_loss += self.gradient_penalty_weight(
+            ) * gradient_penalty
+
         gradients_of_discriminator = discriminator_tape.gradient(
-            target=discriminator_loss,
-            sources=self._discriminator.trainable_variables)
+            discriminator_loss, self._discriminator.trainable_variables)
+        gradients_of_generator = generator_tape.gradient(
+            generator_loss, self._generator.trainable_variables)
 
-        self._generator_optimizer.apply_gradients(
-            zip(gradients_of_generator, self._generator.trainable_variables))
         self._discriminator_optimizer.apply_gradients(
             zip(gradients_of_discriminator,
                 self._discriminator.trainable_variables))
+        self._generator_optimizer.apply_gradients(
+            zip(gradients_of_generator, self._generator.trainable_variables))
 
         return {
             'generator': generator_loss,
