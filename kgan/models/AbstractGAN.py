@@ -12,6 +12,8 @@ class AbstractGAN(object):
     __default_generation_frequency = 1000
     __default_loss_scan_frequency = 1000
 
+    __default_save_frequency = 1
+
     @classmethod
     def default_batch_size(cls):
         return (cls.__default_batch_size)
@@ -23,6 +25,10 @@ class AbstractGAN(object):
     @classmethod
     def default_loss_scan_frequency(cls):
         return (cls.__default_loss_scan_frequency)
+
+    @classmethod
+    def default_save_frequency(cls):
+        return (cls.__default_save_frequency)
 
     def __init__(self):
         self._batch_size = AbstractGAN.default_batch_size()
@@ -41,6 +47,15 @@ class AbstractGAN(object):
 
     def batch_size(self):
         return (self._batch_size)
+
+    def set_save_frequency(self, save_frequency):
+        if (save_frequency > 0):
+            self._save_frequency = save_frequency
+        else:
+            self._save_frequency = AbstractDataset.default_save_frequency()
+
+    def save_frequency(self):
+        return (self._save_frequency)
 
     def set_generation_frequency(self, generation_frequency):
         if (generation_frequency > 0):
@@ -108,6 +123,10 @@ class AbstractGAN(object):
                         batch_index % self.loss_scan_frequency() == 0):
                     print('current loss values at', str(batch_index))
                     self._print_losses(current_losses)
+
+            if self.save_frequency() and (
+                    current_epoch % self.save_frequency() == 0):
+                print('models saved at', str(current_epoch))
 
         return (True)
 

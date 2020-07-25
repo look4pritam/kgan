@@ -53,6 +53,12 @@ def parse_arguments(argv):
         default=100)
 
     parser.add_argument(
+        '--save_frequency',
+        type=int,
+        help='Model saving frequency in terms of number of epochs processed.',
+        default=1)
+
+    parser.add_argument(
         '--generation_frequency',
         type=int,
         help=
@@ -75,6 +81,7 @@ def main(args):
     gan = GANFactory.create(args.model, model_shape, args.latent_dimension)
     gan.set_generation_frequency(args.generation_frequency)
     gan.set_loss_scan_frequency(args.loss_scan_frequency)
+    gan.set_save_frequency(args.save_frequency)
 
     dataset = DatasetFactory.create(args.dataset)
     train_dataset, validation_dataset = dataset.load(args.batch_size)
