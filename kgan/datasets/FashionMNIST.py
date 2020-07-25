@@ -44,7 +44,7 @@ class FashionMNIST(AbstractDataset):
                                                             train_labels))
 
         validation_images = validation_images.reshape(
-            train_images.shape[0], 28, 28, 1).astype('float32')
+            validation_images.shape[0], 28, 28, 1).astype('float32')
         validation_labels = tf.one_hot(validation_labels, depth=10)
         validation_dataset = tf.data.Dataset.from_tensor_slices(
             (validation_images, validation_labels))
