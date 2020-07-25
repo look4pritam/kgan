@@ -13,6 +13,8 @@ import tensorflow.keras.models as models
 
 from tensorflow.keras.optimizers import RMSprop
 
+import numpy as np
+
 
 class WGANGP(ImageGAN):
     @classmethod
