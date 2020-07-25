@@ -81,7 +81,7 @@ class WGANGP(ImageGAN):
         generator = models.Sequential(name='generator')
 
         generator.add(
-            Dense(
+            layers.Dense(
                 units=1024,
                 kernel_initializer=tf.keras.initializers.RandomNormal(
                     stddev=0.02),
@@ -90,7 +90,7 @@ class WGANGP(ImageGAN):
         generator.add(layers.ReLU())
 
         generator.add(
-            Dense(
+            layers.Dense(
                 units=generator_size,
                 kernel_initializer=tf.keras.initializers.RandomNormal(
                     stddev=0.02),
@@ -101,7 +101,7 @@ class WGANGP(ImageGAN):
         generator.add(layers.Reshape(generator_shape))
 
         generator.add(
-            UpConv2D(
+            layers.UpConv2D(
                 filters=64,
                 kernel_size=(4, 4),
                 strides=(2, 2),
@@ -114,7 +114,7 @@ class WGANGP(ImageGAN):
         generator.add(layers.ReLU())
 
         generator.add(
-            UpConv2D(
+            layers.UpConv2D(
                 filters=1,
                 kernel_size=(4, 4),
                 strides=(2, 2),
