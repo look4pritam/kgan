@@ -10,6 +10,7 @@ import tensorflow as tf
 
 import tensorflow.keras.layers as layers
 import tensorflow.keras.models as models
+from tensorflow.keras.optimizers import RMSprop
 
 
 class WGANGP(ImageGAN):
@@ -123,6 +124,14 @@ class WGANGP(ImageGAN):
         generator.add(tf.keras.activations.tanh())
 
         return (generator)
+
+    def _create_generator_optimizer(self, learning_rate):
+        optimizer = RMSprop(learning_rate=5 * learning_rate)
+        return (optimizer)
+
+    def _create_discriminator_optimizer(self, learning_rate):
+        optimizer = RMSprop(learning_rate=learning_rate)
+        return (optimizer)
 
     def _train_on_batch(self, input_batch):
         real_samples = input_batch

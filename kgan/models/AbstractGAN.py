@@ -81,6 +81,7 @@ class AbstractGAN(object):
 
         self._generator_optimizer = self._create_generator_optimizer(
             learning_rate)
+
         self._discriminator_optimizer = self._create_discriminator_optimizer(
             learning_rate)
 
