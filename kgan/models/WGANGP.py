@@ -77,8 +77,6 @@ class WGANGP(AbstractGAN):
         return (discriminator)
 
     def _create_generator(self):
-        generator = ConvolutionalGenerator.create(self.latent_dimension())
-
         generator = models.Sequential(name='generator')
 
         generator.add(
