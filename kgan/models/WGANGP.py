@@ -123,7 +123,6 @@ class WGANGP(ImageGAN):
                     stddev=0.02),
                 use_bias=True,
                 bias_initializer=tf.keras.initializers.Constant(value=0.0)))
-        #generator.add(tf.keras.activations.tanh())
         generator.add(layers.Activation(tf.keras.activations.tanh))
 
         return (generator)
@@ -143,10 +142,10 @@ class WGANGP(ImageGAN):
         return (self._gradient_penalty_weight)
 
     def _train_on_batch(self, input_batch):
+        real_samples = input_batch
         generator_inputs = tf.random.uniform(
             [self.batch_size(), self.latent_dimension()], minval=-1, maxval=1)
 
-        real_samples = batch_images
         with tf.GradientTape() as generator_tape, tf.GradientTape(
         ) as discriminator_tape:
             fake_samples = self._generator(generator_inputs, training=True)
