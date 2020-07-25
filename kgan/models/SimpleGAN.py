@@ -16,7 +16,7 @@ class SimpleGAN(ImageGAN):
         return ('gan')
 
     def __init__(self, input_shape, latent_dimension):
-        super(SimpleGAN, self).__init__()
+        super(SimpleGAN, self).__init__(input_shape, latent_dimension)
         pass
 
     def _create_discriminator(self):

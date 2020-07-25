@@ -20,7 +20,8 @@ class WGANGP(ImageGAN):
         return ('wgangp')
 
     def __init__(self, input_shape, latent_dimension):
-        super(WGANGP, self).__init__()
+        super(WGANGP, self).__init__(input_shape, latent_dimension)
+
         self._gradient_penalty_weight = 10.
 
     def _create_discriminator(self):

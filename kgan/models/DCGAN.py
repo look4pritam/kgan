@@ -16,7 +16,7 @@ class DCGAN(ImageGAN):
         return ('dcgan')
 
     def __init__(self, input_shape, latent_dimension):
-        super(DCGAN, self).__init__()
+        super(DCGAN, self).__init__(input_shape, latent_dimension)
         pass
 
     def _create_discriminator(self):
