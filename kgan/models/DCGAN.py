@@ -4,8 +4,8 @@ from __future__ import print_function
 
 from kgan.models.AbstractGAN import AbstractGAN
 
-from kgan.models.ConvolutionalDiscriminator import ConvolutionalDiscriminator
-from kgan.models.ConvolutionalGenerator import ConvolutionalGenerator
+from kgan.models.discriminators.ConvolutionalDiscriminator import ConvolutionalDiscriminator
+from kgan.models.generators.ConvolutionalGenerator import ConvolutionalGenerator
 
 import tensorflow as tf
 
