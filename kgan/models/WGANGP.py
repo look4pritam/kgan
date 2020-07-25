@@ -142,7 +142,7 @@ class WGANGP(ImageGAN):
         return (self._gradient_penalty_weight)
 
     def _train_on_batch(self, input_batch):
-        real_samples = input_batch
+        real_samples, _ = input_batch
         generator_inputs = tf.random.uniform(
             [self.batch_size(), self.latent_dimension()], minval=-1, maxval=1)
 
