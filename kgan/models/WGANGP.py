@@ -123,7 +123,8 @@ class WGANGP(ImageGAN):
                     stddev=0.02),
                 use_bias=True,
                 bias_initializer=tf.keras.initializers.Constant(value=0.0)))
-        generator.add(tf.keras.activations.tanh())
+        #generator.add(tf.keras.activations.tanh())
+        generator.add(layers.Activation(tf.keras.activations.tanh))
 
         return (generator)
 
