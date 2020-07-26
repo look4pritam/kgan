@@ -145,6 +145,7 @@ class AbstractGAN(object):
             if self.save_frequency() and (
                     current_epoch % self.save_frequency() == 0):
                 self.save_models()
+                print('models are saved at', str(current_epoch))
 
             # Update learning rate at end of each epoch.
             self._update_learning_rate()
@@ -155,7 +156,7 @@ class AbstractGAN(object):
         return (True)
 
     def save_models(self):
-        print('models are saved at', str(current_epoch))
+        pass
 
     def generate(self, number_of_samples):
         raise NotImplementedError('Must be implemented by the subclass.')
