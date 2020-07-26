@@ -7,12 +7,17 @@ from tensorflow.keras.optimizers import Adam
 
 class AbstractGAN(object):
 
+    __default_learning_rate = 0.0001
     __default_batch_size = 128
 
     __default_generation_frequency = 1000
     __default_loss_scan_frequency = 1000
 
     __default_save_frequency = 1
+
+    @classmethod
+    def default_learning_rate(cls):
+        return (cls.__default_learning_rate)
 
     @classmethod
     def default_batch_size(cls):
@@ -31,6 +36,7 @@ class AbstractGAN(object):
         return (cls.__default_save_frequency)
 
     def __init__(self):
+        self._learning_rate = AbstractGAN.default_learning_rate()
         self._batch_size = AbstractGAN.default_batch_size()
 
         self._generation_frequency = AbstractGAN.default_generation_frequency()
@@ -38,6 +44,15 @@ class AbstractGAN(object):
 
         self._generator_optimizer = None
         self._discriminator_optimizer = None
+
+    def set_learning_rate(self, learning_rate):
+        if (learning_rate > 0):
+            self._learning_rate = learning_rate
+        else:
+            self._learning_rate = AbstractDataset.default_learning_rate()
+
+    def learning_rate(self):
+        return (self._learning_rate)
 
     def set_batch_size(self, batch_size):
         if (batch_size > 0):
@@ -98,17 +113,20 @@ class AbstractGAN(object):
               validation_dataset=None):
         status = True
 
+        self.set_learning_rate(learning_rate)
         self.set_batch_size(batch_size)
         status = self._create_models() and status
 
-        self._generator_optimizer = self._create_generator_optimizer(
-            learning_rate)
-
-        self._discriminator_optimizer = self._create_discriminator_optimizer(
-            learning_rate)
-
         batch_index = 0
         for current_epoch in range(epochs):
+
+            # Create optimizers with learning rate for each epoch.
+            self._generator_optimizer = self._create_generator_optimizer(
+                self.learning_rate())
+
+            self._discriminator_optimizer = self._create_discriminator_optimizer(
+                self.learning_rate())
+
             for current_batch in train_dataset:
 
                 current_losses = self._train_on_batch(current_batch)
@@ -128,6 +146,12 @@ class AbstractGAN(object):
                     current_epoch % self.save_frequency() == 0):
                 self.save_models()
 
+            # Update learning rate at end of each epoch.
+            self._update_learning_rate()
+
+        return (True)
+
+    def _update_learning_rate(self):
         return (True)
 
     def save_models(self):
