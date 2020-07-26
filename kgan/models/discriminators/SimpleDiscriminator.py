@@ -18,8 +18,8 @@ class SimpleDiscriminator(object):
 
         discriminator.add(layers.Flatten(input_shape=input_shape))
 
-        discriminator.add(layers.Dense(units=1024))
-        discriminator.add(layers.LeakyReLU(alpha=0.2))
+        #discriminator.add(layers.Dense(units=1024))
+        #discriminator.add(layers.LeakyReLU(alpha=0.2))
 
         discriminator.add(layers.Dense(units=512))
         discriminator.add(layers.LeakyReLU(alpha=0.2))
