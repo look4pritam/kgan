@@ -28,6 +28,14 @@ class SimpleGAN(ImageGAN):
                                            self.latent_dimension())
         return (generator)
 
+    def _create_generator_optimizer(self, learning_rate):
+        optimizer = Adam(learning_rate=learning_rate, beta_1=0.5)
+        return (optimizer)
+
+    def _create_discriminator_optimizer(self, learning_rate):
+        optimizer = Adam(learning_rate=learning_rate, beta_1=0.5)
+        return (optimizer)
+
     def _train_on_batch(self, input_batch):
         real_samples = input_batch
         generator_inputs = tf.random.normal(
