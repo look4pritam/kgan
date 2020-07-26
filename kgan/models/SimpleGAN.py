@@ -8,6 +8,7 @@ from kgan.models.discriminators.SimpleDiscriminator import SimpleDiscriminator
 from kgan.models.generators.SimpleGenerator import SimpleGenerator
 
 import tensorflow as tf
+from tensorflow.keras.optimizers import Adam
 
 
 class SimpleGAN(ImageGAN):
