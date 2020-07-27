@@ -8,7 +8,7 @@ import tensorflow.keras.layers as layers
 import tensorflow.keras.models as models
 
 
-class SimpleDiscriminator(object):
+class DenseDiscriminator(object):
     def __init__(self):
         pass
 

@@ -10,7 +10,7 @@ import tensorflow.keras.models as models
 import numpy as np
 
 
-class SimpleGenerator(object):
+class DenseGenerator(object):
     def __init__(self):
         pass
 

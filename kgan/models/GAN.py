@@ -4,8 +4,8 @@ from __future__ import print_function
 
 from kgan.models.ImageGAN import ImageGAN
 
-from kgan.models.discriminators.SimpleDiscriminator import SimpleDiscriminator
-from kgan.models.generators.SimpleGenerator import SimpleGenerator
+from kgan.models.discriminators.DenseDiscriminator import DenseDiscriminator
+from kgan.models.generators.DenseGenerator import DenseGenerator
 
 import tensorflow as tf
 from tensorflow.keras.optimizers import Adam
@@ -21,12 +21,12 @@ class GAN(ImageGAN):
         pass
 
     def _create_discriminator(self):
-        discriminator = SimpleDiscriminator.create(self.input_shape())
+        discriminator = DenseDiscriminator.create(self.input_shape())
         return (discriminator)
 
     def _create_generator(self):
-        generator = SimpleGenerator.create(self.input_shape(),
-                                           self.latent_dimension())
+        generator = DenseGenerator.create(self.input_shape(),
+                                          self.latent_dimension())
         return (generator)
 
     def _create_generator_optimizer(self, learning_rate):
