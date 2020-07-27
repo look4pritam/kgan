@@ -35,7 +35,7 @@ class MNIST(AbstractDataset):
 
         train_dataset, test_dataset = tfds.load(
             name="mnist", split=['train', 'test'], as_supervised=True)
-        train_dataset = train_dataset + test_dataset
+        train_dataset = train_dataset.concatenate(test_dataset)
 
         train_dataset = train_dataset.shuffle(self.buffer_size())
         train_dataset = train_dataset.batch(
