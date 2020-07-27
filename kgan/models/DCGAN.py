@@ -32,7 +32,7 @@ class DCGAN(ImageGAN):
         image = tf.cast(image, tf.float32) / 255.
         return (image, label)
 
-    def _train_on_batch(self, input_batch):
+    def _update_discriminator(self, input_batch):
         real_images, real_labels = input_batch
 
         # Sample random points in the latent space.
@@ -65,6 +65,9 @@ class DCGAN(ImageGAN):
         self._discriminator_optimizer.apply_gradients(
             zip(gradients, self._discriminator.trainable_weights))
 
+        return (discriminator_loss)
+
+    def _update_generator(self, input_batch):
         # Sample random points in the latent space.
         generator_inputs = tf.random.normal(
             shape=(self.batch_size(), self.latent_dimension()))
@@ -84,6 +87,12 @@ class DCGAN(ImageGAN):
                                   self._generator.trainable_weights)
         self._generator_optimizer.apply_gradients(
             zip(gradients, self._generator.trainable_weights))
+
+        return (generator_loss)
+
+    def _train_on_batch(self, input_batch):
+        discriminator_loss = self._update_discriminator(input_batch)
+        generator_loss = self._update_generator(input_batch)
 
         return {
             'generator': generator_loss,
