@@ -67,13 +67,18 @@ class DCGAN(ImageGAN):
 
         return (discriminator_loss)
 
+    def _generator_loss(self, fake_predictions):
+        # Create fake labels, which will be predicted as real images.
+        fake_labels = tf.zeros_like(fake_predictions)
+
+        # Compute generator loss.
+        generator_loss = cross_entropy(fake_labels, fake_predictions)
+        return (generator_loss)
+
     def _update_generator(self, input_batch):
         # Sample random points in the latent space.
         generator_inputs = tf.random.normal(
             shape=(self.batch_size(), self.latent_dimension()))
-
-        # Create misleading labels, which will be predicted as real images.
-        misleading_labels = tf.zeros((self.batch_size(), 1))
 
         # Train the generator.
         with tf.GradientTape() as tape:
@@ -84,7 +89,7 @@ class DCGAN(ImageGAN):
             fake_predictions = self._discriminator(generated_images)
 
             # Compute generator loss using these fake predictions.
-            generator_loss = cross_entropy(misleading_labels, fake_predictions)
+            generator_loss = self._generator_loss(fake_predictions)
 
         # Compute gradients of generator loss using trainable weights of generator.
         gradients = tape.gradient(generator_loss,
