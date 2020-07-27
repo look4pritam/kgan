@@ -28,30 +28,6 @@ class DCGAN(ImageGAN):
         generator = ConvolutionalGenerator.create(self.latent_dimension())
         return (generator)
 
-    def _discriminator_loss(self, real_predictions, fake_predictions):
-        # Create labels for real images. - zeros.
-        real_labels = tf.zeros_like(real_predictions)
-
-        # Add random noise to the labels.
-        real_labels += 0.05 * tf.random.uniform(tf.shape(real_labels))
-
-        # Compute discriminator loss for real images.
-        real_loss = cross_entropy(real_labels, real_predictions)
-
-        # Create labels for fake images. - ones.
-        fake_labels = tf.ones_like(fake_predictions)
-
-        # Add random noise to the labels.
-        fake_labels += 0.05 * tf.random.uniform(tf.shape(fake_labels))
-
-        # Compute discriminator loss for fake images.
-        fake_loss = cross_entropy(fake_labels, fake_predictions)
-
-        # Compute total discriminator loss.
-        discriminator_loss = 0.5 * (real_loss + fake_loss)
-
-        return (discriminator_loss)
-
     def _update_discriminator(self, input_batch):
         real_images, real_labels = input_batch
 
@@ -80,14 +56,6 @@ class DCGAN(ImageGAN):
             zip(gradients, self._discriminator.trainable_weights))
 
         return (discriminator_loss)
-
-    def _generator_loss(self, fake_predictions):
-        # Create fake labels, which will be predicted as real images.
-        fake_labels = tf.zeros_like(fake_predictions)
-
-        # Compute generator loss.
-        generator_loss = cross_entropy(fake_labels, fake_predictions)
-        return (generator_loss)
 
     def _update_generator(self, input_batch):
         # Sample random points in the latent space.
