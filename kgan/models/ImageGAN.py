@@ -37,6 +37,10 @@ class ImageGAN(AbstractGAN):
         discriminator_loss = 0.5 * (real_loss + fake_loss)
         return (discriminator_loss)
 
+    def _decode_image(self, input_image):
+        input_image = input_image * 255.
+        return (input_image)
+
     def generate(self):
         generator_inputs = tf.random.normal(
             [self.number_of_samples(),
@@ -45,7 +49,7 @@ class ImageGAN(AbstractGAN):
         generated_images = generated_images.reshape(self.number_of_samples(),
                                                     self._input_shape[0],
                                                     self._input_shape[1])
-        generated_images = generated_images * 255.0
+        generated_images = self._decode_image(generated_images)
         return (generated_images)
 
     def save_generated(self):
