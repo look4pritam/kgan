@@ -37,33 +37,67 @@ class GAN(ImageGAN):
         optimizer = Adam(learning_rate=learning_rate, beta_1=0.5)
         return (optimizer)
 
-    def _train_on_batch(self, input_batch):
-        real_samples = input_batch
+    def _update_discriminator(self, input_batch):
+        real_images, real_labels = input_batch
+
+        # Sample random points in the latent space.
         generator_inputs = tf.random.normal(
-            [self.batch_size(), self.latent_dimension()])
+            shape=(self.batch_size(), self.latent_dimension()))
 
-        with tf.GradientTape() as generator_tape, tf.GradientTape(
-        ) as discriminator_tape:
-            fake_samples = self._generator(generator_inputs, training=True)
+        # Generate fake images using these random points.
+        generated_images = self._generator(generator_inputs)
 
-            real_predictions = self._discriminator(real_samples, training=True)
-            fake_predictions = self._discriminator(fake_samples, training=True)
+        # Train the discriminator.
+        with tf.GradientTape() as tape:
+            # Compute discriminator's predictions for real images.
+            real_predictions = self._discriminator(real_images)
 
-            generator_loss = self._generator_loss(fake_predictions)
+            # Compute discriminator's predictions for generated images.
+            fake_predictions = self._discriminator(generated_images)
+
+            # Compute discriminator loss.
             discriminator_loss = self._discriminator_loss(
                 real_predictions, fake_predictions)
 
-        gradients_of_generator = generator_tape.gradient(
-            target=generator_loss, sources=self._generator.trainable_variables)
-        gradients_of_discriminator = discriminator_tape.gradient(
-            target=discriminator_loss,
-            sources=self._discriminator.trainable_variables)
-
-        self._generator_optimizer.apply_gradients(
-            zip(gradients_of_generator, self._generator.trainable_variables))
+        gradients = tape.gradient(discriminator_loss,
+                                  self._discriminator.trainable_weights)
         self._discriminator_optimizer.apply_gradients(
-            zip(gradients_of_discriminator,
-                self._discriminator.trainable_variables))
+            zip(gradients, self._discriminator.trainable_weights))
+
+        return (discriminator_loss)
+
+    def _update_generator(self, input_batch):
+        # Sample random points in the latent space.
+        generator_inputs = tf.random.normal(
+            shape=(self.batch_size(), self.latent_dimension()))
+
+        # Train the generator.
+        with tf.GradientTape() as tape:
+            # Generate fake images using these random points.
+            generated_images = self._generator(generator_inputs)
+
+            # Compute discriminator's predictions for generated images.
+            fake_predictions = self._discriminator(generated_images)
+
+            # Compute generator loss using these fake predictions.
+            generator_loss = self._generator_loss(fake_predictions)
+
+        # Compute gradients of generator loss using trainable weights of generator.
+        gradients = tape.gradient(generator_loss,
+                                  self._generator.trainable_weights)
+
+        # Apply gradients to trainable weights of generator.
+        self._generator_optimizer.apply_gradients(
+            zip(gradients, self._generator.trainable_weights))
+
+        return (generator_loss)
+
+    def _train_on_batch(self, input_batch):
+        # Update discriminator weights.
+        discriminator_loss = self._update_discriminator(input_batch)
+
+        # Update generator weights.
+        generator_loss = self._update_generator(input_batch)
 
         return {
             'generator': generator_loss,
