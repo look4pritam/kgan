@@ -22,20 +22,22 @@ class ConvolutionalDiscriminator(object):
                 kernel_size=(3, 3),
                 strides=(2, 2),
                 padding='same',
-                input_shape=input_shape))
-        discriminator.add(layers.LeakyReLU(alpha=0.2))
+                input_shape=input_shape,
+                name='block-1-conv2d'))
+        discriminator.add(layers.LeakyReLU(alpha=0.2, name='block-1-lrelu'))
 
         discriminator.add(
             layers.Conv2D(
                 filters=128,
                 kernel_size=(3, 3),
                 strides=(2, 2),
-                padding='same'))
-        discriminator.add(layers.LeakyReLU(alpha=0.2))
+                padding='same',
+                name='block-2-conv2d'))
+        discriminator.add(layers.LeakyReLU(alpha=0.2, name='block-2-lrelu'))
 
-        discriminator.add(layers.GlobalMaxPooling2D())
-        discriminator.add(layers.Flatten())
+        discriminator.add(layers.GlobalMaxPooling2D(name='gap'))
+        discriminator.add(layers.Flatten(name='flatten'))
 
-        discriminator.add(layers.Dense(units=1))
+        discriminator.add(layers.Dense(units=1, name='prediction'))
 
         return (discriminator)
