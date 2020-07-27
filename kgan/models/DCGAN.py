@@ -28,14 +28,6 @@ class DCGAN(ImageGAN):
         generator = ConvolutionalGenerator.create(self.latent_dimension())
         return (generator)
 
-    def _normalize_image(self, image, label):
-        image = tf.cast(image, tf.float32) / 255.
-        return (image, label)
-
-    def _augment_image(self, image, label):
-        image = tf.cast(image, tf.float32) / 255.
-        return (image, label)
-
     def _train_on_batch(self, input_batch):
         real_images = input_batch
 
