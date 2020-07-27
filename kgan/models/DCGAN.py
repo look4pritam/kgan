@@ -32,6 +32,30 @@ class DCGAN(ImageGAN):
         image = tf.cast(image, tf.float32) / 255.
         return (image, label)
 
+    def _discriminator_loss(self, real_predictions, fake_predictions):
+        # Create labels for real images. - zeros.
+        real_labels = tf.zeros_like(real_predictions)
+
+        # Add random noise to the labels.
+        real_labels += 0.05 * tf.random.uniform(tf.shape(real_labels))
+
+        # Compute discriminator loss for real images.
+        real_loss = cross_entropy(real_labels, real_predictions)
+
+        # Create labels for fake images. - ones.
+        fake_labels = tf.ones_like(fake_predictions)
+
+        # Add random noise to the labels.
+        fake_labels += 0.05 * tf.random.uniform(tf.shape(fake_labels))
+
+        # Compute discriminator loss for fake images.
+        fake_loss = cross_entropy(fake_labels, fake_predictions)
+
+        # Compute total discriminator loss.
+        discriminator_loss = 0.5 * (real_loss + fake_loss)
+
+        return (discriminator_loss)
+
     def _update_discriminator(self, input_batch):
         real_images, real_labels = input_batch
 
@@ -42,23 +66,17 @@ class DCGAN(ImageGAN):
         # Generate fake images using these random points.
         generated_images = self._generator(generator_inputs)
 
-        # Combine generated images with real images.
-        combined_images = tf.concat([generated_images, real_images], axis=0)
-
-        # Create combined labels for discriminating real images from generated images.
-        labels = tf.concat([
-            tf.ones((self.batch_size(), 1)),
-            tf.zeros((self.batch_size(), 1))
-        ],
-                           axis=0)
-
-        # Add random noise to the labels. (important trick)
-        labels += 0.05 * tf.random.uniform(tf.shape(labels))
-
         # Train the discriminator.
         with tf.GradientTape() as tape:
-            predictions = self._discriminator(combined_images)
-            discriminator_loss = cross_entropy(labels, predictions)
+            # Compute discriminator's predictions for real images.
+            real_predictions = self._discriminator(real_images)
+
+            # Compute discriminator's predictions for generated images.
+            fake_predictions = self._discriminator(generated_images)
+
+            # Compute discriminator loss.
+            discriminator_loss = self._discriminator_loss(
+                real_predictions, fake_predictions)
 
         gradients = tape.gradient(discriminator_loss,
                                   self._discriminator.trainable_weights)
@@ -102,7 +120,10 @@ class DCGAN(ImageGAN):
         return (generator_loss)
 
     def _train_on_batch(self, input_batch):
+        # Update discriminator weights.
         discriminator_loss = self._update_discriminator(input_batch)
+
+        # Update generator weights.
         generator_loss = self._update_generator(input_batch)
 
         return {
