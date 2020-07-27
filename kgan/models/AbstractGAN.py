@@ -108,9 +108,13 @@ class AbstractGAN(object):
         self._generator.summary()
         return (True)
 
+    def _normalize_dataset(self, dataset_sample):
+        raise NotImplementedError('Must be implemented by the subclass.')
+
     def train(self, train_dataset, batch_size, epochs, learning_rate=0.0001):
         status = True
 
+        train_dataset = train_dataset.map(self._normalize_dataset)
         self.set_learning_rate(learning_rate)
         self.set_batch_size(batch_size)
         status = self._create_models() and status
