@@ -102,7 +102,10 @@ class AbstractGAN(object):
 
     def _create_models(self):
         self._discriminator = self._create_discriminator()
+        self._discriminator.summary()
+
         self._generator = self._create_generator()
+        self._generator.summary()
         return (True)
 
     def train(self,
