@@ -57,11 +57,11 @@ class ImageGAN(AbstractGAN):
         return (generator_loss)
 
     def _normalize_dataset(self, image, label):
-        image = tf.cast(image, tf.float32) / 255.
+        image = (tf.cast(image, tf.float32) - 127.5) / 127.5
         return (image, label)
 
     def _decode_image(self, input_image):
-        input_image = input_image * 255.
+        input_image = input_image * 127.5 + 127.5
         return (input_image)
 
     def generate(self):

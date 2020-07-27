@@ -27,14 +27,6 @@ class DCGAN(ImageGAN):
         generator = ConvolutionalGenerator.create(self.latent_dimension())
         return (generator)
 
-    def _normalize_dataset(self, image, label):
-        image = (tf.cast(image, tf.float32) - 127.5) / 127.5
-        return (image, label)
-
-    def _decode_image(self, input_image):
-        input_image = input_image * 127.5 + 127.5
-        return (input_image)
-
     def _update_discriminator(self, input_batch):
         real_images, real_labels = input_batch
 
