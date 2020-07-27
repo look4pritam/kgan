@@ -16,7 +16,7 @@ class ConvolutionalGenerator(object):
 
     @classmethod
     def create(cls, latent_dimension):
-        generator_shape = (7, 7, 256)
+        generator_shape = (7, 7, 128)
         generator_size = np.prod(generator_shape)
 
         generator = models.Sequential(name='generator')
@@ -24,40 +24,34 @@ class ConvolutionalGenerator(object):
         generator.add(
             layers.Dense(
                 units=generator_size,
-                use_bias=False,
-                input_shape=(latent_dimension, )))
-        generator.add(layers.BatchNormalization())
-        generator.add(layers.LeakyReLU())
+                input_shape=(latent_dimension, name='block-1-dense')))
+        generator.add(layers.LeakyReLU(alpha=0.2, name='block-1-lrelu'))
 
         generator.add(layers.Reshape(generator_shape))
 
         generator.add(
             layers.Conv2DTranspose(
                 filters=128,
-                kernel_size=(5, 5),
-                strides=(1, 1),
-                padding='same',
-                use_bias=False))
-        generator.add(layers.BatchNormalization())
-        generator.add(layers.LeakyReLU())
-
-        generator.add(
-            layers.Conv2DTranspose(
-                filters=64,
-                kernel_size=(5, 5),
+                kernel_size=(4, 4),
                 strides=(2, 2),
                 padding='same',
-                use_bias=False))
-        generator.add(layers.BatchNormalization())
-        generator.add(layers.LeakyReLU())
+                name='block-2-deconv2d'))
+        generator.add(layers.LeakyReLU(alpha=0.2, name='block-2-lrelu'))
 
         generator.add(
             layers.Conv2DTranspose(
+                filters=128,
+                kernel_size=(4, 4),
+                strides=(2, 2),
+                padding='same',
+                name='block-3-deconv2d'))
+        generator.add(layers.LeakyReLU(alpha=0.2, name='block-3-lrelu'))
+
+        generator.add(
+            layers.Conv2D(
                 filters=1,
-                kernel_size=(5, 5),
-                strides=(2, 2),
+                kernel_size=(7, 7),
                 padding='same',
-                use_bias=False,
-                activation='tanh'))
+                activation='sigmoid', name='fake-image'))
 
         return (generator)
