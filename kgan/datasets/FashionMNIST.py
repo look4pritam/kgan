@@ -33,23 +33,16 @@ class FashionMNIST(AbstractDataset):
     def load(self, batch_size):
         self.set_batch_size(batch_size)
 
-        train_dataset, validation_dataset = tfds.load(
+        train_dataset, test_dataset = tfds.load(
             name="fashion_mnist", split=['train', 'test'], as_supervised=True)
+        train_dataset = train_dataset.concatenate(test_dataset)
 
-        train_dataset = train_dataset.shuffle(self.buffer_size()).batch(
+        train_dataset = train_dataset.shuffle(self.buffer_size())
+        train_dataset = train_dataset.batch(
             self.batch_size(), drop_remainder=True)
-        train_dataset = train_dataset.map(self._augment_image)
+        train_dataset = train_dataset.map(self._augment_dataset)
 
-        validation_dataset = validation_dataset.batch(
-            self.batch_size(), drop_remainder=True)
-        validation_dataset = validation_dataset.map(self._normalize_image)
+        return (train_dataset)
 
-        return (train_dataset, validation_dataset)
-
-    def _normalize_image(self, image, label):
-        image = (tf.cast(image, tf.float32) - 127.5) / 127.5
-        return (image, label)
-
-    def _augment_image(self, image, label):
-        image = (tf.cast(image, tf.float32) - 127.5) / 127.5
+    def _augment_dataset(self, image, label):
         return (image, label)
