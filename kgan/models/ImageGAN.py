@@ -12,9 +12,6 @@ cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
 
 
 class ImageGAN(AbstractGAN):
-    @classmethod
-    def name(cls):
-        return ('gan')
 
     def __init__(self, input_shape, latent_dimension):
         super(ImageGAN, self).__init__()

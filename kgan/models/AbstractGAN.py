@@ -7,6 +7,8 @@ from tensorflow.keras.optimizers import Adam
 
 class AbstractGAN(object):
 
+    __default_number_of_samples = 10
+
     __default_learning_rate = 0.0001
     __default_batch_size = 128
 
@@ -14,6 +16,10 @@ class AbstractGAN(object):
     __default_loss_scan_frequency = 1000
 
     __default_save_frequency = 1
+
+    @classmethod
+    def default_number_of_samples(cls):
+        return (cls.__default_number_of_samples)
 
     @classmethod
     def default_learning_rate(cls):
@@ -36,6 +42,7 @@ class AbstractGAN(object):
         return (cls.__default_save_frequency)
 
     def __init__(self):
+        self._number_of_samples = AbstractGAN.default_number_of_samples()
         self._learning_rate = AbstractGAN.default_learning_rate()
         self._batch_size = AbstractGAN.default_batch_size()
 
@@ -44,6 +51,15 @@ class AbstractGAN(object):
 
         self._generator_optimizer = None
         self._discriminator_optimizer = None
+
+    def set_number_of_samples(self, number_of_samples)
+        if(number_of_samples > 0):
+            self._number_of_samples = number_of_samples
+        else:
+            self._number_of_samples = AbstractGAN.default_number_of_samples()
+
+    def number_of_samples(self):
+        return(self._number_of_samples)
 
     def set_learning_rate(self, learning_rate):
         if (learning_rate > 0):
