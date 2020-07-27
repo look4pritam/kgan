@@ -39,7 +39,7 @@ class DCGAN(ImageGAN):
         generator_inputs = tf.random.normal(
             shape=(self.batch_size(), self.latent_dimension()))
 
-        # Decode these random points to fake images.
+        # Generate fake images using these random points.
         generated_images = self._generator(generator_inputs)
 
         # Combine generated images with real images.
@@ -77,14 +77,20 @@ class DCGAN(ImageGAN):
 
         # Train the generator.
         with tf.GradientTape() as tape:
-            # Decode random point to fake images.
+            # Generate fake images using these random points.
             generated_images = self._generator(generator_inputs)
 
-            predictions = self._discriminator(generated_images)
-            generator_loss = cross_entropy(misleading_labels, predictions)
+            # Compute discriminator's predictions for generated images.
+            fake_predictions = self._discriminator(generated_images)
 
+            # Compute generator loss using these fake predictions.
+            generator_loss = cross_entropy(misleading_labels, fake_predictions)
+
+        # Compute gradients of generator loss using trainable weights of generator.
         gradients = tape.gradient(generator_loss,
                                   self._generator.trainable_weights)
+
+        # Apply gradients to trainable weights of generator.
         self._generator_optimizer.apply_gradients(
             zip(gradients, self._generator.trainable_weights))
 
