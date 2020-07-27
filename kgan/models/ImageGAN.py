@@ -59,3 +59,9 @@ class ImageGAN(AbstractGAN):
     def _print_losses(self, losses):
         for key_value, loss_value in losses.items():
             print(key_value, '-', loss_value.numpy())
+
+    def _normalize_image(self, image, label):
+        raise NotImplementedError('Must be implemented by the subclass.')
+
+    def _augment_image(self, image, label):
+        raise NotImplementedError('Must be implemented by the subclass.')
