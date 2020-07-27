@@ -54,7 +54,8 @@ class ConvolutionalGenerator(object):
                 filters=1,
                 kernel_size=(7, 7),
                 padding='same',
-                activation='sigmoid',
+                #activation='sigmoid',
+                activation='tanh',
                 name='fake-image'))
 
         return (generator)
