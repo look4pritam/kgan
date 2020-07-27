@@ -24,7 +24,7 @@ class ConvolutionalGenerator(object):
         generator.add(
             layers.Dense(
                 units=generator_size,
-                input_shape=(latent_dimension),
+                input_shape=(latent_dimension, ),
                 name='block-1-dense'))
         generator.add(layers.LeakyReLU(alpha=0.2, name='block-1-lrelu'))
 
