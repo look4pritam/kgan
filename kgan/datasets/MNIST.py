@@ -38,11 +38,11 @@ class MNIST(AbstractDataset):
 
         train_dataset = train_dataset.shuffle(self.buffer_size()).batch(
             self.batch_size(), drop_remainder=True)
-        train_dataset = train_dataset.map(self._augment_image)
+        #train_dataset = train_dataset.map(self._augment_image)
 
         validation_dataset = validation_dataset.batch(
             self.batch_size(), drop_remainder=True)
-        validation_dataset = validation_dataset.map(self._normalize_image)
+        #validation_dataset = validation_dataset.map(self._normalize_image)
 
         return (train_dataset, validation_dataset)
 
