@@ -29,7 +29,7 @@ class DCGAN(ImageGAN):
         return (generator)
 
     def _train_on_batch(self, input_batch):
-        real_images = input_batch
+        real_images, real_labels = input_batch
 
         # Sample random points in the latent space.
         generator_inputs = tf.random.normal(
