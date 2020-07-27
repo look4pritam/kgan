@@ -16,16 +16,18 @@ class DenseDiscriminator(object):
     def create(cls, input_shape):
         discriminator = models.Sequential(name='discriminator')
 
-        discriminator.add(layers.Flatten(input_shape=input_shape))
+        discriminator.add(
+            layers.Flatten(input_shape=input_shape, name='block-1-flatten'))
 
-        discriminator.add(layers.Dense(units=1024))
-        discriminator.add(layers.LeakyReLU(alpha=0.2))
+        discriminator.add(layers.Dense(units=1024, name='block-2-dense'))
+        discriminator.add(layers.LeakyReLU(alpha=0.2, name='block-2-lrelu'))
 
-        discriminator.add(layers.Dense(units=512))
-        discriminator.add(layers.LeakyReLU(alpha=0.2))
+        discriminator.add(layers.Dense(units=512, name='block-3-dense'))
+        discriminator.add(layers.LeakyReLU(alpha=0.2, name='block-3-lrelu'))
 
-        discriminator.add(layers.Dense(units=256))
-        discriminator.add(layers.LeakyReLU(alpha=0.2))
+        discriminator.add(layers.Dense(units=256, name='block-4-dense'))
+        discriminator.add(layers.LeakyReLU(alpha=0.2, name='block-4-lrelu'))
 
-        discriminator.add(layers.Dense(units=1, activation='sigmoid'))
+        discriminator.add(
+            layers.Dense(units=1, activation='sigmoid', name='prediction'))
         return (discriminator)
