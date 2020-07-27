@@ -33,23 +33,15 @@ class MNIST(AbstractDataset):
     def load(self, batch_size):
         self.set_batch_size(batch_size)
 
-        train_dataset, validation_dataset = tfds.load(
+        train_dataset, test_dataset = tfds.load(
             name="mnist", split=['train', 'test'], as_supervised=True)
+        train_dataset = train_dataset + test_dataset
 
         train_dataset = train_dataset.shuffle(self.buffer_size()).batch(
             self.batch_size(), drop_remainder=True)
         train_dataset = train_dataset.map(self._augment_image)
 
-        validation_dataset = validation_dataset.batch(
-            self.batch_size(), drop_remainder=True)
-        validation_dataset = validation_dataset.map(self._normalize_image)
-
-        return (train_dataset, validation_dataset)
-
-    def _normalize_image(self, image, label):
-        image = tf.cast(image, tf.float32) / 255.
-        return (image, label)
+        return (train_dataset)
 
     def _augment_image(self, image, label):
-        image = tf.cast(image, tf.float32) / 255.
         return (image, label)
