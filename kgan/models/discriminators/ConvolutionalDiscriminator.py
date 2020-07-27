@@ -19,23 +19,23 @@ class ConvolutionalDiscriminator(object):
         discriminator.add(
             layers.Conv2D(
                 filters=64,
-                kernel_size=(5, 5),
+                kernel_size=(3, 3),
                 strides=(2, 2),
                 padding='same',
                 input_shape=input_shape))
-        discriminator.add(layers.LeakyReLU())
-        discriminator.add(layers.Dropout(0.3))
+        discriminator.add(layers.LeakyReLU(alpha=0.2))
 
         discriminator.add(
             layers.Conv2D(
                 filters=128,
-                kernel_size=(5, 5),
+                kernel_size=(3, 3),
                 strides=(2, 2),
                 padding='same'))
-        discriminator.add(layers.LeakyReLU())
-        discriminator.add(layers.Dropout(0.3))
+        discriminator.add(layers.LeakyReLU(alpha=0.2))
 
+        discriminator.add(layers.GlobalMaxPooling2D())
         discriminator.add(layers.Flatten())
+
         discriminator.add(layers.Dense(units=1))
 
         return (discriminator)
