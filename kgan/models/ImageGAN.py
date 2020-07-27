@@ -47,7 +47,7 @@ class ImageGAN(AbstractGAN):
         generated_images = self._generator.predict(generator_inputs)
         generated_images = generated_images.reshape(
             number_of_samples, self._input_shape[0], self._input_shape[1])
-        generated_images = generated_images * 127.5 + 127.5
+        generated_images = generated_images * 255.0
         return (generated_images)
 
     def save_generated(self, number_of_samples=10):
