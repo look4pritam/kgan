@@ -28,10 +28,6 @@ class DCGAN(ImageGAN):
         generator = ConvolutionalGenerator.create(self.latent_dimension())
         return (generator)
 
-    def _normalize_dataset(self, image, label):
-        image = tf.cast(image, tf.float32) / 255.
-        return (image, label)
-
     def _discriminator_loss(self, real_predictions, fake_predictions):
         # Create labels for real images. - zeros.
         real_labels = tf.zeros_like(real_predictions)

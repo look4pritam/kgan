@@ -37,6 +37,10 @@ class ImageGAN(AbstractGAN):
         discriminator_loss = 0.5 * (real_loss + fake_loss)
         return (discriminator_loss)
 
+    def _normalize_dataset(self, image, label):
+        image = tf.cast(image, tf.float32) / 255.
+        return (image, label)
+
     def _decode_image(self, input_image):
         input_image = input_image * 255.
         return (input_image)
