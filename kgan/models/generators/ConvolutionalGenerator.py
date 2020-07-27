@@ -28,7 +28,8 @@ class ConvolutionalGenerator(object):
                 name='block-1-dense'))
         generator.add(layers.LeakyReLU(alpha=0.2, name='block-1-lrelu'))
 
-        generator.add(layers.Reshape(generator_shape))
+        generator.add(
+            layers.Reshape(generator_shape, name='block-1-2-reshape'))
 
         generator.add(
             layers.Conv2DTranspose(
