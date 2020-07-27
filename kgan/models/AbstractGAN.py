@@ -52,14 +52,14 @@ class AbstractGAN(object):
         self._generator_optimizer = None
         self._discriminator_optimizer = None
 
-    def set_number_of_samples(self, number_of_samples)
-        if(number_of_samples > 0):
+    def set_number_of_samples(self, number_of_samples):
+        if (number_of_samples > 0):
             self._number_of_samples = number_of_samples
         else:
             self._number_of_samples = AbstractGAN.default_number_of_samples()
 
     def number_of_samples(self):
-        return(self._number_of_samples)
+        return (self._number_of_samples)
 
     def set_learning_rate(self, learning_rate):
         if (learning_rate > 0):
