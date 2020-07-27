@@ -108,12 +108,7 @@ class AbstractGAN(object):
         self._generator.summary()
         return (True)
 
-    def train(self,
-              train_dataset,
-              batch_size,
-              epochs,
-              learning_rate=0.0001,
-              validation_dataset=None):
+    def train(self, train_dataset, batch_size, epochs, learning_rate=0.0001):
         status = True
 
         self.set_learning_rate(learning_rate)

@@ -84,10 +84,10 @@ def main(args):
     gan.set_save_frequency(args.save_frequency)
 
     dataset = DatasetFactory.create(args.dataset)
-    train_dataset, validation_dataset = dataset.load(args.batch_size)
+    train_dataset = dataset.load(args.batch_size)
 
     status = gan.train(train_dataset, args.batch_size, args.maximum_epochs,
-                       args.learning_rate, validation_dataset)
+                       args.learning_rate)
 
 
 if __name__ == '__main__':
