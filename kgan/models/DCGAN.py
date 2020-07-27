@@ -8,7 +8,6 @@ from kgan.models.discriminators.ConvolutionalDiscriminator import ConvolutionalD
 from kgan.models.generators.ConvolutionalGenerator import ConvolutionalGenerator
 
 import tensorflow as tf
-cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
 
 
 class DCGAN(ImageGAN):
