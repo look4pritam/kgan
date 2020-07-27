@@ -45,4 +45,5 @@ class MNIST(AbstractDataset):
         return (train_dataset)
 
     def _augment_dataset(self, image, label):
-        return (image, label)
+        dataset_sample = image, label
+        return (dataset_sample)
