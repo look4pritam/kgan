@@ -12,7 +12,6 @@ cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
 
 
 class ImageGAN(AbstractGAN):
-
     def __init__(self, input_shape, latent_dimension):
         super(ImageGAN, self).__init__()
 
@@ -38,17 +37,19 @@ class ImageGAN(AbstractGAN):
         discriminator_loss = 0.5 * (real_loss + fake_loss)
         return (discriminator_loss)
 
-    def generate(self, number_of_samples):
+    def generate(self):
         generator_inputs = tf.random.normal(
-            [number_of_samples, self.latent_dimension()])
+            [self.number_of_samples(),
+             self.latent_dimension()])
         generated_images = self._generator.predict(generator_inputs)
-        generated_images = generated_images.reshape(
-            number_of_samples, self._input_shape[0], self._input_shape[1])
+        generated_images = generated_images.reshape(self.number_of_samples(),
+                                                    self._input_shape[0],
+                                                    self._input_shape[1])
         generated_images = generated_images * 255.0
         return (generated_images)
 
-    def save_generated(self, number_of_samples=10):
-        generated_images = self.generate(number_of_samples)
+    def save_generated(self):
+        generated_images = self.generate()
         for index, image in enumerate(generated_images):
             filename = 'image-' + str(index) + '.png'
             cv2.imwrite(filename, image)
