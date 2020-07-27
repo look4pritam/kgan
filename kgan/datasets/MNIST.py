@@ -37,7 +37,8 @@ class MNIST(AbstractDataset):
             name="mnist", split=['train', 'test'], as_supervised=True)
         train_dataset = train_dataset + test_dataset
 
-        train_dataset = train_dataset.shuffle(self.buffer_size()).batch(
+        train_dataset = train_dataset.shuffle(self.buffer_size())
+        train_dataset = train_dataset.batch(
             self.batch_size(), drop_remainder=True)
         train_dataset = train_dataset.map(self._augment_dataset)
 
