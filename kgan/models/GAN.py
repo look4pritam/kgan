@@ -11,13 +11,13 @@ import tensorflow as tf
 from tensorflow.keras.optimizers import Adam
 
 
-class SimpleGAN(ImageGAN):
+class GAN(ImageGAN):
     @classmethod
     def name(cls):
         return ('gan')
 
     def __init__(self, input_shape, latent_dimension):
-        super(SimpleGAN, self).__init__(input_shape, latent_dimension)
+        super(GAN, self).__init__(input_shape, latent_dimension)
         pass
 
     def _create_discriminator(self):
