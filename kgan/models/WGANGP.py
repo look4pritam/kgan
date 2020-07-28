@@ -2,7 +2,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from kgan.models.ImageGAN import ImageGAN
+from kgan.models.GAN import GAN
 
 from kgan.layers.BatchNormalization import BatchNormalization
 
@@ -16,7 +16,7 @@ from tensorflow.keras.optimizers import RMSprop
 import numpy as np
 
 
-class WGANGP(ImageGAN):
+class WGANGP(GAN):
     @classmethod
     def name(cls):
         return ('wgangp')
