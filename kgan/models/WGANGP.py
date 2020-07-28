@@ -151,25 +151,27 @@ class WGANGP(ImageGAN):
             [self.batch_size(), self.latent_dimension()], minval=-1, maxval=1)
         return (generator_inputs)
 
-    def _train_on_batch(self, input_batch):
+    def _update_discriminator(self, input_batch):
         real_samples, _ = input_batch
 
         # Sample random points in the latent space.
         generator_inputs = self._sample_latent_space()
 
-        with tf.GradientTape() as generator_tape, tf.GradientTape(
-        ) as discriminator_tape:
-            fake_samples = self._generator(generator_inputs, training=True)
+        # Generate fake images using these random points.
+        generated_images = self._generator(generator_inputs)
 
-            fake_predictions = self._discriminator(fake_samples, training=True)
-            real_predictions = self._discriminator(real_samples, training=True)
+        # Train the discriminator.
+        with tf.GradientTape() as tape:
+
+            # Compute discriminator's predictions for real images.
+            real_predictions = self._discriminator(real_samples)
+
+            # Compute discriminator's predictions for generated images.
+            fake_predictions = self._discriminator(fake_samples)
 
             #discriminator_loss = tf.reduce_mean(-real_predictions) + tf.reduce_mean(fake_predictions)
             discriminator_loss = self._discriminator_loss(
                 real_predictions, fake_predictions)
-
-            #generator_loss = tf.reduce_mean(-fake_predictions)
-            generator_loss = self._generator_loss(fake_predictions)
 
             with tf.GradientTape() as gp_tape:
                 alpha = tf.random.uniform([self.batch_size()],
@@ -191,16 +193,21 @@ class WGANGP(ImageGAN):
             discriminator_loss += self.gradient_penalty_weight(
             ) * gradient_penalty
 
-        gradients_of_discriminator = discriminator_tape.gradient(
+        gradients_of_discriminator = tape.gradient(
             discriminator_loss, self._discriminator.trainable_variables)
-        gradients_of_generator = generator_tape.gradient(
-            generator_loss, self._generator.trainable_variables)
 
         self._discriminator_optimizer.apply_gradients(
             zip(gradients_of_discriminator,
                 self._discriminator.trainable_variables))
-        self._generator_optimizer.apply_gradients(
-            zip(gradients_of_generator, self._generator.trainable_variables))
+
+        return (discriminator_loss)
+
+    def _train_on_batch(self, input_batch):
+        # Update discriminator weights.
+        discriminator_loss = self._update_discriminator(input_batch)
+
+        # Update generator weights.
+        generator_loss = self._update_generator(input_batch)
 
         return {
             'generator': generator_loss,
