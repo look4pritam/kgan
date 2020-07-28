@@ -152,22 +152,22 @@ class WGANGP(ImageGAN):
         return (generator_inputs)
 
     def _update_discriminator(self, input_batch):
-        real_samples, _ = input_batch
+        real_images, _ = input_batch
 
         # Sample random points in the latent space.
         generator_inputs = self._sample_latent_space()
 
         # Generate fake images using these random points.
-        generated_images = self._generator(generator_inputs)
+        fake_images = self._generator(generator_inputs)
 
         # Train the discriminator.
         with tf.GradientTape() as tape:
 
             # Compute discriminator's predictions for real images.
-            real_predictions = self._discriminator(real_samples)
+            real_predictions = self._discriminator(real_images)
 
             # Compute discriminator's predictions for generated images.
-            fake_predictions = self._discriminator(fake_samples)
+            fake_predictions = self._discriminator(fake_images)
 
             #discriminator_loss = tf.reduce_mean(-real_predictions) + tf.reduce_mean(fake_predictions)
             discriminator_loss = self._discriminator_loss(
@@ -179,8 +179,8 @@ class WGANGP(ImageGAN):
                                           1.,
                                           dtype=tf.float32)
                 alpha = tf.reshape(alpha, (-1, 1, 1, 1))
-                sample_images = real_samples + alpha * (
-                    fake_samples - real_samples)
+                sample_images = real_images + alpha * (
+                    fake_images - real_images)
 
                 gp_tape.watch(sample_images)
                 sample_predictions = self._discriminator(
