@@ -37,7 +37,7 @@ class FashionMNIST(AbstractDataset):
             name="fashion_mnist", split=['train', 'test'], as_supervised=True)
         train_dataset = train_dataset.concatenate(test_dataset)
 
-        number_of_samples = tf.shape(train_dataset)
+        number_of_samples = tf.shape(train_dataset).numpy()
         print(number_of_samples)
 
         train_dataset = train_dataset.shuffle(self.buffer_size())
