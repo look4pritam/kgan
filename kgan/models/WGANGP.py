@@ -153,8 +153,9 @@ class WGANGP(ImageGAN):
 
     def _train_on_batch(self, input_batch):
         real_samples, _ = input_batch
-        generator_inputs = tf.random.uniform(
-            [self.batch_size(), self.latent_dimension()], minval=-1, maxval=1)
+
+        # Sample random points in the latent space.
+        generator_inputs = self._sample_latent_space()
 
         with tf.GradientTape() as generator_tape, tf.GradientTape(
         ) as discriminator_tape:
