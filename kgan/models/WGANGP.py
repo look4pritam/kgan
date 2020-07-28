@@ -86,7 +86,8 @@ class WGANGP(ImageGAN):
                 units=1024,
                 kernel_initializer=tf.keras.initializers.RandomNormal(
                     stddev=0.02),
-                bias_initializer=tf.keras.initializers.Constant(value=0.0)))
+                bias_initializer=tf.keras.initializers.Constant(value=0.0),
+                input_shape=generator_shape))
         generator.add(BatchNormalization(is_training=True))
         generator.add(layers.ReLU())
 
