@@ -38,7 +38,8 @@ class WGANGP(ImageGAN):
                 kernel_initializer=tf.keras.initializers.TruncatedNormal(
                     stddev=0.02),
                 use_bias=True,
-                bias_initializer=tf.keras.initializers.Constant(value=0.0)))
+                bias_initializer=tf.keras.initializers.Constant(value=0.0),
+                input_shape=self.input_shape()))
         discriminator.add(layers.LeakyReLU(alpha=0.2))
 
         discriminator.add(
