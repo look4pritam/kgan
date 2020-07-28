@@ -94,13 +94,25 @@ class WGANGP(ImageGAN):
 
         generator.add(layers.Conv2DTranspose(filters=1, kernel_size=(3, 3), strides=(1, 1), padding="same", activation="sigmoid"))
 
+
+        generator.add(
+            layers.Dense(
+                units=1024,
+                kernel_initializer=tf.keras.initializers.RandomNormal(
+                    stddev=0.02),
+                bias_initializer=tf.keras.initializers.Constant(value=0.0),
+                input_shape=generator_shape))
+        generator.add(BatchNormalization(is_training=True))
+        generator.add(layers.ReLU())
         '''
         generator.add(
             layers.Dense(
                 units=generator_size,
                 kernel_initializer=tf.keras.initializers.RandomNormal(
                     stddev=0.02),
-                bias_initializer=tf.keras.initializers.Constant(value=0.0)))
+                bias_initializer=tf.keras.initializers.Constant(value=0.0),
+                input_shape=(self.latent_dimension(), ),
+            ))
         generator.add(BatchNormalization(is_training=True))
         generator.add(layers.ReLU())
 
