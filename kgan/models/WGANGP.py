@@ -80,17 +80,21 @@ class WGANGP(ImageGAN):
         generator_size = np.prod(generator_shape)
 
         generator = models.Sequential(name='generator')
+        '''
+        generator_shape = (7, 7, 64)
+        generator_size = np.prod(generator_shape)
+        
+        generator = models.Sequential(name='generator')
+        generator.add(layers.Dense(units=generator_size, activation="relu"))
+        generator.add(layers.Reshape(target_shape=generator_shape))
 
-        generator.add(
-            layers.Dense(
-                units=1024,
-                kernel_initializer=tf.keras.initializers.RandomNormal(
-                    stddev=0.02),
-                bias_initializer=tf.keras.initializers.Constant(value=0.0),
-                input_shape=generator_shape))
-        generator.add(BatchNormalization(is_training=True))
-        generator.add(layers.ReLU())
+        generator.add(layers.Conv2DTranspose(filters=64, kernel_size=(3, 3), strides=(2, 2), padding="same", activation="relu"))
 
+        generator.add(layers.Conv2DTranspose(filters=32, kernel_size=(3, 3), strides=(2, 2), padding="same", activation="relu"))
+
+        generator.add(layers.Conv2DTranspose(filters=1, kernel_size=(3, 3), strides=(1, 1), padding="same", activation="sigmoid"))
+
+        '''
         generator.add(
             layers.Dense(
                 units=generator_size,
