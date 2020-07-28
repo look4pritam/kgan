@@ -146,6 +146,11 @@ class WGANGP(ImageGAN):
         generator_loss = tf.reduce_mean(-fake_predictions)
         return (generator_loss)
 
+    def _sample_latent_space(self):
+        generator_inputs = tf.random.uniform(
+            [self.batch_size(), self.latent_dimension()], minval=-1, maxval=1)
+        return (generator_inputs)
+
     def _train_on_batch(self, input_batch):
         real_samples, _ = input_batch
         generator_inputs = tf.random.uniform(
