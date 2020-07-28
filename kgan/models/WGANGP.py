@@ -135,6 +135,17 @@ class WGANGP(ImageGAN):
     def gradient_penalty_weight(self):
         return (self._gradient_penalty_weight)
 
+    def _discriminator_loss(self, real_predictions, fake_predictions):
+        # Compute discriminator loss.
+        discriminator_loss = tf.reduce_mean(
+            -real_predictions) + tf.reduce_mean(fake_predictions)
+        return (discriminator_loss)
+
+    def _generator_loss(self, fake_predictions):
+        # Compute generator loss.
+        generator_loss = tf.reduce_mean(-fake_predictions)
+        return (generator_loss)
+
     def _train_on_batch(self, input_batch):
         real_samples, _ = input_batch
         generator_inputs = tf.random.uniform(
@@ -147,9 +158,12 @@ class WGANGP(ImageGAN):
             fake_predictions = self._discriminator(fake_samples, training=True)
             real_predictions = self._discriminator(real_samples, training=True)
 
-            discriminator_loss = tf.reduce_mean(
-                -real_predictions) + tf.reduce_mean(fake_predictions)
-            generator_loss = tf.reduce_mean(-fake_predictions)
+            #discriminator_loss = tf.reduce_mean(-real_predictions) + tf.reduce_mean(fake_predictions)
+            discriminator_loss = self._discriminator_loss(
+                real_predictions, fake_predictions)
+
+            #generator_loss = tf.reduce_mean(-fake_predictions)
+            generator_loss = self._generator_loss(fake_predictions)
 
             with tf.GradientTape() as gp_tape:
                 alpha = tf.random.uniform([self.batch_size()],
