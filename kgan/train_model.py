@@ -84,9 +84,7 @@ def main(args):
     gan.set_save_frequency(args.save_frequency)
 
     dataset = DatasetFactory.create(args.dataset)
-    train_dataset = dataset.load(args.batch_size)
-
-    status = gan.train(train_dataset, args.batch_size, args.maximum_epochs,
+    status = gan.train(dataset, args.batch_size, args.maximum_epochs,
                        args.learning_rate)
 
 
