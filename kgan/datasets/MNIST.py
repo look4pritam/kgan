@@ -33,6 +33,7 @@ class MNIST(AbstractDataset):
     def load(self, batch_size):
         self.set_batch_size(batch_size)
 
+        number_of_batches = 0
         train_dataset, test_dataset = tfds.load(
             name="mnist", split=['train', 'test'], as_supervised=True)
         train_dataset = train_dataset.concatenate(test_dataset)
@@ -42,7 +43,7 @@ class MNIST(AbstractDataset):
             self.batch_size(), drop_remainder=True)
         train_dataset = train_dataset.map(self._augment_dataset)
 
-        return (train_dataset)
+        return (train_dataset, number_of_batches)
 
     def _augment_dataset(self, image, label):
         return (image, label)

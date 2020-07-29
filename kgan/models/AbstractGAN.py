@@ -130,7 +130,7 @@ class AbstractGAN(object):
     def train(self, dataset, batch_size, epochs, learning_rate=0.0001):
         status = True
 
-        train_dataset = dataset.load(batch_size)
+        train_dataset, number_of_batches = dataset.load(batch_size)
         train_dataset = train_dataset.map(self._normalize_dataset)
 
         self.set_learning_rate(learning_rate)
