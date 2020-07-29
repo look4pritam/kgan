@@ -53,6 +53,12 @@ def parse_arguments(argv):
         default=100)
 
     parser.add_argument(
+        '--start_epoch',
+        type=int,
+        help='Starting epoch used for training the model.',
+        default=0)
+
+    parser.add_argument(
         '--save_frequency',
         type=int,
         help='Model saving frequency in terms of number of epochs processed.',
@@ -85,7 +91,7 @@ def main(args):
 
     dataset = DatasetFactory.create(args.dataset)
     status = gan.train(dataset, args.batch_size, args.maximum_epochs,
-                       args.learning_rate)
+                       args.start_epoch, args.learning_rate)
 
 
 if __name__ == '__main__':

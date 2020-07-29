@@ -131,7 +131,12 @@ class AbstractGAN(object):
     def _normalize_dataset(self, image, label):
         raise NotImplementedError('Must be implemented by the subclass.')
 
-    def train(self, dataset, batch_size, epochs, learning_rate=0.0001):
+    def train(self,
+              dataset,
+              batch_size,
+              number_of_epochs,
+              start_epoch=0,
+              learning_rate=0.0001):
         status = True
 
         train_dataset, number_of_batches = dataset.load(batch_size)
@@ -142,7 +147,7 @@ class AbstractGAN(object):
         status = self._create_models() and status
 
         self._current_step = 0
-        for current_epoch in range(epochs):
+        for current_epoch in range(start_epoch, number_of_epochs):
 
             # Create optimizers with learning rate for each epoch.
             self._generator_optimizer = self._create_generator_optimizer(
