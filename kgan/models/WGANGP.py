@@ -151,6 +151,26 @@ class WGANGP(GAN):
             [self.batch_size(), self.latent_dimension()], minval=-1, maxval=1)
         return (generator_inputs)
 
+    def _gradient_penalty(self, real_images, fake_images):
+        with tf.GradientTape() as gp_tape:
+            alpha = tf.random.uniform([self.batch_size()],
+                                      0.,
+                                      1.,
+                                      dtype=tf.float32)
+            alpha = tf.reshape(alpha, (-1, 1, 1, 1))
+            sample_images = real_images + alpha * (fake_images - real_images)
+
+            gp_tape.watch(sample_images)
+            sample_predictions = self._discriminator(
+                sample_images, training=False)
+
+        gradients = gp_tape.gradient(sample_predictions, sample_images)
+        gradients_l2_norm = tf.sqrt(
+            tf.reduce_sum(tf.square(gradients), axis=[1, 2, 3]))
+        gradient_penalty = tf.reduce_mean((gradients_l2_norm - 1)**2)
+
+        return (gradient_penalty)
+
     def _update_discriminator(self, input_batch):
         real_images, _ = input_batch
 
@@ -173,24 +193,11 @@ class WGANGP(GAN):
             discriminator_loss = self._discriminator_loss(
                 real_predictions, fake_predictions)
 
-            with tf.GradientTape() as gp_tape:
-                alpha = tf.random.uniform([self.batch_size()],
-                                          0.,
-                                          1.,
-                                          dtype=tf.float32)
-                alpha = tf.reshape(alpha, (-1, 1, 1, 1))
-                sample_images = real_images + alpha * (
-                    fake_images - real_images)
+            # Compute gradient penalty using real and fake images.
+            gradient_penalty = self._gradient_penalty(real_images, fake_images)
 
-                gp_tape.watch(sample_images)
-                sample_predictions = self._discriminator(
-                    sample_images, training=False)
-
-            gradients = gp_tape.gradient(sample_predictions, sample_images)
-            grad_l2 = tf.sqrt(
-                tf.reduce_sum(tf.square(gradients), axis=[1, 2, 3]))
-            gradient_penalty = tf.reduce_mean((grad_l2 - 1)**2)
-            discriminator_loss += self.gradient_penalty_weight(
+            # Update discriminator loss using gradient penalty value.
+            discriminator_loss = discriminator_loss + self.gradient_penalty_weight(
             ) * gradient_penalty
 
         gradients_of_discriminator = tape.gradient(
