@@ -150,15 +150,15 @@ class AbstractGAN(object):
                 current_losses = self._train_on_batch(current_batch)
                 batch_index = batch_index + 1
 
-                if self.generation_frequency() and (
-                        batch_index % self.generation_frequency() == 0):
-                    self.save_generated()
-                    print('generated samples at', str(batch_index))
+            if self.loss_scan_frequency() and (
+                    current_epoch % self.loss_scan_frequency() == 0):
+                print('current loss values at', str(current_epoch))
+                self._print_losses(current_losses)
 
-                if self.loss_scan_frequency() and (
-                        batch_index % self.loss_scan_frequency() == 0):
-                    print('current loss values at', str(batch_index))
-                    self._print_losses(current_losses)
+            if self.generation_frequency() and (
+                    current_epoch % self.generation_frequency() == 0):
+                self.save_generated()
+                print('generated samples at', str(current_epoch))
 
             if self.save_frequency() and (
                     current_epoch % self.save_frequency() == 0):

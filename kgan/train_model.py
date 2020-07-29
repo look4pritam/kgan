@@ -62,15 +62,15 @@ def parse_arguments(argv):
         '--generation_frequency',
         type=int,
         help=
-        'Sample generation frequency in terms of number of batches processed.',
-        default=1000)
+        'Sample generation frequency in terms of number of epochs processed.',
+        default=1)
 
     parser.add_argument(
         '--loss_scan_frequency',
         type=int,
         help=
-        'Model loss scanning frequency in terms of number of batches processed.',
-        default=1000)
+        'Model loss scanning frequency in terms of number of epochs processed.',
+        default=1)
 
     return (parser.parse_args(argv))
 
