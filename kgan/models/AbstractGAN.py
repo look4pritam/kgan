@@ -42,6 +42,7 @@ class AbstractGAN(object):
         return (cls.__default_save_frequency)
 
     def __init__(self):
+        self._current_step = 0
         self._number_of_samples = AbstractGAN.default_number_of_samples()
         self._learning_rate = AbstractGAN.default_learning_rate()
         self._batch_size = AbstractGAN.default_batch_size()
@@ -51,6 +52,9 @@ class AbstractGAN(object):
 
         self._generator_optimizer = None
         self._discriminator_optimizer = None
+
+    def current_step(self):
+        return (self._current_step)
 
     def set_number_of_samples(self, number_of_samples):
         if (number_of_samples > 0):
@@ -137,7 +141,7 @@ class AbstractGAN(object):
         self.set_batch_size(batch_size)
         status = self._create_models() and status
 
-        batch_index = 0
+        self._current_step = 0
         for current_epoch in range(epochs):
 
             # Create optimizers with learning rate for each epoch.
@@ -150,7 +154,7 @@ class AbstractGAN(object):
             for current_batch in train_dataset:
 
                 current_losses = self._train_on_batch(current_batch)
-                batch_index = batch_index + 1
+                self._current_step = self._current_step + 1
 
             if self.loss_scan_frequency() and (
                     current_epoch % self.loss_scan_frequency() == 0):
