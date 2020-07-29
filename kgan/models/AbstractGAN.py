@@ -139,26 +139,39 @@ class AbstractGAN(object):
               learning_rate=0.0001):
         status = True
 
+        # Load train dataset split.
         train_dataset, number_of_batches = dataset.load(batch_size)
+
+        # Normalize_ the dataset.
         train_dataset = train_dataset.map(self._normalize_dataset)
 
+        # Set parameters used for model training.
         self.set_learning_rate(learning_rate)
         self.set_batch_size(batch_size)
+
+        # Create models.
         status = self._create_models() and status
 
-        self._current_step = 0
+        # Compute current step using start epoch and number of batches.
+        self._current_step = start_epoch * number_of_batches
+
+        # Train the model starting from start_epoch upto number_of_epochs.
         for current_epoch in range(start_epoch, number_of_epochs):
 
-            # Create optimizers with learning rate for each epoch.
+            # Create generator optimizer with learning rate using current epoch.
             self._generator_optimizer = self._create_generator_optimizer(
                 self.learning_rate())
 
+            # Create discriminator optimizer with learning rate using current epoch.
             self._discriminator_optimizer = self._create_discriminator_optimizer(
                 self.learning_rate())
 
+            # Train the model for all batches in the train dataset split.
             for current_batch in train_dataset:
-
+                # Train the model on current batch.
                 current_losses = self._train_on_batch(current_batch)
+
+                # Increment current step by 1.
                 self._current_step = self._current_step + 1
 
             if self.loss_scan_frequency() and (
@@ -177,11 +190,11 @@ class AbstractGAN(object):
                 print('models are saved at', str(current_epoch))
 
             # Update learning rate at end of each epoch.
-            self._update_learning_rate()
+            self._update_learning_rate(current_epoch, number_of_epochs)
 
         return (True)
 
-    def _update_learning_rate(self):
+    def _update_learning_rate(self, current_epoch, number_of_epochs):
         return (True)
 
     def save_models(self):
