@@ -85,10 +85,10 @@ class ImageGAN(AbstractGAN):
             cv2.imwrite(filename, image)
 
     def _print_losses(self, losses):
-        with summary_writer.as_default():
+        with self._summary_writer.as_default():
             for key_value, loss_value in losses.items():
                 print(key_value, '-', loss_value.numpy())
                 tf.summary.scalar(
                     key_value, loss_value, step=self.current_step())
 
-        summary_writer.flush()
+        self._summary_writer.flush()
