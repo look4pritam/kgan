@@ -26,6 +26,7 @@ class ImageGAN(AbstractGAN):
 
     def _create_summary_writer(self, logdir='logs'):
         self._summary_writer = tf.summary.create_file_writer(logdir)
+        return (self._summary_writer)
 
     def _discriminator_loss(self, real_predictions, fake_predictions):
         # Create labels for real images. - zeros.
