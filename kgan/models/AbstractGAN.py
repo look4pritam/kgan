@@ -43,6 +43,8 @@ class AbstractGAN(object):
 
     def __init__(self):
         self._current_step = 0
+        self._summary_writer = None
+
         self._number_of_samples = AbstractGAN.default_number_of_samples()
         self._learning_rate = AbstractGAN.default_learning_rate()
         self._batch_size = AbstractGAN.default_batch_size()
@@ -154,6 +156,9 @@ class AbstractGAN(object):
 
         # Compute current step using start epoch and number of batches.
         self._current_step = start_epoch * number_of_batches
+
+        # Create summary writer.
+        self._summary_writer = tf.summary.create_file_writer("logs")
 
         # Train the model starting from start_epoch upto number_of_epochs.
         for current_epoch in range(start_epoch, number_of_epochs):
