@@ -179,7 +179,7 @@ class AbstractGAN(object):
     def generate(self, number_of_samples):
         raise NotImplementedError('Must be implemented by the subclass.')
 
-    def save_generated(self, number_of_samples=10):
+    def save_generated(self):
         raise NotImplementedError('Must be implemented by the subclass.')
 
     def _print_losses(self, losses):
