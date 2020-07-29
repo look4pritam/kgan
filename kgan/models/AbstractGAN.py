@@ -133,6 +133,9 @@ class AbstractGAN(object):
     def _normalize_dataset(self, image, label):
         raise NotImplementedError('Must be implemented by the subclass.')
 
+    def _create_summary_writer(self, logdir='logs'):
+        raise NotImplementedError('Must be implemented by the subclass.')
+
     def train(self,
               dataset,
               batch_size,
@@ -158,7 +161,7 @@ class AbstractGAN(object):
         self._current_step = start_epoch * number_of_batches
 
         # Create summary writer.
-        self._summary_writer = tf.summary.create_file_writer("logs")
+        self._summary_writer = self._create_summary_writer()
 
         # Train the model starting from start_epoch upto number_of_epochs.
         for current_epoch in range(start_epoch, number_of_epochs):

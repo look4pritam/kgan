@@ -24,6 +24,9 @@ class ImageGAN(AbstractGAN):
     def latent_dimension(self):
         return (self._latent_dimension)
 
+    def _create_summary_writer(self, logdir='logs'):
+        self._summary_writer = tf.summary.create_file_writer(logdir)
+
     def _discriminator_loss(self, real_predictions, fake_predictions):
         # Create labels for real images. - zeros.
         real_labels = tf.zeros_like(real_predictions)
