@@ -24,3 +24,14 @@ class AttGAN(WGANGP):
     def _create_generator(self):
         generator = ConvolutionalGenerator.create(self.latent_dimension())
         return (generator)
+
+    def _train_on_batch(self, input_batch):
+
+        if ((self.current_step() % self.cycle_number()) == 0):
+            # Update generator weights.
+            generator_loss = self._update_generator(input_batch)
+            return {'generator': generator_loss}
+        else:
+            # Update discriminator weights.
+            discriminator_loss = self._update_discriminator(input_batch)
+            return {'discriminator': discriminator_loss}
