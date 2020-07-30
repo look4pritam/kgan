@@ -21,7 +21,7 @@ class AttGANEncoder(models.Model):
                  downsamplings_layers,
                  name='attgan-encoder',
                  **kwargs):
-        super(Encoder, self).__init__(name=name, **kwargs)
+        super(AttGANEncoder, self).__init__(name=name, **kwargs)
 
         self._encoder_dimension = encoder_dimension
         self._downsamplings_layers = downsamplings_layers
