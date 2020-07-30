@@ -119,7 +119,7 @@ class CelebA(AbstractDataset):
         return (image)
 
     def _random_crop(self, image):
-        cropped_image = tf.image.random_crop(image, size=image_shape)
+        cropped_image = tf.image.random_crop(image, size=self.image_shape())
         return (cropped_image)
 
     def _random_jitter(self, image):
