@@ -36,7 +36,7 @@ class AttGANDiscriminator(models.Model):
                  downsamplings_layers=5,
                  name='attgan-discriminator',
                  **kwargs):
-        super(Discriminator, self).__init__(name=name, **kwargs)
+        super(AttGANDiscriminator, self).__init__(name=name, **kwargs)
 
         self._number_of_attributes = number_of_attributes
         self._discriminator_dimension = discriminator_dimension
