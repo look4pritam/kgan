@@ -170,6 +170,9 @@ class WGANGP(GAN):
             sample_predictions = self._discriminator(
                 sample_images, training=False)
 
+            if isinstance(sample_predictions, tuple):
+                sample_predictions = sample_predictions[0]
+
         gradients = gp_tape.gradient(sample_predictions, sample_images)
         gradients_l2_norm = tf.sqrt(
             tf.reduce_sum(tf.square(gradients), axis=[1, 2, 3]))
