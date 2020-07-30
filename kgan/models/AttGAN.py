@@ -7,8 +7,6 @@ from kgan.models.WGANGP import WGANGP
 from kgan.models.discriminators.AttGANDiscriminator import AttGANDiscriminator
 from kgan.models.generators.ConvolutionalGenerator import ConvolutionalGenerator
 
-import tensorflow as tf
-
 
 class AttGAN(WGANGP):
     @classmethod

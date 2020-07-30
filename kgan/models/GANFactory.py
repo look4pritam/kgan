@@ -5,6 +5,7 @@ from __future__ import print_function
 from kgan.models.GAN import GAN
 from kgan.models.DCGAN import DCGAN
 from kgan.models.WGANGP import WGANGP
+from kgan.models.AttGAN import AttGAN
 
 
 class GANFactory(object):
@@ -20,6 +21,7 @@ class GANFactory(object):
             cls.__models.append(GAN.name())
             cls.__models.append(DCGAN.name())
             cls.__models.append(WGANGP.name())
+            cls.__models.append(AttGAN.name())
 
         return (cls.__models)
 
@@ -37,6 +39,8 @@ class GANFactory(object):
             gan = DCGAN(input_shape, latent_dimension)
         elif (name == WGANGP.name()):
             gan = WGANGP(input_shape, latent_dimension)
+        elif (name == AttGAN.name()):
+            gan = AttGAN(input_shape, latent_dimension)
         else:
             gan = GAN(input_shape, latent_dimension)
 
