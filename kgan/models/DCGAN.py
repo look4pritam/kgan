@@ -22,9 +22,11 @@ class DCGAN(GAN):
     def _create_discriminator(self):
         self._discriminator = ConvolutionalDiscriminator.create(
             self.input_shape())
+        self._discriminator.summary()
         return (True)
 
     def _create_generator(self):
         self._generator = ConvolutionalGenerator.create(
             self.latent_dimension())
+        self._generator.summary()
         return (True)

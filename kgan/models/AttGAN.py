@@ -25,6 +25,7 @@ class AttGAN(WGANGP):
 
     def _create_discriminator(self):
         self._discriminator = AttGANDiscriminator.create(self.input_shape())
+        self._discriminator.summary()
         return (True)
 
     def _create_generator(self):
@@ -33,6 +34,18 @@ class AttGAN(WGANGP):
         self._encoder = AttGANEncoder.create()
         self._decoder = AttGANDecoder.create()
 
+        input_images = np.zeros((input_shape))
+        input_images = np.expand_dims(input_images, axis=0)
+
+        image_attributes = np.zero(self.latent_dimension())
+        image_attributes = np.expand_dims(image_attributes, axis=0)
+
+        image_features = self._encoder.predict(input_images)
+        generated_images = self._decoder.predict(
+            [image_features, image_attributes])
+
+        self._encoder.summary()
+        self._decoder.summary()
         return (True)
 
     def _normalize_dataset(self, image, attributes):

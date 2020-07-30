@@ -22,11 +22,13 @@ class GAN(ImageGAN):
 
     def _create_discriminator(self):
         self._discriminator = DenseDiscriminator.create(self.input_shape())
+        self._discriminator.summary()
         return (True)
 
     def _create_generator(self):
         self._generator = DenseGenerator.create(self.input_shape(),
                                                 self.latent_dimension())
+        self._generator.summary()
         return (True)
 
     def _create_generator_optimizer(self, learning_rate):

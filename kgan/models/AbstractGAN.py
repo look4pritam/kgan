@@ -137,10 +137,7 @@ class AbstractGAN(object):
         status = True
 
         status = self._create_discriminator() and status
-        self._discriminator.summary()
-
         status = self._create_generator() and status
-        self._generator.summary()
 
         return (status)
 

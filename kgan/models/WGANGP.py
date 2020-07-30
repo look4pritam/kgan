@@ -74,6 +74,7 @@ class WGANGP(GAN):
                 bias_initializer=tf.keras.initializers.Constant(value=0.0)))
 
         self._discriminator = discriminator
+        self._discriminator.summary()
 
         return (True)
 
@@ -122,6 +123,7 @@ class WGANGP(GAN):
         generator.add(layers.Activation(tf.keras.activations.tanh))
 
         self._generator = generator
+        self._generator.summary()
 
         return (True)
 
