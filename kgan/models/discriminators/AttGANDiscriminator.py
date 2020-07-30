@@ -8,6 +8,7 @@ import tensorflow_addons as tfa
 import tensorflow.keras.layers as layers
 import tensorflow.keras.models as models
 
+from functools import partial
 import numpy as np
 
 
