@@ -5,7 +5,7 @@ from __future__ import print_function
 from kgan.models.WGANGP import WGANGP
 
 from kgan.models.discriminators.AttGANDiscriminator import AttGANDiscriminator
-from kgan.models.generators.ConvolutionalGenerator import ConvolutionalGenerator
+from kgan.models.generators.AttGANEncoder import AttGANEncoder
 
 import tensorflow as tf
 from tensorflow.keras.optimizers import Adam
@@ -18,15 +18,16 @@ class AttGAN(WGANGP):
 
     def __init__(self, input_shape, latent_dimension):
         super(AttGAN, self).__init__(input_shape, latent_dimension)
-        pass
+        self._encoder = None
+        self._decoder = None
 
     def _create_discriminator(self):
         self._discriminator = AttGANDiscriminator.create(self.input_shape())
         return (True)
 
     def _create_generator(self):
-        self._generator = ConvolutionalGenerator.create(
-            self.latent_dimension())
+        self._generator = None
+        self._encoder = AttGANEncoder.create(self.input_shape())
         return (True)
 
     def _normalize_dataset(self, image, attributes):
