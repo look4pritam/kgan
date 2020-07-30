@@ -18,8 +18,8 @@ class AttGAN(WGANGP):
         pass
 
     def _create_discriminator(self):
-        discriminator = AttGANDiscriminator.create(self.input_shape())
-        return (discriminator)
+        self._discriminator = AttGANDiscriminator.create(self.input_shape())
+        return (True)
 
     def _create_generator(self):
         generator = ConvolutionalGenerator.create(self.latent_dimension())

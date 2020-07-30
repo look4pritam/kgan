@@ -73,7 +73,9 @@ class WGANGP(GAN):
                     stddev=0.02),
                 bias_initializer=tf.keras.initializers.Constant(value=0.0)))
 
-        return (discriminator)
+        self._discriminator = discriminator
+
+        return (True)
 
     def _create_generator(self):
         generator_shape = (7, 7, 128)

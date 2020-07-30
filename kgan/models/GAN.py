@@ -21,8 +21,8 @@ class GAN(ImageGAN):
         pass
 
     def _create_discriminator(self):
-        discriminator = DenseDiscriminator.create(self.input_shape())
-        return (discriminator)
+        self._discriminator = DenseDiscriminator.create(self.input_shape())
+        return (True)
 
     def _create_generator(self):
         generator = DenseGenerator.create(self.input_shape(),

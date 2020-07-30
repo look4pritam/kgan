@@ -129,10 +129,12 @@ class AbstractGAN(object):
         return (optimizer)
 
     def _create_models(self):
-        self._discriminator = self._create_discriminator()
-        self._discriminator.summary()
+        status = True
+        status = self._create_discriminator() and status
 
         self._generator = self._create_generator()
+
+        self._discriminator.summary()
         self._generator.summary()
         return (True)
 
