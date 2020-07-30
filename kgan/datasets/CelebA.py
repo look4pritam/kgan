@@ -157,10 +157,14 @@ class CelebA(AbstractDataset):
 
         train_dataset, number_of_batches = self._create_dataset()
 
+        auto_tune = tf.data.experimental.AUTOTUNE
+
+        train_dataset = train_dataset.map(
+            self._augment_dataset, num_parallel_calls=auto_tune)
         train_dataset = train_dataset.shuffle(self.buffer_size())
         train_dataset = train_dataset.batch(
             self.batch_size(), drop_remainder=True)
-        train_dataset = train_dataset.map(self._augment_dataset)
+        train_dataset = train_dataset.prefetch(auto_tune)
 
         return (train_dataset, number_of_batches)
 
