@@ -11,23 +11,8 @@ from functools import partial
 
 
 class AttGANEncoder(models.Model):
-
-    __default_encoder_dimension = 64
-    __default_downsamplings_layers = 5
-
     @classmethod
-    def default_encoder_dimension(cls):
-        return (cls.__default_encoder_dimension)
-
-    @classmethod
-    def default_downsamplings_layers(cls):
-        return (cls.__default_downsamplings_layers)
-
-    @classmethod
-    def create(cls,
-               encoder_dimension=cls.default_encoder_dimension(),
-               downsamplings_layers=cls.default_downsamplings_layers()):
-
+    def create(cls, encoder_dimension=64, downsamplings_layers=5):
         encoder = AttGANEncoder(encoder_dimension, downsamplings_layers)
         return (encoder)
 

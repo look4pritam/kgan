@@ -31,36 +31,12 @@ def concatenate(list_of_features, list_of_attributes, layer_name):
 
 
 class AttGANDecoder(models.Model):
-
-    __default_decoder_dimension = 64
-    __default_upsamplings_layers = 5
-
-    __default_shortcut_layers = 1
-    __default_inject_layers = 1
-
-    @classmethod
-    def default_decoder_dimension(cls):
-        return (cls.__default_decoder_dimension)
-
-    @classmethod
-    def default_upsamplings_layers(cls):
-        return (cls.__default_upsamplings_layers)
-
-    @classmethod
-    def default_shortcut_layers(cls):
-        return (cls.__default_shortcut_layers)
-
-    @classmethod
-    def default_inject_layers(cls):
-        return (cls.__default_inject_layers)
-
     @classmethod
     def create(cls,
-               decoder_dimension=AttGANDecoder.default_decoder_dimension(),
-               upsamplings_layers=AttGANDecoder.default_upsamplings_layers(),
-               shortcut_layers=AttGANDecoder.default_shortcut_layers(),
-               inject_layers=AttGANDecoder.default_inject_layers()):
-
+               decoder_dimension=64,
+               upsamplings_layers=5,
+               shortcut_layers=1,
+               inject_layers=1):
         decoder = AttGANDecoder(decoder_dimension, upsamplings_layers,
                                 shortcut_layers, inject_layers)
         return (decoder)
