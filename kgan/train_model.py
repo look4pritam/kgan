@@ -94,7 +94,6 @@ def main(args):
 
     print('creating the model - start')
     model_shape = args.model_shape[:3]
-    print(model_shape)
     gan = GANFactory.create(args.model, model_shape, args.latent_dimension)
 
     gan.set_discriminator_number(args.discriminator_number)
