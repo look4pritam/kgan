@@ -76,7 +76,7 @@ class AbstractGAN(object):
         return (self._number_of_samples)
 
     def set_base_learning_rate(self, base_learning_rate):
-        if (learning_rate > 0):
+        if (base_learning_rate > 0):
             self._learning_rate = self._base_learning_rate = base_learning_rate
         else:
             self._learning_rate = self._base_learning_rate = AbstractDataset.default_base_learning_rate(
