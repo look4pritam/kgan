@@ -25,5 +25,6 @@ class DCGAN(GAN):
         return (True)
 
     def _create_generator(self):
-        generator = ConvolutionalGenerator.create(self.latent_dimension())
-        return (generator)
+        self._generator = ConvolutionalGenerator.create(
+            self.latent_dimension())
+        return (True)

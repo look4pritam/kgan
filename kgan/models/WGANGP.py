@@ -121,7 +121,9 @@ class WGANGP(GAN):
                 bias_initializer=tf.keras.initializers.Constant(value=0.0)))
         generator.add(layers.Activation(tf.keras.activations.tanh))
 
-        return (generator)
+        self._generator = generator
+
+        return (True)
 
     def _create_generator_optimizer(self, learning_rate):
         optimizer = RMSprop(learning_rate=5 * learning_rate)

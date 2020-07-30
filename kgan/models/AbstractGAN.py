@@ -130,13 +130,14 @@ class AbstractGAN(object):
 
     def _create_models(self):
         status = True
+
         status = self._create_discriminator() and status
-
-        self._generator = self._create_generator()
-
         self._discriminator.summary()
+
+        status = self._create_generator() and status
         self._generator.summary()
-        return (True)
+
+        return (status)
 
     def _normalize_dataset(self, image, label):
         raise NotImplementedError('Must be implemented by the subclass.')

@@ -25,9 +25,9 @@ class GAN(ImageGAN):
         return (True)
 
     def _create_generator(self):
-        generator = DenseGenerator.create(self.input_shape(),
-                                          self.latent_dimension())
-        return (generator)
+        self._generator = DenseGenerator.create(self.input_shape(),
+                                                self.latent_dimension())
+        return (True)
 
     def _create_generator_optimizer(self, learning_rate):
         optimizer = Adam(learning_rate=learning_rate, beta_1=0.5)

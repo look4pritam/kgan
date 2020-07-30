@@ -22,8 +22,9 @@ class AttGAN(WGANGP):
         return (True)
 
     def _create_generator(self):
-        generator = ConvolutionalGenerator.create(self.latent_dimension())
-        return (generator)
+        self._generator = ConvolutionalGenerator.create(
+            self.latent_dimension())
+        return (True)
 
     def _normalize_dataset(self, image, attributes):
         return (image, attributes)
