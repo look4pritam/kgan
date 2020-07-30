@@ -36,7 +36,7 @@ class AttGAN(WGANGP):
         self._encoder = AttGANEncoder.create()
         self._decoder = AttGANDecoder.create()
 
-        input_images = np.zeros((input_shape))
+        input_images = np.zeros(self.input_shape())
         input_images = np.expand_dims(input_images, axis=0)
 
         image_attributes = np.zero(self.latent_dimension())
