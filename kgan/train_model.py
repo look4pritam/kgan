@@ -103,7 +103,7 @@ def main(args):
     print('creating the model - end')
 
     print('processing the dataset - start')
-    dataset = None  #DatasetFactory.create(args.dataset)
+    dataset = DatasetFactory.create(args.dataset)
     print('processing the dataset - end')
 
     print('training the model - start')
