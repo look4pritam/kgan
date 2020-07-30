@@ -9,7 +9,7 @@ from kgan.datasets.AbstractDataset import AbstractDataset
 
 class CelebA(AbstractDataset):
 
-    __default_image_shape = (28, 28, 1)
+    __default_image_shape = (128, 128, 3)
 
     @classmethod
     def default_image_shape(cls):
