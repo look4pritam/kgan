@@ -13,10 +13,15 @@ import numpy as np
 class CelebA(AbstractDataset):
 
     __default_image_shape = (128, 128, 3)
+    __default_buffer_size = 512
 
     @classmethod
     def default_image_shape(cls):
         return (cls.__default_image_shape)
+
+    @classmethod
+    def default_buffer_size(cls):
+        return (cls.__default_buffer_size)
 
     @classmethod
     def name(cls):
@@ -25,6 +30,8 @@ class CelebA(AbstractDataset):
     def __init__(self):
         super(CelebA, self).__init__()
         self._image_shape = CelebA.default_image_shape()
+        self._buffer_size = CelebA.default_buffer_size()
+
         self._image_load_shape = (143, 143, 3)
 
         self._attributes_to_identifiers = {
