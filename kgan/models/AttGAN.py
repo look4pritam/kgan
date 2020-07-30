@@ -4,7 +4,7 @@ from __future__ import print_function
 
 from kgan.models.WGANGP import WGANGP
 
-from kgan.models.discriminators.ConvolutionalDiscriminator import ConvolutionalDiscriminator
+from kgan.models.discriminators.AttGANDiscriminator import AttGANDiscriminator
 from kgan.models.generators.ConvolutionalGenerator import ConvolutionalGenerator
 
 import tensorflow as tf
@@ -20,7 +20,7 @@ class AttGAN(WGANGP):
         pass
 
     def _create_discriminator(self):
-        discriminator = ConvolutionalDiscriminator.create(self.input_shape())
+        discriminator = AttGANDiscriminator.create(self.input_shape())
         return (discriminator)
 
     def _create_generator(self):
