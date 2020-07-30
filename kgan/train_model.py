@@ -40,7 +40,7 @@ def parse_arguments(argv):
     parser.add_argument(
         '--latent_dimension',
         type=int,
-        help='Latent dimension used for generating the image.',
+        help='Latent dimension used for generating samples.',
         default=100)
 
     parser.add_argument(
