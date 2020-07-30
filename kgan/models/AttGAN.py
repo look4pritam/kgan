@@ -12,6 +12,8 @@ from kgan.models.generators.AttGANDecoder import AttGANDecoder
 import tensorflow as tf
 from tensorflow.keras.optimizers import Adam
 
+import numpy as np
+
 
 class AttGAN(WGANGP):
     @classmethod
