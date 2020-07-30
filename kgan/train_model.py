@@ -29,6 +29,13 @@ def parse_arguments(argv):
         default=DatasetFactory.default_dataset())
 
     parser.add_argument(
+        '--model_shape',
+        nargs='+',
+        type=int,
+        help='Input shape used for training the model.',
+        default=[28, 28, 1])
+
+    parser.add_argument(
         '--latent_dimension',
         type=int,
         help='Latent dimension used for generating the image.',
@@ -84,7 +91,8 @@ def parse_arguments(argv):
 def main(args):
 
     print('creating the model - start')
-    model_shape = (28, 28, 1)
+    model_shape = args.model_shape[:3]
+    print(model_shape)
     gan = GANFactory.create(args.model, model_shape, args.latent_dimension)
 
     gan.set_discriminator_number(args.discriminator_number)
