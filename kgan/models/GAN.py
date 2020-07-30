@@ -72,20 +72,25 @@ class GAN(ImageGAN):
 
         return (discriminator_loss)
 
+    def _compute_generator_loss(self, generator_inputs):
+        # Generate fake images using these random points.
+        generated_images = self._generator(generator_inputs)
+
+        # Compute discriminator's predictions for generated images.
+        fake_predictions = self._discriminator(generated_images)
+
+        # Compute generator loss using these fake predictions.
+        generator_loss = self._generator_loss(fake_predictions)
+        return (generator_loss)
+
     def _update_generator(self, input_batch):
         # Sample random points in the latent space.
         generator_inputs = self._create_generator_inputs(input_batch)
 
         # Train the generator.
         with tf.GradientTape() as tape:
-            # Generate fake images using these random points.
-            generated_images = self._generator(generator_inputs)
-
-            # Compute discriminator's predictions for generated images.
-            fake_predictions = self._discriminator(generated_images)
-
-            # Compute generator loss using these fake predictions.
-            generator_loss = self._generator_loss(fake_predictions)
+            # Compute generator loss.
+            generator_loss = self._compute_generator_loss(generator_inputs)
 
         # Compute gradients of generator loss using trainable weights of generator.
         gradients = tape.gradient(generator_loss,
