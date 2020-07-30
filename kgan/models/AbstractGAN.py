@@ -4,6 +4,8 @@ from __future__ import print_function
 
 from tensorflow.keras.optimizers import Adam
 
+import cv2
+
 
 class AbstractGAN(object):
 

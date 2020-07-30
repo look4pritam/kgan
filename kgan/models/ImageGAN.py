@@ -5,9 +5,6 @@ from __future__ import print_function
 from kgan.models.AbstractGAN import AbstractGAN
 
 import tensorflow as tf
-
-import cv2
-
 cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
 
 
