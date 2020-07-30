@@ -83,6 +83,11 @@ class CelebA(AbstractDataset):
             'Wavy_Hair', 'Wearing_Earrings', 'Wearing_Hat', 'Wearing_Lipstick',
             'Wearing_Necklace', 'Wearing_Necktie', 'Young'
         ]
+        self._number_of_attributes = len(self._default_attribute_names)
+        print('number of attributes -', self.number_of_attributes())
+
+    def number_of_attributes(self):
+        return (self._number_of_attributes)
 
     def set_image_shape(self, image_shape):
         self._image_shape = image_shape
