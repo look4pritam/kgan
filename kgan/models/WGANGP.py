@@ -208,15 +208,3 @@ class WGANGP(GAN):
                 self._discriminator.trainable_variables))
 
         return (discriminator_loss)
-
-    def _train_on_batch(self, input_batch):
-        # Update discriminator weights.
-        discriminator_loss = self._update_discriminator(input_batch)
-
-        # Update generator weights.
-        generator_loss = self._update_generator(input_batch)
-
-        return {
-            'generator': generator_loss,
-            'discriminator': discriminator_loss
-        }
