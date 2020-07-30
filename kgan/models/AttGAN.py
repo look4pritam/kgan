@@ -5,7 +5,9 @@ from __future__ import print_function
 from kgan.models.WGANGP import WGANGP
 
 from kgan.models.discriminators.AttGANDiscriminator import AttGANDiscriminator
+
 from kgan.models.generators.AttGANEncoder import AttGANEncoder
+from kgan.models.generators.AttGANDecoder import AttGANDecoder
 
 import tensorflow as tf
 from tensorflow.keras.optimizers import Adam
@@ -27,7 +29,10 @@ class AttGAN(WGANGP):
 
     def _create_generator(self):
         self._generator = None
-        self._encoder = AttGANEncoder.create(self.input_shape())
+
+        self._encoder = AttGANEncoder.create()
+        self._decoder = AttGANDecoder.create()
+
         return (True)
 
     def _normalize_dataset(self, image, attributes):
