@@ -68,7 +68,7 @@ class ImageGAN(AbstractGAN):
         input_image = input_image * 127.5 + 127.5
         return (input_image)
 
-    def generate(self):
+    def generate_samples(self):
         generator_inputs = tf.random.normal(
             [self.number_of_samples(),
              self.latent_dimension()])
@@ -78,14 +78,6 @@ class ImageGAN(AbstractGAN):
                                                     self._input_shape[1])
         generated_images = self._decode_image(generated_images)
         return (generated_images)
-
-    def save_generated(self):
-        print('generating samples - start')
-        generated_images = self.generate()
-        for index, image in enumerate(generated_images):
-            filename = 'image-' + str(index) + '.png'
-            cv2.imwrite(filename, image)
-        print('generating samples - end')
 
     def _print_losses(self, losses):
         print('loss values are -')

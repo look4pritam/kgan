@@ -190,7 +190,7 @@ class AbstractGAN(object):
                 self._current_step = self._current_step + 1
 
             self._print_losses(current_losses)
-            self.save_generated()
+            self._save_samples()
 
             if self.save_frequency() and (
                     current_epoch % self.save_frequency() == 0):
@@ -206,15 +206,24 @@ class AbstractGAN(object):
     def _update_learning_rate(self, current_epoch, number_of_epochs):
         return (True)
 
+    def _save_models(self):
+        return (True)
+
     def save_models(self):
         print('saving models - start')
+        self._save_models()
         print('saving models - end')
 
-    def generate(self, number_of_samples):
+    def generate_samples(self):
         raise NotImplementedError('Must be implemented by the subclass.')
 
-    def save_generated(self):
-        raise NotImplementedError('Must be implemented by the subclass.')
+    def _save_samples(self):
+        print('generating samples - start')
+        generated_images = self.generate_samples()
+        for index, image in enumerate(generated_images):
+            filename = 'image-' + str(index) + '.png'
+            cv2.imwrite(filename, image)
+        print('generating samples - end')
 
     def _print_losses(self, losses):
         raise NotImplementedError('Must be implemented by the subclass.')
