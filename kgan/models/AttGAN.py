@@ -41,9 +41,13 @@ class AttGAN(WGANGP):
         image_attributes = np.expand_dims(image_attributes, axis=0)
 
         image_features = self._encoder.predict(input_images)
+        print('number of image features -', len(image_features))
+        for index, image_feature in enumerate(image_features):
+            print('image feature -', (index + 1), image_feature.shape)
+
         generated_images = self._decoder.predict(
             [image_features, image_attributes])
-
+        print('generated image shape -', generated_images.shape)
         self._encoder.summary()
         self._decoder.summary()
         return (True)
