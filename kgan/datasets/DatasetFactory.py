@@ -5,6 +5,8 @@ from __future__ import print_function
 from kgan.datasets.MNIST import MNIST
 from kgan.datasets.FashionMNIST import FashionMNIST
 
+from kgan.datasets.CelebA import CelebA
+
 
 class DatasetFactory(object):
 
@@ -15,6 +17,7 @@ class DatasetFactory(object):
         if (len(cls.__datasets) == 0):
             cls.__datasets.append(MNIST.name())
             cls.__datasets.append(FashionMNIST.name())
+            cls.__datasets.append(CelebA.name())
 
         return (cls.__datasets)
 
@@ -33,6 +36,8 @@ class DatasetFactory(object):
             dataset = MNIST()
         elif (name == FashionMNIST.name()):
             dataset = FashionMNIST()
+        elif (name == CelebA.name()):
+            dataset = CelebA()
         else:
             dataset = MNIST()
 
