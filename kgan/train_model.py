@@ -59,23 +59,23 @@ def parse_arguments(argv):
         default=0)
 
     parser.add_argument(
+        '--discriminator_number',
+        type=int,
+        help=
+        'Number of times discriminator model is updated while training the model.',
+        default=1)
+
+    parser.add_argument(
+        '--generator_number',
+        type=int,
+        help=
+        'Number of times generator model is updated while training the model.',
+        default=1)
+
+    parser.add_argument(
         '--save_frequency',
         type=int,
         help='Model saving frequency in terms of number of epochs processed.',
-        default=1)
-
-    parser.add_argument(
-        '--generation_frequency',
-        type=int,
-        help=
-        'Sample generation frequency in terms of number of epochs processed.',
-        default=1)
-
-    parser.add_argument(
-        '--loss_scan_frequency',
-        type=int,
-        help=
-        'Model loss scanning frequency in terms of number of epochs processed.',
         default=1)
 
     return (parser.parse_args(argv))
@@ -83,15 +83,24 @@ def parse_arguments(argv):
 
 def main(args):
 
+    print('creating the model - start')
     model_shape = (28, 28, 1)
     gan = GANFactory.create(args.model, model_shape, args.latent_dimension)
-    gan.set_generation_frequency(args.generation_frequency)
-    gan.set_loss_scan_frequency(args.loss_scan_frequency)
-    gan.set_save_frequency(args.save_frequency)
 
+    gan.set_discriminator_number(args.discriminator_number)
+    gan.set_generator_number(args.generator_number)
+
+    gan.set_save_frequency(args.save_frequency)
+    print('creating the model - end')
+
+    print('processing the dataset - start')
     dataset = DatasetFactory.create(args.dataset)
+    print('processing the dataset - end')
+
+    print('training the model - start')
     status = gan.train(dataset, args.batch_size, args.maximum_epochs,
                        args.start_epoch, args.learning_rate)
+    print('training the model - end')
 
 
 if __name__ == '__main__':

@@ -80,16 +80,18 @@ class ImageGAN(AbstractGAN):
         return (generated_images)
 
     def save_generated(self):
+        print('generating samples - start')
         generated_images = self.generate()
         for index, image in enumerate(generated_images):
             filename = 'image-' + str(index) + '.png'
             cv2.imwrite(filename, image)
+        print('generating samples - end')
 
     def _print_losses(self, losses):
+        print('loss values are -')
         with self._summary_writer.as_default():
             for key_value, loss_value in losses.items():
                 print(key_value, '-', loss_value.numpy())
                 tf.summary.scalar(
                     key_value, loss_value, step=self.current_step())
-
         self._summary_writer.flush()

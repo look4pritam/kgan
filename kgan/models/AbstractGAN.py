@@ -12,8 +12,8 @@ class AbstractGAN(object):
     __default_learning_rate = 0.0001
     __default_batch_size = 128
 
-    __default_generation_frequency = 1000
-    __default_loss_scan_frequency = 1000
+    __default_discriminator_number = 1
+    __default_generator_number = 1
 
     __default_save_frequency = 1
 
@@ -30,12 +30,12 @@ class AbstractGAN(object):
         return (cls.__default_batch_size)
 
     @classmethod
-    def default_generation_frequency(cls):
-        return (cls.__default_generation_frequency)
+    def default_generator_number(cls):
+        return (cls.__default_generator_number)
 
     @classmethod
-    def default_loss_scan_frequency(cls):
-        return (cls.__default_loss_scan_frequency)
+    def default_discriminator_number(cls):
+        return (cls.__default_discriminator_number)
 
     @classmethod
     def default_save_frequency(cls):
@@ -49,8 +49,8 @@ class AbstractGAN(object):
         self._learning_rate = AbstractGAN.default_learning_rate()
         self._batch_size = AbstractGAN.default_batch_size()
 
-        self._generation_frequency = AbstractGAN.default_generation_frequency()
-        self._loss_scan_frequency = AbstractGAN.default_loss_scan_frequency()
+        self._discriminator_number = AbstractGAN.default_discriminator_number()
+        self._generator_number = AbstractGAN.default_generator_number()
 
         self._generator_optimizer = None
         self._discriminator_optimizer = None
@@ -94,25 +94,24 @@ class AbstractGAN(object):
     def save_frequency(self):
         return (self._save_frequency)
 
-    def set_generation_frequency(self, generation_frequency):
-        if (generation_frequency > 0):
-            self._generation_frequency = generation_frequency
+    def set_generator_number(self, generator_number):
+        if (generator_number > 0):
+            self._generator_number = generator_number
         else:
-            self._generation_frequency = AbstractDataset.default_generation_frequency(
+            self._generator_number = AbstractDataset.default_generator_number()
+
+    def generator_number(self):
+        return (self._generator_number)
+
+    def set_discriminator_number(self, discriminator_number):
+        if (discriminator_number > 0):
+            self._discriminator_number = discriminator_number
+        else:
+            self._discriminator_number = AbstractDataset.default_discriminator_number(
             )
 
-    def generation_frequency(self):
-        return (self._generation_frequency)
-
-    def set_loss_scan_frequency(self, loss_scan_frequency):
-        if (loss_scan_frequency > 0):
-            self._loss_scan_frequency = loss_scan_frequency
-        else:
-            self._loss_scan_frequency = AbstractDataset.default_loss_scan_frequency(
-            )
-
-    def loss_scan_frequency(self):
-        return (self._loss_scan_frequency)
+    def discriminator_number(self):
+        return (self._discriminator_number)
 
     def _create_generator_optimizer(self, learning_rate):
         optimizer = Adam(learning_rate=learning_rate)
@@ -172,6 +171,7 @@ class AbstractGAN(object):
 
         # Train the model starting from start_epoch upto number_of_epochs.
         for current_epoch in range(start_epoch, number_of_epochs):
+            print('epoch', str(current_epoch), '- start')
 
             # Create generator optimizer with learning rate using current epoch.
             self._generator_optimizer = self._create_generator_optimizer(
@@ -189,23 +189,17 @@ class AbstractGAN(object):
                 # Increment current step by 1.
                 self._current_step = self._current_step + 1
 
-            if self.loss_scan_frequency() and (
-                    current_epoch % self.loss_scan_frequency() == 0):
-                print('current loss values at', str(current_epoch))
-                self._print_losses(current_losses)
-
-            if self.generation_frequency() and (
-                    current_epoch % self.generation_frequency() == 0):
-                self.save_generated()
-                print('generated samples at', str(current_epoch))
+            self._print_losses(current_losses)
+            self.save_generated()
 
             if self.save_frequency() and (
                     current_epoch % self.save_frequency() == 0):
                 self.save_models()
-                print('models are saved at', str(current_epoch))
 
             # Update learning rate at end of each epoch.
             self._update_learning_rate(current_epoch, number_of_epochs)
+
+            print('epoch', str(current_epoch), '- end')
 
         return (True)
 
@@ -213,7 +207,8 @@ class AbstractGAN(object):
         return (True)
 
     def save_models(self):
-        pass
+        print('saving models - start')
+        print('saving models - end')
 
     def generate(self, number_of_samples):
         raise NotImplementedError('Must be implemented by the subclass.')
