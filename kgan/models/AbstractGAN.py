@@ -163,11 +163,11 @@ class AbstractGAN(object):
               start_epoch=0,
               base_learning_rate=0.0001):
         status = True
-
+        '''
         # Preprocess the dataset.
         train_dataset, number_of_batches = self._preprocess_dataset(
             dataset, batch_size)
-
+        '''
         # Set parameters used for model training.
         self.set_base_learning_rate(base_learning_rate)
         self.set_batch_size(batch_size)
