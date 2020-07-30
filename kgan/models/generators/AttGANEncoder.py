@@ -31,12 +31,9 @@ class AttGANEncoder(models.Model):
             downsamplings_layers=AttGANEncoder.default_downsamplings_layers()):
 
         encoder = AttGANEncoder(encoder_dimension, downsamplings_layers)
-
         input_images = np.zeros((input_shape))
         input_images = np.expand_dims(input_images, axis=0)
-
         image_features = encoder.predict(input_images)
-
         return (encoder)
 
     def __init__(self,
