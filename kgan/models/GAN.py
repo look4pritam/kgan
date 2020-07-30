@@ -96,11 +96,15 @@ class GAN(ImageGAN):
         return (generator_loss)
 
     def _train_on_batch(self, input_batch):
-        # Update discriminator weights.
-        discriminator_loss = self._update_discriminator(input_batch)
 
-        # Update generator weights.
-        generator_loss = self._update_generator(input_batch)
+        generator_loss = discriminator_loss = 0.
+
+        if ((self.current_step() % self.cycle_number()) == 0):
+            # Update generator weights.
+            generator_loss = self._update_generator(input_batch)
+        else:
+            # Update discriminator weights.
+            discriminator_loss = self._update_discriminator(input_batch)
 
         return {
             'generator': generator_loss,

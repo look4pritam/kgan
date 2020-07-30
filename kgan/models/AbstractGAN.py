@@ -53,9 +53,14 @@ class AbstractGAN(object):
 
         self._discriminator_number = AbstractGAN.default_discriminator_number()
         self._generator_number = AbstractGAN.default_generator_number()
+        self._cycle_number = self.discriminator_number(
+        ) + self.generator_number()
 
         self._generator_optimizer = None
         self._discriminator_optimizer = None
+
+    def cycle_number(self):
+        return (self.discriminator_number() + self.generator_number())
 
     def current_step(self):
         return (self._current_step)
