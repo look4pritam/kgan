@@ -24,8 +24,8 @@ class AttGANEncoder(models.Model):
         return (encoder)
 
     def __init__(self,
-                 encoder_dimension=64,
-                 downsamplings_layers=5,
+                 encoder_dimension,
+                 downsamplings_layers,
                  name='attgan-encoder',
                  **kwargs):
         super(Encoder, self).__init__(name=name, **kwargs)
