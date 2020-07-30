@@ -48,7 +48,8 @@ class AbstractGAN(object):
         self._summary_writer = None
 
         self._number_of_samples = AbstractGAN.default_number_of_samples()
-        self._base_learning_rate = AbstractGAN.default_base_learning_rate()
+        self._learning_rate = self._base_learning_rate = AbstractGAN.default_base_learning_rate(
+        )
         self._batch_size = AbstractGAN.default_batch_size()
 
         self._discriminator_number = AbstractGAN.default_discriminator_number()
@@ -74,15 +75,18 @@ class AbstractGAN(object):
     def number_of_samples(self):
         return (self._number_of_samples)
 
-    def set_learning_rate(self, learning_rate):
+    def set_base_learning_rate(self, base_learning_rate):
         if (learning_rate > 0):
-            self._base_learning_rate = learning_rate
+            self._learning_rate = self._base_learning_rate = base_learning_rate
         else:
-            self._base_learning_rate = AbstractDataset.default_base_learning_rate(
+            self._learning_rate = self._base_learning_rate = AbstractDataset.default_base_learning_rate(
             )
 
-    def learning_rate(self):
+    def base_learning_rate(self):
         return (self._base_learning_rate)
+
+    def learning_rate(self):
+        return (self._learning_rate)
 
     def set_batch_size(self, batch_size):
         if (batch_size > 0):
@@ -160,7 +164,7 @@ class AbstractGAN(object):
               batch_size,
               number_of_epochs,
               start_epoch=0,
-              learning_rate=0.0001):
+              base_learning_rate=0.0001):
         status = True
 
         # Preprocess the dataset.
@@ -168,7 +172,7 @@ class AbstractGAN(object):
             dataset, batch_size)
 
         # Set parameters used for model training.
-        self.set_learning_rate(learning_rate)
+        self.set_base_learning_rate(base_learning_rate)
         self.set_batch_size(batch_size)
 
         # Create models.

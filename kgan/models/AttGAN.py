@@ -33,6 +33,14 @@ class AttGAN(WGANGP):
         return (image, attributes)
 
     def _update_learning_rate(self, current_epoch, number_of_epochs):
+        start_decay_epoch = number_of_epochs // 2
+        if (current_epoch >= start_decay_epoch):
+            self._learning_rate = self.base_learning_rate() * (
+                1 - 1 / (number_of_epochs - start_decay_epoch + 1) *
+                (current_epoch - start_decay_epoch + 1))
+        else:
+            self._learning_rate = self.base_learning_rate()
+
         return (True)
 
     def _create_generator_optimizer(self, learning_rate):
