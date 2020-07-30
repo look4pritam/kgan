@@ -11,13 +11,23 @@ from functools import partial
 
 
 def concatenate(list_of_features, list_of_attributes, layer_name):
-  list_of_features = list(list_of_features) if isinstance(list_of_features, (list, tuple)) else [list_of_features]
-  list_of_attributes = list(list_of_attributes) if isinstance(list_of_attributes, (list, tuple)) else [list_of_attributes]
-  for index, attributes in enumerate(list_of_attributes):
-        attributes = tf.reshape(attributes, [-1, 1, 1, attributes.shape[-1]], name=layer_name + 'reshape')
-        attributes = tf.tile(attributes, [1, list_of_features[0].shape[1], list_of_features[0].shape[2], 1], name=layer_name + 'tile')
+    list_of_features = list(list_of_features) if isinstance(
+        list_of_features, (list, tuple)) else [list_of_features]
+    list_of_attributes = list(list_of_attributes) if isinstance(
+        list_of_attributes, (list, tuple)) else [list_of_attributes]
+    for index, attributes in enumerate(list_of_attributes):
+        attributes = tf.reshape(
+            attributes, [-1, 1, 1, attributes.shape[-1]],
+            name=layer_name + 'reshape')
+        attributes = tf.tile(
+            attributes,
+            [1, list_of_features[0].shape[1], list_of_features[0].shape[2], 1],
+            name=layer_name + 'tile')
         list_of_attributes[index] = attributes
-  return tf.concat(list_of_features + list_of_attributes, axis=-1, name=layer_name + 'concat')
+    return tf.concat(
+        list_of_features + list_of_attributes,
+        axis=-1,
+        name=layer_name + 'concat')
 
 
 class AttGANDecoder(models.Model):
@@ -45,79 +55,100 @@ class AttGANDecoder(models.Model):
         return (cls.__default_inject_layers)
 
     @classmethod
-    def create(cls, decoder_dimension=AttGANDecoder.default_decoder_dimension(), upsamplings_layers=AttGANDecoder.default_upsamplings_layers(), shortcut_layers=AttGANDecoder.default_shortcut_layers(), inject_layers=AttGANDecoder.default_inject_layers()):
+    def create(cls,
+               decoder_dimension=AttGANDecoder.default_decoder_dimension(),
+               upsamplings_layers=AttGANDecoder.default_upsamplings_layers(),
+               shortcut_layers=AttGANDecoder.default_shortcut_layers(),
+               inject_layers=AttGANDecoder.default_inject_layers()):
 
-        decoder = AttGANDecoder(decoder_dimension, upsamplings_layers, shortcut_layers, inject_layers)
+        decoder = AttGANDecoder(decoder_dimension, upsamplings_layers,
+                                shortcut_layers, inject_layers)
         return (decoder)
 
-  def __init__(self, decoder_dimension, upsamplings_layers, shortcut_layers, inject_layers, name='attgan-decoder', **kwargs):
-    super(AttGANDecoder, self).__init__(name=name, **kwargs)
-    
-    self._decoder_dimension = decoder_dimension
-    self._upsamplings_layers = upsamplings_layers
-    self._shortcut_layers = shortcut_layers
-    self._inject_layers = inject_layers
+    def __init__(self,
+                 decoder_dimension,
+                 upsamplings_layers,
+                 shortcut_layers,
+                 inject_layers,
+                 name='attgan-decoder',
+                 **kwargs):
+        super(AttGANDecoder, self).__init__(name=name, **kwargs)
 
-    self._decoders = []
-    filters = self._decoder_dimension  
-    for block_index in range(self._upsamplings_layers - 1):
-      block_name = 'block-' + str(block_index + 1)
+        self._decoder_dimension = decoder_dimension
+        self._upsamplings_layers = upsamplings_layers
+        self._shortcut_layers = shortcut_layers
+        self._inject_layers = inject_layers
 
-      current_decoder = self._convolution_block(filters, 4, name=block_name)
-      self._decoders.append(current_decoder)
+        self._decoders = []
+        filters = self._decoder_dimension
+        for block_index in range(self._upsamplings_layers - 1):
+            block_name = 'block-' + str(block_index + 1)
 
-      filters = filters * 2
+            current_decoder = self._convolution_block(
+                filters, 4, name=block_name)
+            self._decoders.append(current_decoder)
 
-    current_decoder = self._convolution_block(3, 4, activation_fn=tf.nn.tanh, batch_norm=False, name='block-5')
-    self._decoders.append(current_decoder)    
+            filters = filters * 2
 
-  def _convolution_block(self, filters, kernel_size, 
-                         activation_fn=tf.nn.leaky_relu, batch_norm=True, 
-                         input_shape=None, name=''):
-    
-    if( input_shape is None ):
-      dconv = partial(layers.Conv2DTranspose)
-    else:
-      dconv = partial(layers.Conv2DTranspose, input_shape=input_shape)
+        current_decoder = self._convolution_block(
+            3, 4, activation_fn=tf.nn.tanh, batch_norm=False, name='block-5')
+        self._decoders.append(current_decoder)
 
-    blocks = [
-      dconv(filters, 
-            (kernel_size, kernel_size), 
-            strides = (2,2), 
-            padding = "same",             
-            use_bias = True,             
-            name = 'dconv')
+    def _convolution_block(self,
+                           filters,
+                           kernel_size,
+                           activation_fn=tf.nn.leaky_relu,
+                           batch_norm=True,
+                           input_shape=None,
+                           name=''):
+
+        if (input_shape is None):
+            dconv = partial(layers.Conv2DTranspose)
+        else:
+            dconv = partial(layers.Conv2DTranspose, input_shape=input_shape)
+
+        blocks = [
+            dconv(
+                filters, (kernel_size, kernel_size),
+                strides=(2, 2),
+                padding="same",
+                use_bias=True,
+                name='dconv')
         ]
 
-    if( batch_norm ):
-      blocks.append(layers.BatchNormalization(name='bnorm'))
+        if (batch_norm):
+            blocks.append(layers.BatchNormalization(name='bnorm'))
 
-    if(activation_fn is not None):
-      if(activation_fn == tf.nn.leaky_relu):        
-        blocks.append(layers.LeakyReLU(alpha=0.2, name='act'))
-      else:
-        blocks.append(layers.Activation(activation_fn, name='act'))
+        if (activation_fn is not None):
+            if (activation_fn == tf.nn.leaky_relu):
+                blocks.append(layers.LeakyReLU(alpha=0.2, name='act'))
+            else:
+                blocks.append(layers.Activation(activation_fn, name='act'))
 
-    return(models.Sequential(blocks, name=name))
+        return (models.Sequential(blocks, name=name))
 
-  def call(self, inputs, training=True):
+    def call(self, inputs, training=True):
 
-    input_features, input_attributes = inputs    
+        input_features, input_attributes = inputs
 
-    layer_name = 'block-0-shortcut-'    
-    layer_input = concatenate(input_features[-1], input_attributes, layer_name=layer_name)    
-    for block_index in range(self._upsamplings_layers):
-      layer_name = 'block-' + str(block_index + 1) + '-'
+        layer_name = 'block-0-shortcut-'
+        layer_input = concatenate(
+            input_features[-1], input_attributes, layer_name=layer_name)
+        for block_index in range(self._upsamplings_layers):
+            layer_name = 'block-' + str(block_index + 1) + '-'
 
-      decoder_layer = self._decoders[block_index]
-      layer_input = decoder_layer(layer_input, training)
+            decoder_layer = self._decoders[block_index]
+            layer_input = decoder_layer(layer_input, training)
 
-      if (self._shortcut_layers > block_index):
-        shortcut_name = layer_name + 'shortcut-'
-        layer_input = concatenate([layer_input, input_features[-2 - block_index]], [], layer_name=shortcut_name)
+            if (self._shortcut_layers > block_index):
+                shortcut_name = layer_name + 'shortcut-'
+                layer_input = concatenate(
+                    [layer_input, input_features[-2 - block_index]], [],
+                    layer_name=shortcut_name)
 
-      if (self._inject_layers > block_index):
-        inject_name = layer_name + 'inject-'
-        layer_input = concatenate(layer_input, input_attributes, layer_name=inject_name)      
+            if (self._inject_layers > block_index):
+                inject_name = layer_name + 'inject-'
+                layer_input = concatenate(
+                    layer_input, input_attributes, layer_name=inject_name)
 
-    return(layer_input)
+        return (layer_input)
