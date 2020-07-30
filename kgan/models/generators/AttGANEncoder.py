@@ -24,10 +24,9 @@ class AttGANEncoder(models.Model):
         return (cls.__default_downsamplings_layers)
 
     @classmethod
-    def create(
-            cls,
-            encoder_dimension=AttGANEncoder.default_encoder_dimension(),
-            downsamplings_layers=AttGANEncoder.default_downsamplings_layers()):
+    def create(cls,
+               encoder_dimension=cls.default_encoder_dimension(),
+               downsamplings_layers=cls.default_downsamplings_layers()):
 
         encoder = AttGANEncoder(encoder_dimension, downsamplings_layers)
         return (encoder)
