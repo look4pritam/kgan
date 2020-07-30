@@ -25,6 +25,9 @@ class AttGAN(WGANGP):
         generator = ConvolutionalGenerator.create(self.latent_dimension())
         return (generator)
 
+    def _normalize_dataset(self, image, attributes):
+        return (image, attributes)
+
     def _train_on_batch(self, input_batch):
 
         if ((self.current_step() % self.cycle_number()) == 0):
