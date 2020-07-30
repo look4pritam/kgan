@@ -24,11 +24,74 @@ class CelebA(AbstractDataset):
         self._image_shape = CelebA.default_image_shape()
         self._image_load_shape = (143, 143, 3)
 
+        self._attributes_to_identifiers = {
+            '5_o_Clock_Shadow': 0,
+            'Arched_Eyebrows': 1,
+            'Attractive': 2,
+            'Bags_Under_Eyes': 3,
+            'Bald': 4,
+            'Bangs': 5,
+            'Big_Lips': 6,
+            'Big_Nose': 7,
+            'Black_Hair': 8,
+            'Blond_Hair': 9,
+            'Blurry': 10,
+            'Brown_Hair': 11,
+            'Bushy_Eyebrows': 12,
+            'Chubby': 13,
+            'Double_Chin': 14,
+            'Eyeglasses': 15,
+            'Goatee': 16,
+            'Gray_Hair': 17,
+            'Heavy_Makeup': 18,
+            'High_Cheekbones': 19,
+            'Male': 20,
+            'Mouth_Slightly_Open': 21,
+            'Mustache': 22,
+            'Narrow_Eyes': 23,
+            'No_Beard': 24,
+            'Oval_Face': 25,
+            'Pale_Skin': 26,
+            'Pointy_Nose': 27,
+            'Receding_Hairline': 28,
+            'Rosy_Cheeks': 29,
+            'Sideburns': 30,
+            'Smiling': 31,
+            'Straight_Hair': 32,
+            'Wavy_Hair': 33,
+            'Wearing_Earrings': 34,
+            'Wearing_Hat': 35,
+            'Wearing_Lipstick': 36,
+            'Wearing_Necklace': 37,
+            'Wearing_Necktie': 38,
+            'Young': 39
+        }
+        self._identifiers_to_attributes = {
+            v: k
+            for k, v in self._attributes_to_identifiers.items()
+        }
+
+        self._default_attribute_names = [
+            '5_o_Clock_Shadow', 'Arched_Eyebrows', 'Attractive',
+            'Bags_Under_Eyes', 'Bald', 'Bangs', 'Big_Lips', 'Big_Nose',
+            'Black_Hair', 'Blond_Hair', 'Blurry', 'Brown_Hair',
+            'Bushy_Eyebrows', 'Chubby', 'Double_Chin', 'Eyeglasses', 'Goatee',
+            'Gray_Hair', 'Heavy_Makeup', 'High_Cheekbones', 'Male',
+            'Mouth_Slightly_Open', 'Mustache', 'Narrow_Eyes', 'No_Beard',
+            'Oval_Face', 'Pale_Skin', 'Pointy_Nose', 'Receding_Hairline',
+            'Rosy_Cheeks', 'Sideburns', 'Smiling', 'Straight_Hair',
+            'Wavy_Hair', 'Wearing_Earrings', 'Wearing_Hat', 'Wearing_Lipstick',
+            'Wearing_Necklace', 'Wearing_Necktie', 'Young'
+        ]
+
     def set_image_shape(self, image_shape):
         self._image_shape = image_shape
 
     def image_shape(self):
         return (self._image_shape)
+
+    def image_load_shape(self):
+        return (self._image_load_shape)
 
     def _load_image(self, image_filename):
         input_image = tf.io.read_file(image_filename)
@@ -45,16 +108,16 @@ class CelebA(AbstractDataset):
         return (cropped_image)
 
     def _random_jitter(self, image):
-        image = tf.image.resize(image,
-                                [image_load_shape[0], image_load_shape[1]])
+        image = tf.image.resize(
+            image, [self._image_load_shape[0], self._image_load_shape[1]])
         image = self._random_crop(image)
         image = tf.image.random_flip_left_right(image)
         return (image)
 
     def _preprocess_attributes(self, attributes_array):
         selected_attributes = []
-        for attribute_name in default_attribute_names:
-            index = attributes_to_identifiers[attribute_name]
+        for attribute_name in self._default_attribute_names:
+            index = self._attributes_to_identifiers[attribute_name]
             selected_attributes.append(attributes_array[index])
 
         selected_attributes = tf.convert_to_tensor(selected_attributes)
@@ -77,7 +140,7 @@ class CelebA(AbstractDataset):
 
         return (train_dataset, number_of_batches)
 
-    def _augment_dataset(self, image, attributes):
+    def _augment_dataset(self, image_filename, attributes):
         image = self._load_image(image_filename)
         image = self._random_jitter(image)
         image = self._normalize_image(image)
