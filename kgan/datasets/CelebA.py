@@ -2,9 +2,12 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import tensorflow as tf
+import os
 
 from kgan.datasets.AbstractDataset import AbstractDataset
+
+import tensorflow as tf
+import numpy as np
 
 
 class CelebA(AbstractDataset):
@@ -130,13 +133,29 @@ class CelebA(AbstractDataset):
         selected_attributes = selected_attributes * 1.
         return (selected_attributes)
 
+    def _create_dataset(self,
+                        image_root_dir='img_align_celeba/images',
+                        attribute_filename='img_align_celeba/train_label.txt'):
+        image_names = np.genfromtxt(attribute_filename, dtype=str, usecols=0)
+        image_filename_array = np.array([
+            os.path.join(image_root_dir, image_name)
+            for image_name in image_names
+        ])
+
+        attributes_array = np.genfromtxt(
+            attribute_filename, dtype=float, usecols=range(1, 41))
+
+        number_of_batches = len(image_filename_array) // self.batch_size()
+
+        memory_data = (image_filename_array, attributes_array)
+        dataset = tf.data.Dataset.from_tensor_slices(memory_data)
+
+        return (dataset, number_of_batches)
+
     def load(self, batch_size):
         self.set_batch_size(batch_size)
 
-        number_of_batches = 0
-        train_dataset, test_dataset = tfds.load(
-            name="mnist", split=['train', 'test'], as_supervised=True)
-        train_dataset = train_dataset.concatenate(test_dataset)
+        train_dataset, number_of_batches = self._create_dataset()
 
         train_dataset = train_dataset.shuffle(self.buffer_size())
         train_dataset = train_dataset.batch(
