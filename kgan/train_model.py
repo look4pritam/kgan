@@ -10,6 +10,8 @@ import argparse
 from kgan.models.GANFactory import GANFactory
 from kgan.datasets.DatasetFactory import DatasetFactory
 
+default_model_shape = [28, 28, 1]
+
 
 def parse_arguments(argv):
     parser = argparse.ArgumentParser()
@@ -33,7 +35,7 @@ def parse_arguments(argv):
         nargs='+',
         type=int,
         help='Input shape used for training the model.',
-        default=[28, 28, 1])
+        default=default_model_shape)
 
     parser.add_argument(
         '--latent_dimension',
