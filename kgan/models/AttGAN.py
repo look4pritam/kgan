@@ -81,86 +81,55 @@ class AttGAN(WGANGP):
         optimizer = Adam(learning_rate=learning_rate, beta_1=0.5, beta_2=0.999)
         return (optimizer)
 
-    '''
-def compute_discriminator_loss(input_image, input_attributes):
-
-  target_attributes = tf.random.shuffle(input_attributes)
-  scaled_target_attributes = target_attributes * 2. - 1.
-
-  # Generate
-  image_features = encoder_model(input_image)
-  fake_image = decoder_model([image_features, scaled_target_attributes])
-
-  # Discriminate
-  real_image_prediction, real_image_attributes = discriminator_model(input_image)
-  fake_image_prediction, fake_image_attributes = discriminator_model(fake_image)
-
-  # Discriminator losses
-  real_image_gan_loss = tf.reduce_mean(-real_image_prediction)
-  fake_image_gan_loss = tf.reduce_mean(fake_image_prediction)  
-
-  with tf.GradientTape() as gp_tape: 
-    alpha = tf.random.uniform([batch_size],0.,1.,dtype=tf.float32)                
-    alpha = tf.reshape(alpha,(-1,1,1,1))                 
-    sample_images = input_image + alpha * (fake_image - input_image)                
-    #sample_images = tf.clip_by_value(sample_images, -1., 1.)
-
-    gp_tape.watch(sample_images)                
-    sample_predictions = discriminator_model(sample_images)                 
-    sample_predictions = sample_predictions[0]
-                
-  gradients = gp_tape.gradient(sample_predictions, sample_images)                
-  grad_l2 = tf.sqrt(tf.reduce_sum(tf.square(gradients), axis=[1,2,3]))
-  gradient_penalty_value = tf.reduce_mean((grad_l2-1) ** 2)  
-
-  real_image_attributes_loss = tf.compat.v1.losses.sigmoid_cross_entropy(input_attributes, real_image_attributes)  
-
-  discriminator_loss = (  real_image_gan_loss 
-                        + fake_image_gan_loss 
-                        + gradient_penalty_value * d_gradient_penalty_weight 
-                        + real_image_attributes_loss * d_attribute_loss_weight                        
-                        ) 
-  
-  write_discriminator_loss(real_image_gan_loss, fake_image_gan_loss, gradient_penalty_value, real_image_attributes_loss, discriminator_loss)
-
-  return(discriminator_loss)
-    '''
-
     def _update_discriminator(self, input_batch):
-        real_images, _ = input_batch
 
-        # Sample random points in the latent space.
-        generator_inputs = self._create_generator_inputs(input_batch)
+        # Extract input images and image attributes from current input batch.
+        input_image, input_attributes = input_batch
 
-        # Generate fake images using these random points.
-        fake_images = self._generator(generator_inputs)
+        # Generate target attributes from input attributes.
+        target_attributes = tf.random.shuffle(input_attributes)
+
+        # Transform target attributes.
+        scaled_target_attributes = target_attributes * 2. - 1.
+
+        # Generate image features for input image.
+        image_features = self._encoder(input_image)
+
+        # Generate fake image using image features and target attributes.
+        fake_image = self._decoder([image_features, scaled_target_attributes])
 
         # Train the discriminator.
         with tf.GradientTape() as tape:
 
             # Compute discriminator's predictions for real images.
-            real_predictions = self._discriminator(real_images)
+            real_image_prediction, real_image_attributes = self._discriminator(
+                input_image)
 
             # Compute discriminator's predictions for generated images.
-            fake_predictions = self._discriminator(fake_images)
+            fake_image_prediction, fake_image_attributes = self._discriminator(
+                fake_image)
 
-            #discriminator_loss = tf.reduce_mean(-real_predictions) + tf.reduce_mean(fake_predictions)
             discriminator_loss = self._discriminator_loss(
-                real_predictions, fake_predictions)
+                real_image_prediction, fake_image_prediction)
 
             # Compute gradient penalty using real and fake images.
             gradient_penalty = self._gradient_penalty(real_images, fake_images)
 
+            # Compute image attribute loss for real images.
+            real_image_attributes_loss = tf.compat.v1.losses.sigmoid_cross_entropy(
+                input_attributes, real_image_attributes)
+
             # Update discriminator loss using gradient penalty value.
             discriminator_loss = discriminator_loss + self.gradient_penalty_weight(
-            ) * gradient_penalty
+            ) * gradient_penalty + real_image_attributes_loss * self._d_attribute_loss_weight
 
-        gradients_of_discriminator = tape.gradient(
-            discriminator_loss, self._discriminator.trainable_variables)
+        # Compute gradients of discriminator loss using trainable weights of discriminator model.
+        gradients = tape.gradient(discriminator_loss,
+                                  self._discriminator.trainable_variables)
 
+        # Apply gradients to trainable weights of discriminator.
         self._discriminator_optimizer.apply_gradients(
-            zip(gradients_of_discriminator,
-                self._discriminator.trainable_variables))
+            zip(gradients, self._discriminator.trainable_variables))
 
         return (discriminator_loss)
 
@@ -214,7 +183,7 @@ def compute_discriminator_loss(input_image, input_attributes):
             *self._decoder.trainable_variables
         ])
 
-        # Apply gradients to trainable weights of generator.
+        # Apply gradients to trainable weights of encoder and decoder models.
         self._generator_optimizer.apply_gradients(
             zip(gradients, [
                 *self._encoder.trainable_variables,
