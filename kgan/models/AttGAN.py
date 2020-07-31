@@ -25,6 +25,11 @@ class AttGAN(WGANGP):
         self._encoder = None
         self._decoder = None
 
+        self._d_attribute_loss_weight = 1.0
+
+        self._g_attribute_loss_weight = 10.0
+        self._g_reconstruction_loss_weight = 100.0
+
     def _create_discriminator(self):
         self._discriminator = AttGANDiscriminator.create(self.input_shape())
         self._discriminator.summary()
@@ -75,6 +80,62 @@ class AttGAN(WGANGP):
     def _create_discriminator_optimizer(self, learning_rate):
         optimizer = Adam(learning_rate=learning_rate, beta_1=0.5, beta_2=0.999)
         return (optimizer)
+
+'''
+def compute_generator_loss(input_image, input_attributes):
+
+  target_attributes = tf.random.shuffle(input_attributes)
+
+  scaled_input_attributes = input_attributes * 2. - 1.
+  scaled_target_attributes = target_attributes * 2. - 1.
+
+  # Generator
+  image_features = encoder_model(input_image)
+
+  reconstructed_image = decoder_model([image_features, scaled_input_attributes])
+  fake_image = decoder_model([image_features, scaled_target_attributes])
+
+  # Discriminator
+  fake_image_prediction, fake_image_attributes = discriminator_model(fake_image)
+
+  fake_image_prediction_loss = tf.reduce_mean(-fake_image_prediction)
+  fake_image_attributes_loss = tf.compat.v1.losses.sigmoid_cross_entropy(target_attributes, fake_image_attributes)  
+  
+  image_reconstruction_loss = tf.compat.v1.losses.absolute_difference(input_image, reconstructed_image)
+   
+  generator_loss = (  fake_image_prediction_loss 
+                    + fake_image_attributes_loss * g_attribute_loss_weight 
+                    + image_reconstruction_loss * g_reconstruction_loss_weight
+                    )  
+  
+  write_generator_loss(fake_image_prediction_loss, fake_image_attributes_loss, image_reconstruction_loss, generator_loss)
+  
+  return(generator_loss)
+'''
+    def _update_generator(self, input_batch):
+        # Sample random points in the latent space.
+        generator_inputs = self._create_generator_inputs(input_batch)
+
+        # Train the generator.
+        with tf.GradientTape() as tape:
+            # Generate fake images using these random points.
+            generated_images = self._generator(generator_inputs)
+
+            # Compute discriminator's predictions for generated images.
+            fake_predictions = self._discriminator(generated_images)
+
+            # Compute generator loss using these fake predictions.
+            generator_loss = self._generator_loss(fake_predictions)
+
+        # Compute gradients of generator loss using trainable weights of generator.
+        gradients = tape.gradient(generator_loss,
+                                  self._generator.trainable_weights)
+
+        # Apply gradients to trainable weights of generator.
+        self._generator_optimizer.apply_gradients(
+            zip(gradients, self._generator.trainable_weights))
+
+        return (generator_loss)
 
     def _train_on_batch(self, input_batch):
 
