@@ -191,7 +191,7 @@ class AbstractGAN(object):
         status = self._create_models() and status
 
         # Compute current step using start epoch and number of batches.
-        self._current_step = start_epoch * number_of_batches
+        self._current_step = start_epoch * number_of_batches + 1
 
         # Create summary writer.
         self._summary_writer = self._create_summary_writer()
@@ -213,12 +213,12 @@ class AbstractGAN(object):
                 # Train the model on current batch.
                 current_losses = self._train_on_batch(current_batch)
 
-                # Increment current step by 1.
-                self._current_step = self._current_step + 1
-
                 if self.loss_scan_frequency() and (
                         self.current_step() % self.loss_scan_frequency() == 0):
                     self._print_losses(current_losses)
+
+                # Increment current step by 1.
+                self._current_step = self._current_step + 1
 
             self._print_losses(current_losses)
             self._save_samples()
