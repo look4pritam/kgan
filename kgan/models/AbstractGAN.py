@@ -18,6 +18,7 @@ class AbstractGAN(object):
     __default_generator_number = 1
 
     __default_save_frequency = 1
+    __default_loss_scan_frequency = 100
 
     @classmethod
     def default_number_of_samples(cls):
@@ -42,6 +43,10 @@ class AbstractGAN(object):
     @classmethod
     def default_save_frequency(cls):
         return (cls.__default_save_frequency)
+
+    @classmethod
+    def default_loss_scan_frequency(cls):
+        return (cls.__default_loss_scan_frequency)
 
     def __init__(self):
         self._current_step = 0
@@ -105,6 +110,16 @@ class AbstractGAN(object):
 
     def save_frequency(self):
         return (self._save_frequency)
+
+    def set_loss_scan_frequency(self, loss_scan_frequency):
+        if (loss_scan_frequency > 0):
+            self._loss_scan_frequency = loss_scan_frequency
+        else:
+            self._loss_scan_frequency = AbstractDataset.default_loss_scan_frequency(
+            )
+
+    def loss_scan_frequency(self):
+        return (self._loss_scan_frequency)
 
     def set_generator_number(self, generator_number):
         if (generator_number > 0):
@@ -200,6 +215,10 @@ class AbstractGAN(object):
 
                 # Increment current step by 1.
                 self._current_step = self._current_step + 1
+
+                if self.loss_scan_frequency() and (
+                        self.current_step() % self.loss_scan_frequency() == 0):
+                    self._print_losses(current_losses)
 
             self._print_losses(current_losses)
             self._save_samples()

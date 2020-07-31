@@ -87,6 +87,13 @@ def parse_arguments(argv):
         help='Model saving frequency in terms of number of epochs processed.',
         default=1)
 
+    parser.add_argument(
+        '--loss_scan_frequency',
+        type=int,
+        help=
+        'Model loss scanning frequency in terms of number of batches processed.',
+        default=100)
+
     return (parser.parse_args(argv))
 
 
@@ -98,6 +105,8 @@ def main(args):
 
     gan.set_discriminator_number(args.discriminator_number)
     gan.set_generator_number(args.generator_number)
+
+    gan.set_loss_scan_frequency(args.loss_scan_frequency)
 
     gan.set_save_frequency(args.save_frequency)
     print('creating the model - end')
