@@ -81,6 +81,44 @@ class AttGAN(WGANGP):
         optimizer = Adam(learning_rate=learning_rate, beta_1=0.5, beta_2=0.999)
         return (optimizer)
 
+    def _update_discriminator(self, input_batch):
+        real_images, _ = input_batch
+
+        # Sample random points in the latent space.
+        generator_inputs = self._create_generator_inputs(input_batch)
+
+        # Generate fake images using these random points.
+        fake_images = self._generator(generator_inputs)
+
+        # Train the discriminator.
+        with tf.GradientTape() as tape:
+
+            # Compute discriminator's predictions for real images.
+            real_predictions = self._discriminator(real_images)
+
+            # Compute discriminator's predictions for generated images.
+            fake_predictions = self._discriminator(fake_images)
+
+            #discriminator_loss = tf.reduce_mean(-real_predictions) + tf.reduce_mean(fake_predictions)
+            discriminator_loss = self._discriminator_loss(
+                real_predictions, fake_predictions)
+
+            # Compute gradient penalty using real and fake images.
+            gradient_penalty = self._gradient_penalty(real_images, fake_images)
+
+            # Update discriminator loss using gradient penalty value.
+            discriminator_loss = discriminator_loss + self.gradient_penalty_weight(
+            ) * gradient_penalty
+
+        gradients_of_discriminator = tape.gradient(
+            discriminator_loss, self._discriminator.trainable_variables)
+
+        self._discriminator_optimizer.apply_gradients(
+            zip(gradients_of_discriminator,
+                self._discriminator.trainable_variables))
+
+        return (discriminator_loss)
+
     def _update_generator(self, input_batch):
 
         # Extract input images and image attributes from current input batch.
