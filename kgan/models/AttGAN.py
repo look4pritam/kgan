@@ -81,6 +81,51 @@ class AttGAN(WGANGP):
         optimizer = Adam(learning_rate=learning_rate, beta_1=0.5, beta_2=0.999)
         return (optimizer)
 
+    '''
+def compute_discriminator_loss(input_image, input_attributes):
+
+  target_attributes = tf.random.shuffle(input_attributes)
+  scaled_target_attributes = target_attributes * 2. - 1.
+
+  # Generate
+  image_features = encoder_model(input_image)
+  fake_image = decoder_model([image_features, scaled_target_attributes])
+
+  # Discriminate
+  real_image_prediction, real_image_attributes = discriminator_model(input_image)
+  fake_image_prediction, fake_image_attributes = discriminator_model(fake_image)
+
+  # Discriminator losses
+  real_image_gan_loss = tf.reduce_mean(-real_image_prediction)
+  fake_image_gan_loss = tf.reduce_mean(fake_image_prediction)  
+
+  with tf.GradientTape() as gp_tape: 
+    alpha = tf.random.uniform([batch_size],0.,1.,dtype=tf.float32)                
+    alpha = tf.reshape(alpha,(-1,1,1,1))                 
+    sample_images = input_image + alpha * (fake_image - input_image)                
+    #sample_images = tf.clip_by_value(sample_images, -1., 1.)
+
+    gp_tape.watch(sample_images)                
+    sample_predictions = discriminator_model(sample_images)                 
+    sample_predictions = sample_predictions[0]
+                
+  gradients = gp_tape.gradient(sample_predictions, sample_images)                
+  grad_l2 = tf.sqrt(tf.reduce_sum(tf.square(gradients), axis=[1,2,3]))
+  gradient_penalty_value = tf.reduce_mean((grad_l2-1) ** 2)  
+
+  real_image_attributes_loss = tf.compat.v1.losses.sigmoid_cross_entropy(input_attributes, real_image_attributes)  
+
+  discriminator_loss = (  real_image_gan_loss 
+                        + fake_image_gan_loss 
+                        + gradient_penalty_value * d_gradient_penalty_weight 
+                        + real_image_attributes_loss * d_attribute_loss_weight                        
+                        ) 
+  
+  write_discriminator_loss(real_image_gan_loss, fake_image_gan_loss, gradient_penalty_value, real_image_attributes_loss, discriminator_loss)
+
+  return(discriminator_loss)
+    '''
+
     def _update_discriminator(self, input_batch):
         real_images, _ = input_batch
 
