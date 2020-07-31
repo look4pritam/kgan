@@ -81,37 +81,38 @@ class AttGAN(WGANGP):
         optimizer = Adam(learning_rate=learning_rate, beta_1=0.5, beta_2=0.999)
         return (optimizer)
 
-'''
-def compute_generator_loss(input_image, input_attributes):
+    '''
+    def compute_generator_loss(input_image, input_attributes):
 
-  target_attributes = tf.random.shuffle(input_attributes)
+    target_attributes = tf.random.shuffle(input_attributes)
 
-  scaled_input_attributes = input_attributes * 2. - 1.
-  scaled_target_attributes = target_attributes * 2. - 1.
+    scaled_input_attributes = input_attributes * 2. - 1.
+    scaled_target_attributes = target_attributes * 2. - 1.
 
-  # Generator
-  image_features = encoder_model(input_image)
+    # Generator
+    image_features = encoder_model(input_image)
 
-  reconstructed_image = decoder_model([image_features, scaled_input_attributes])
-  fake_image = decoder_model([image_features, scaled_target_attributes])
+    reconstructed_image = decoder_model([image_features, scaled_input_attributes])
+    fake_image = decoder_model([image_features, scaled_target_attributes])
 
-  # Discriminator
-  fake_image_prediction, fake_image_attributes = discriminator_model(fake_image)
+    # Discriminator
+    fake_image_prediction, fake_image_attributes = discriminator_model(fake_image)
 
-  fake_image_prediction_loss = tf.reduce_mean(-fake_image_prediction)
-  fake_image_attributes_loss = tf.compat.v1.losses.sigmoid_cross_entropy(target_attributes, fake_image_attributes)  
+    fake_image_prediction_loss = tf.reduce_mean(-fake_image_prediction)
+    fake_image_attributes_loss = tf.compat.v1.losses.sigmoid_cross_entropy(target_attributes, fake_image_attributes)  
   
-  image_reconstruction_loss = tf.compat.v1.losses.absolute_difference(input_image, reconstructed_image)
+    image_reconstruction_loss = tf.compat.v1.losses.absolute_difference(input_image, reconstructed_image)
    
-  generator_loss = (  fake_image_prediction_loss 
+    generator_loss = (  fake_image_prediction_loss 
                     + fake_image_attributes_loss * g_attribute_loss_weight 
                     + image_reconstruction_loss * g_reconstruction_loss_weight
                     )  
   
-  write_generator_loss(fake_image_prediction_loss, fake_image_attributes_loss, image_reconstruction_loss, generator_loss)
+    write_generator_loss(fake_image_prediction_loss, fake_image_attributes_loss, image_reconstruction_loss, generator_loss)
   
-  return(generator_loss)
-'''
+    return(generator_loss)
+    '''
+
     def _update_generator(self, input_batch):
         # Sample random points in the latent space.
         generator_inputs = self._create_generator_inputs(input_batch)
