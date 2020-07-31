@@ -84,7 +84,7 @@ class AttGAN(WGANGP):
     def _update_discriminator(self, input_batch):
 
         # Extract input images and image attributes from current input batch.
-        input_image, input_attributes = input_batch
+        real_images, input_attributes = input_batch
 
         # Generate target attributes from input attributes.
         target_attributes = tf.random.shuffle(input_attributes)
@@ -93,21 +93,21 @@ class AttGAN(WGANGP):
         scaled_target_attributes = target_attributes * 2. - 1.
 
         # Generate image features for input image.
-        image_features = self._encoder(input_image)
+        image_features = self._encoder(real_images)
 
         # Generate fake image using image features and target attributes.
-        fake_image = self._decoder([image_features, scaled_target_attributes])
+        fake_images = self._decoder([image_features, scaled_target_attributes])
 
         # Train the discriminator.
         with tf.GradientTape() as tape:
 
             # Compute discriminator's predictions for real images.
             real_image_prediction, real_image_attributes = self._discriminator(
-                input_image)
+                real_images)
 
             # Compute discriminator's predictions for generated images.
             fake_image_prediction, fake_image_attributes = self._discriminator(
-                fake_image)
+                fake_images)
 
             discriminator_loss = self._discriminator_loss(
                 real_image_prediction, fake_image_prediction)
@@ -136,7 +136,7 @@ class AttGAN(WGANGP):
     def _update_generator(self, input_batch):
 
         # Extract input images and image attributes from current input batch.
-        input_image, input_attributes = input_batch
+        real_images, input_attributes = input_batch
 
         # Generate target attributes from input attributes.
         target_attributes = tf.random.shuffle(input_attributes)
@@ -148,19 +148,19 @@ class AttGAN(WGANGP):
         # Train the generator.
         with tf.GradientTape() as tape:
             # Generate image features for input image.
-            image_features = self._encoder(input_image)
+            image_features = self._encoder(real_images)
 
             # Reconstruct input image.
-            reconstructed_image = self._decoder(
+            reconstructed_imags = self._decoder(
                 [image_features, scaled_input_attributes])
 
             # Generate fake image using image features and target attributes.
-            fake_image = self._decoder(
+            fake_images = self._decoder(
                 [image_features, scaled_target_attributes])
 
             # Generate image predictions and attributes for fake image.
             fake_image_prediction, fake_image_attributes = self._discriminator(
-                fake_image)
+                fake_images)
 
             # Compute generator loss using these fake image predictions.
             fake_image_prediction_loss = self._generator_loss(
@@ -172,10 +172,10 @@ class AttGAN(WGANGP):
 
             # Compute image reconstruction loss.
             image_reconstruction_loss = tf.compat.v1.losses.absolute_difference(
-                input_image, reconstructed_image)
+                real_images, reconstructed_imags)
 
             # Compute generator loss.
-            generator_loss = fake_image_prediction_loss + fake_image_attributes_loss * g_attribute_loss_weight + image_reconstruction_loss * g_reconstruction_loss_weight
+            generator_loss = fake_image_prediction_loss + fake_image_attributes_loss * self._g_attribute_loss_weight + image_reconstruction_loss * self._g_reconstruction_loss_weight
 
         # Compute gradients of generator loss using trainable weights of encoder and decoder models.
         gradients = tape.gradient(generator_loss, [
