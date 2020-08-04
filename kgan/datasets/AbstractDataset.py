@@ -38,5 +38,5 @@ class AbstractDataset(object):
     def buffer_size(self):
         return (self._buffer_size)
 
-    def load(self, batch_size):
+    def load_train_dataset(self, batch_size):
         raise NotImplementedError('Must be implemented by the subclass.')

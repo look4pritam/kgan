@@ -162,9 +162,10 @@ class AbstractGAN(object):
     def _create_summary_writer(self, logdir='logs'):
         raise NotImplementedError('Must be implemented by the subclass.')
 
-    def _preprocess_dataset(self, dataset, batch_size):
+    def _preprocess_train_dataset(self, dataset, batch_size):
         # Load train dataset split.
-        train_dataset, number_of_batches = dataset.load(batch_size)
+        train_dataset, number_of_batches = dataset.load_train_dataset(
+            batch_size)
 
         # Normalize_ the dataset.
         train_dataset = train_dataset.map(self._normalize_dataset)
@@ -180,7 +181,7 @@ class AbstractGAN(object):
         status = True
 
         # Preprocess the dataset.
-        train_dataset, number_of_batches = self._preprocess_dataset(
+        train_dataset, number_of_batches = self._preprocess_train_dataset(
             dataset, batch_size)
 
         # Set parameters used for model training.

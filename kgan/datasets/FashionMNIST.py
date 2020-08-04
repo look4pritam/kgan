@@ -30,7 +30,7 @@ class FashionMNIST(AbstractDataset):
     def image_shape(self):
         return (self._image_shape)
 
-    def load(self, batch_size):
+    def load_train_dataset(self, batch_size):
         self.set_batch_size(batch_size)
 
         number_of_batches = 0
