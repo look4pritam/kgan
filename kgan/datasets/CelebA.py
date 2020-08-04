@@ -167,12 +167,12 @@ class CelebA(AbstractDataset):
         attributes = self._preprocess_attributes(attributes)
         return (image, attributes)
 
-    def _preprocess_dataset(self, image_filename, attributes):
+    def preprocess_sample(self, image_filename, image_attributes):
         image = self._load_image(image_filename)
         image = self._normalize_image(image)
 
-        attributes = self._preprocess_attributes(attributes)
-        return (image, attributes)
+        image_attributes = self._preprocess_attributes(image_attributes)
+        return (image, image_attributes)
 
     def load_train_dataset(self, batch_size):
         self.set_batch_size(batch_size)
