@@ -172,6 +172,16 @@ class AbstractGAN(object):
 
         return (train_dataset, number_of_batches)
 
+    def _preprocess_validation_dataset(self, dataset, batch_size):
+        # Load validation dataset split.
+        validation_dataset, validation_batches = dataset.load_validation_dataset(
+            batch_size)
+
+        # Normalize_ the dataset.
+        validation_dataset = validation_dataset.map(self._normalize_dataset)
+
+        return (validation_dataset, validation_batches)
+
     def train(self,
               dataset,
               batch_size,
@@ -180,8 +190,12 @@ class AbstractGAN(object):
               base_learning_rate=0.0001):
         status = True
 
-        # Preprocess the dataset.
+        # Preprocess train dataset.
         train_dataset, number_of_batches = self._preprocess_train_dataset(
+            dataset, batch_size)
+
+        # Preprocess validation dataset.
+        validation_dataset, validation_batches = self._preprocess_validation_dataset(
             dataset, batch_size)
 
         # Set parameters used for model training.
