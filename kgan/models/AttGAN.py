@@ -25,8 +25,6 @@ class AttGAN(WGANGP):
         self._encoder = None
         self._decoder = None
 
-        self._d_attribute_loss_weight = 1.0
-
         self._g_attribute_loss_weight = 10.0
         self._g_reconstruction_loss_weight = 100.0
 
@@ -152,7 +150,8 @@ class AttGAN(WGANGP):
 
             # Update discriminator loss using gradient penalty value.
             discriminator_loss = discriminator_loss + self.gradient_penalty_weight(
-            ) * gradient_penalty + real_image_attributes_loss * self._d_attribute_loss_weight
+            ) * gradient_penalty + real_image_attributes_loss * self._discriminator.attribute_loss_weight(
+            )
 
         # Compute gradients of discriminator loss using trainable weights of discriminator model.
         gradients = tape.gradient(discriminator_loss,

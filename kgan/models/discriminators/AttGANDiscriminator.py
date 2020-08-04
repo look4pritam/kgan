@@ -39,6 +39,8 @@ class AttGANDiscriminator(models.Model):
                  **kwargs):
         super(AttGANDiscriminator, self).__init__(name=name, **kwargs)
 
+        self._attribute_loss_weight = 1.0
+
         self._number_of_attributes = number_of_attributes
         self._discriminator_dimension = discriminator_dimension
         self._dense_dimension = dense_dimension
@@ -51,6 +53,12 @@ class AttGANDiscriminator(models.Model):
         self._create_features()
         self._create_classifier()
         self._create_discriminator()
+
+    def set_attribute_loss_weight(self, attribute_loss_weight):
+        self._attribute_loss_weight = attribute_loss_weight
+
+    def attribute_loss_weight(self):
+        return (self._attribute_loss_weight)
 
     def _create_features(self):
         self._features = models.Sequential(name="features")
