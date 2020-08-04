@@ -39,6 +39,19 @@ class AttGAN(WGANGP):
     def discriminator_filename(self):
         return ('discriminator.h5')
 
+    def generate_samples(self, generator_inputs):
+        input_image, image_attributes = generator_inputs
+
+        input_image = tf.expand_dims(input_image, axis=0)
+        image_attributes = tf.expand_dims(image_attributes, axis=0)
+
+        image_features = self._encoder.predict(input_image)
+        generated_images = self._decoder.predict(
+            [image_features, image_attributes])
+        generated_images = self._decode_image(generated_images)
+
+        return (generated_images)
+
     def _create_discriminator(self):
         self._discriminator = AttGANDiscriminator.create(self.input_shape())
         self._discriminator.summary()

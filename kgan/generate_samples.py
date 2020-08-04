@@ -9,6 +9,7 @@ import argparse
 import cv2
 
 from kgan.models.GANFactory import GANFactory
+from kgan.datasets.DatasetFactory import DatasetFactory
 
 default_model_shape = [128, 128, 3]
 
@@ -22,6 +23,13 @@ def parse_arguments(argv):
         choices=GANFactory.models(),
         help='GAN model.',
         default=GANFactory.default_model())
+
+    parser.add_argument(
+        '--dataset',
+        type=str,
+        choices=DatasetFactory.datasets(),
+        help='Dataset used for preprocessing dataset samples.',
+        default=DatasetFactory.default_dataset())
 
     parser.add_argument(
         '--model_shape',
@@ -50,16 +58,23 @@ def main(args):
     status = gan.load()
     print('loading the model - end')
 
-    test_image = cv2.imread(image_filename, cv2.IMREAD_COLOR)
+    print('processing the dataset - start')
+    dataset = DatasetFactory.create(args.dataset)
+    print('processing the dataset - end')
+
+    test_filename = 'input-image.jpg'
     test_attributes = [
         -1., -1., 1., -1., -1., -1., -1., -1., -1., 1., -1., 1., -1., -1., -1.,
         4., -1., -1., -1., -1., -1., -1., -1., -1., 1., -1., 1., -1., -1., -1.,
         -1., 1., 1., -1., -1., -1., -1., -1., -1., 1.
     ]
 
-    dataset_sample = [test_image, test_attributes]
-    dataset_sample = gan.preprocess_sample(dataset_sample)
+    dataset_sample = dataset.preprocess_sample(test_filename, test_attributes)
     generated_samples = gan.generate_samples(dataset_sample)
+
+    for index, image in enumerate(generated_images):
+        filename = 'image-' + str(index) + '.png'
+        cv2.imwrite(filename, image)
 
 
 if __name__ == '__main__':

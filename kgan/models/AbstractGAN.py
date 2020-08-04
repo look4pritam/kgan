@@ -249,9 +249,6 @@ class AbstractGAN(object):
 
         return (True)
 
-    def preprocess_sample(self, dataset_sample):
-        return (dataset_sample)
-
     def _update_learning_rate(self, current_epoch, number_of_epochs):
         return (True)
 
@@ -271,12 +268,13 @@ class AbstractGAN(object):
 
         return (status)
 
-    def generate_samples(self, generator_inputs=None):
+    def generate_samples(self, generator_inputs):
         raise NotImplementedError('Must be implemented by the subclass.')
 
     def _save_samples(self):
         print('generating samples - start')
-        generated_images = self.generate_samples()
+        generator_inputs = None
+        generated_images = self.generate_samples(generator_inputs)
         for index, image in enumerate(generated_images):
             filename = 'image-' + str(index) + '.png'
             cv2.imwrite(filename, image)
