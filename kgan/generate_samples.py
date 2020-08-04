@@ -9,7 +9,7 @@ import argparse
 
 from kgan.models.GANFactory import GANFactory
 
-default_model_shape = [28, 28, 1]
+default_model_shape = [128, 128, 3]
 
 
 def parse_arguments(argv):
@@ -33,7 +33,7 @@ def parse_arguments(argv):
         '--latent_dimension',
         type=int,
         help='Latent dimension used for generating samples.',
-        default=100)
+        default=40)
 
     return (parser.parse_args(argv))
 
