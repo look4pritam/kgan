@@ -245,7 +245,7 @@ class AbstractGAN(object):
         self._save_models()
         print('saving models - end')
 
-    def generate_samples(self):
+    def generate_samples(self, generator_inputs=None):
         raise NotImplementedError('Must be implemented by the subclass.')
 
     def _save_samples(self):
