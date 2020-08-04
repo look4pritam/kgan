@@ -72,8 +72,6 @@ class ImageGAN(AbstractGAN):
         return (generator_inputs)
 
     def generate_samples(self, generator_inputs):
-        generator_inputs = self._create_generator_inputs()
-
         generated_images = self._generator.predict(generator_inputs)
         generated_images = generated_images.reshape(self.number_of_samples(),
                                                     self._input_shape[0],
