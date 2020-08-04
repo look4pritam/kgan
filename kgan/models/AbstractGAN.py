@@ -178,7 +178,9 @@ class AbstractGAN(object):
             batch_size)
 
         # Normalize_ the dataset.
-        validation_dataset = validation_dataset.map(self._normalize_dataset)
+        if (validation_dataset is not None):
+            validation_dataset = validation_dataset.map(
+                self._normalize_dataset)
 
         return (validation_dataset, validation_batches)
 
