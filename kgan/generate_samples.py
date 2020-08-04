@@ -4,8 +4,9 @@ from __future__ import print_function
 
 import os
 import sys
-
 import argparse
+
+import cv2
 
 from kgan.models.GANFactory import GANFactory
 
@@ -48,6 +49,17 @@ def main(args):
     print('loading the model - start')
     status = gan.load()
     print('loading the model - end')
+
+    test_image = cv2.imread(image_filename, cv2.IMREAD_COLOR)
+    test_attributes = [
+        -1., -1., 1., -1., -1., -1., -1., -1., -1., 1., -1., 1., -1., -1., -1.,
+        4., -1., -1., -1., -1., -1., -1., -1., -1., 1., -1., 1., -1., -1., -1.,
+        -1., 1., 1., -1., -1., -1., -1., -1., -1., 1.
+    ]
+
+    dataset_sample = [test_image, test_attributes]
+    dataset_sample = gan.preprocess_sample(dataset_sample)
+    generated_samples = gan.generate_samples(dataset_sample)
 
 
 if __name__ == '__main__':

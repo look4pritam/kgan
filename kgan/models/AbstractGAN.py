@@ -249,6 +249,9 @@ class AbstractGAN(object):
 
         return (True)
 
+    def preprocess_sample(self, dataset_sample):
+        return (dataset_sample)
+
     def _update_learning_rate(self, current_epoch, number_of_epochs):
         return (True)
 
