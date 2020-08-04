@@ -39,16 +39,12 @@ class GAN(ImageGAN):
         optimizer = Adam(learning_rate=learning_rate, beta_1=0.5)
         return (optimizer)
 
-    def _create_generator_inputs(self, input_batch):
-        generator_inputs = tf.random.normal(
-            shape=(self.batch_size(), self.latent_dimension()))
-        return (generator_inputs)
-
     def _update_discriminator(self, input_batch):
         real_images, real_labels = input_batch
 
         # Sample random points in the latent space.
-        generator_inputs = self._create_generator_inputs(input_batch)
+        generator_inputs = self._create_generator_inputs(
+            input_batch, self.batch_size())
 
         # Generate fake images using these random points.
         generated_images = self._generator(generator_inputs)
@@ -74,7 +70,8 @@ class GAN(ImageGAN):
 
     def _update_generator(self, input_batch):
         # Sample random points in the latent space.
-        generator_inputs = self._create_generator_inputs(input_batch)
+        generator_inputs = self._create_generator_inputs(
+            input_batch, self.batch_size())
 
         # Train the generator.
         with tf.GradientTape() as tape:
