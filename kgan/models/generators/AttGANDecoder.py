@@ -50,6 +50,9 @@ class AttGANDecoder(models.Model):
                  **kwargs):
         super(AttGANDecoder, self).__init__(name=name, **kwargs)
 
+        self._attribute_loss_weight = 10.0
+        self._reconstruction_loss_weight = 100.0
+
         self._decoder_dimension = decoder_dimension
         self._upsamplings_layers = upsamplings_layers
         self._shortcut_layers = shortcut_layers
@@ -69,6 +72,18 @@ class AttGANDecoder(models.Model):
         current_decoder = self._convolution_block(
             3, 4, activation_fn=tf.nn.tanh, batch_norm=False, name='block-5')
         self._decoders.append(current_decoder)
+
+    def set_attribute_loss_weight(self, attribute_loss_weight):
+        self._attribute_loss_weight = attribute_loss_weight
+
+    def attribute_loss_weight(self):
+        return (self._attribute_loss_weight)
+
+    def set_reconstruction_loss_weight(self, reconstruction_loss_weight):
+        self._reconstruction_loss_weight = reconstruction_loss_weight
+
+    def reconstruction_loss_weight(self):
+        return (self._reconstruction_loss_weight)
 
     def _convolution_block(self,
                            filters,

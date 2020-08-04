@@ -25,9 +25,6 @@ class AttGAN(WGANGP):
         self._encoder = None
         self._decoder = None
 
-        self._g_attribute_loss_weight = 10.0
-        self._g_reconstruction_loss_weight = 100.0
-
     def encoder_filename(self):
         return ('encoder.h5')
 
@@ -205,7 +202,9 @@ class AttGAN(WGANGP):
                 real_images, reconstructed_imags)
 
             # Compute generator loss.
-            generator_loss = fake_image_prediction_loss + fake_image_attributes_loss * self._g_attribute_loss_weight + image_reconstruction_loss * self._g_reconstruction_loss_weight
+            generator_loss = fake_image_prediction_loss + fake_image_attributes_loss * self._encoder.attribute_loss_weight(
+            ) + image_reconstruction_loss * self._encoder.reconstruction_loss_weight(
+            )
 
         # Compute gradients of generator loss using trainable weights of encoder and decoder models.
         gradients = tape.gradient(generator_loss, [
