@@ -30,6 +30,9 @@ class FashionMNIST(AbstractDataset):
     def image_shape(self):
         return (self._image_shape)
 
+    def _augment_dataset(self, image, label):
+        return (image, label)
+
     def load_train_dataset(self, batch_size):
         self.set_batch_size(batch_size)
 
@@ -45,5 +48,7 @@ class FashionMNIST(AbstractDataset):
 
         return (train_dataset, number_of_batches)
 
-    def _augment_dataset(self, image, label):
-        return (image, label)
+    def load_validation_dataset(self, batch_size):
+        validation_dataset = None
+        number_of_batches = 0
+        return (validation_dataset, number_of_batches)

@@ -40,3 +40,6 @@ class AbstractDataset(object):
 
     def load_train_dataset(self, batch_size):
         raise NotImplementedError('Must be implemented by the subclass.')
+
+    def load_validation_dataset(self, batch_size):
+        raise NotImplementedError('Must be implemented by the subclass.')
