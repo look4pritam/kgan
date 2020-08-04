@@ -30,9 +30,14 @@ class AttGAN(WGANGP):
         self._g_attribute_loss_weight = 10.0
         self._g_reconstruction_loss_weight = 100.0
 
-    def load(self):
-        status = True
-        return (status)
+    def encoder_filename(self):
+        return ('encoder.h5')
+
+    def decoder_filename(self):
+        return ('decoder.h5')
+
+    def discriminator_filename(self):
+        return ('discriminator.h5')
 
     def _create_discriminator(self):
         self._discriminator = AttGANDiscriminator.create(self.input_shape())
@@ -62,6 +67,15 @@ class AttGAN(WGANGP):
         self._encoder.summary()
         self._decoder.summary()
         return (True)
+
+    def _load_weights(self):
+        status = True
+
+        self._discriminator.load_weights(self.discriminator_filename())
+
+        self._encoder.load_weights(self.encoder_filename())
+        self._decoder.load_weights(self.decoder_filename())
+        return (status)
 
     def _normalize_dataset(self, image, attributes):
         return (image, attributes)

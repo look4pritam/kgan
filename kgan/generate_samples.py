@@ -45,6 +45,10 @@ def main(args):
     gan = GANFactory.create(args.model, model_shape, args.latent_dimension)
     print('creating the model - end')
 
+    print('loading the model - start')
+    status = gan.load()
+    print('loading the model - end')
+
 
 if __name__ == '__main__':
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'

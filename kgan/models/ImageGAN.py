@@ -82,7 +82,7 @@ class ImageGAN(AbstractGAN):
         generated_images = self._decode_image(generated_images)
         return (generated_images)
 
-    def load(self):
+    def _load_weights(self):
         return (False)
 
     def _print_losses(self, losses):

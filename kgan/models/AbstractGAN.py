@@ -260,6 +260,14 @@ class AbstractGAN(object):
         self._save_models()
         print('saving models - end')
 
+    def load(self):
+        status = True
+
+        status = self._create_models() and status
+        status = self._load_weights() and status
+
+        return (status)
+
     def generate_samples(self, generator_inputs=None):
         raise NotImplementedError('Must be implemented by the subclass.')
 
@@ -283,5 +291,5 @@ class AbstractGAN(object):
     def _train_on_batch(self, input_batch):
         raise NotImplementedError('Must be implemented by the subclass.')
 
-    def load(self):
+    def _load_weights(self):
         raise NotImplementedError('Must be implemented by the subclass.')
