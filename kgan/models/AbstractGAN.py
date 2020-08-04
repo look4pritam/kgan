@@ -282,3 +282,6 @@ class AbstractGAN(object):
 
     def _train_on_batch(self, input_batch):
         raise NotImplementedError('Must be implemented by the subclass.')
+
+    def load(self):
+        raise NotImplementedError('Must be implemented by the subclass.')

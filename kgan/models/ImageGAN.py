@@ -82,6 +82,9 @@ class ImageGAN(AbstractGAN):
         generated_images = self._decode_image(generated_images)
         return (generated_images)
 
+    def load(self):
+        return (False)
+
     def _print_losses(self, losses):
         print('loss values are -')
         with self._summary_writer.as_default():

@@ -30,6 +30,10 @@ class AttGAN(WGANGP):
         self._g_attribute_loss_weight = 10.0
         self._g_reconstruction_loss_weight = 100.0
 
+    def load(self):
+        status = True
+        return (status)
+
     def _create_discriminator(self):
         self._discriminator = AttGANDiscriminator.create(self.input_shape())
         self._discriminator.summary()
