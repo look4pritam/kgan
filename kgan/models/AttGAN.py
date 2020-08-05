@@ -55,6 +55,10 @@ class AttGAN(WGANGP):
     def _create_generator_inputs(self, number_of_samples):
         return (self._validation_sample)
 
+    def _convert_image(self, input_image):
+        input_image = cv2.cvtColor(input_image, cv2.COLOR_RGB2BGR)
+        return (input_image)
+
     def generate_samples(self, generator_inputs):
         input_image, image_attributes = generator_inputs
 

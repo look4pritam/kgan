@@ -271,6 +271,9 @@ class AbstractGAN(object):
     def _create_generator_inputs(self, number_of_samples):
         raise NotImplementedError('Must be implemented by the subclass.')
 
+    def _convert_image(self, input_image):
+        raise NotImplementedError('Must be implemented by the subclass.')
+
     def _save_samples(self):
         print('generating samples - start')
         generator_inputs = self._create_generator_inputs(
@@ -279,7 +282,7 @@ class AbstractGAN(object):
         generated_images = self.generate_samples(generator_inputs)
         for index, image in enumerate(generated_images):
             filename = 'image-' + str(index) + '.png'
-            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+            image = self._convert_image(image)
             cv2.imwrite(filename, image)
         print('generating samples - end')
 
