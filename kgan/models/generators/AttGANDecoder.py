@@ -63,13 +63,13 @@ class AttGANDecoder(models.Model):
         for block_index in range(self._upsamplings_layers - 1):
             block_name = 'block-' + str(block_index + 1)
 
-            current_decoder = self._convolution_block(
+            current_decoder = self._deconvolution_block(
                 filters, 4, name=block_name)
             self._decoders.append(current_decoder)
 
             filters = filters * 2
 
-        current_decoder = self._convolution_block(
+        current_decoder = self._deconvolution_block(
             3, 4, activation_fn=tf.nn.tanh, batch_norm=False, name='block-5')
         self._decoders.append(current_decoder)
 
@@ -85,13 +85,13 @@ class AttGANDecoder(models.Model):
     def reconstruction_loss_weight(self):
         return (self._reconstruction_loss_weight)
 
-    def _convolution_block(self,
-                           filters,
-                           kernel_size,
-                           activation_fn=tf.nn.leaky_relu,
-                           batch_norm=True,
-                           input_shape=None,
-                           name=''):
+    def _deconvolution_block(self,
+                             filters,
+                             kernel_size,
+                             activation_fn=tf.nn.leaky_relu,
+                             batch_norm=True,
+                             input_shape=None,
+                             name=''):
 
         if (input_shape is None):
             dconv = partial(layers.Conv2DTranspose)
