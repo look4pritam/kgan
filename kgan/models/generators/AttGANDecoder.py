@@ -64,7 +64,7 @@ class AttGANDecoder(models.Model):
             block_name = 'block-' + str(block_index + 1)
 
             current_decoder = self._deconvolution_block(
-                filters, 4, name=block_name)
+                filters, 4, activation_fn=tf.nn.relu, name=block_name)
             self._decoders.append(current_decoder)
 
             filters = filters * 2
