@@ -279,6 +279,7 @@ class AbstractGAN(object):
         generated_images = self.generate_samples(generator_inputs)
         for index, image in enumerate(generated_images):
             filename = 'image-' + str(index) + '.png'
+            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
             cv2.imwrite(filename, image)
         print('generating samples - end')
 
