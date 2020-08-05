@@ -31,14 +31,14 @@ class AttGANEncoder(models.Model):
         self._encoder_dimension = encoder_dimension
         self._downsamplings_layers = downsamplings_layers
 
-        self._encoders = []
+        self._image_features = []
         filters = self._encoder_dimension
         for block_index in range(self._downsamplings_layers):
             block_name = 'block-' + str(block_index + 1)
 
-            current_encoder = self._convolution_block(
+            current_features = self._convolution_block(
                 filters, 4, name=block_name)
-            self._encoders.append(current_encoder)
+            self._image_features.append(current_features)
 
             filters = filters * 2
 
@@ -79,8 +79,8 @@ class AttGANEncoder(models.Model):
         image_features = []
 
         layer_input = input_image
-        for current_encoder in self._encoders:
-            layer_input = current_encoder(layer_input, training=training)
+        for current_features in self._image_features:
+            layer_input = current_features(layer_input, training=training)
             image_features.append(layer_input)
 
         return (image_features)
