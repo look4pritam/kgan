@@ -31,10 +31,10 @@ class AttGANDiscriminator(models.Model):
         return (discriminator)
 
     def __init__(self,
-                 number_of_attributes=40,
-                 discriminator_dimension=64,
-                 dense_dimension=1024,
-                 downsamplings_layers=5,
+                 number_of_attributes,
+                 discriminator_dimension,
+                 dense_dimension,
+                 downsamplings_layers,
                  name='attgan-discriminator',
                  **kwargs):
         super(AttGANDiscriminator, self).__init__(name=name, **kwargs)
