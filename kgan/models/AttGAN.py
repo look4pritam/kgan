@@ -240,8 +240,8 @@ class AttGAN(WGANGP):
                 real_images, reconstructed_images)
 
             # Compute generator loss.
-            generator_loss = fake_image_prediction_loss + fake_image_attributes_loss * self._encoder.attribute_loss_weight(
-            ) + image_reconstruction_loss * self._encoder.reconstruction_loss_weight(
+            generator_loss = fake_image_prediction_loss + fake_image_attributes_loss * self._decoder.attribute_loss_weight(
+            ) + image_reconstruction_loss * self._decoder.reconstruction_loss_weight(
             )
 
         # Compute gradients of generator loss using trainable weights of encoder and decoder models.
