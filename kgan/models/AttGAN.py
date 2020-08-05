@@ -100,10 +100,12 @@ class AttGAN(WGANGP):
         return (True)
 
     def _create_generator_optimizer(self, learning_rate):
+        # AttGAN - Adam optimizer - base_learning_rate=0.0002, beta_1=0.5, beta_2=0.999
         optimizer = Adam(learning_rate=learning_rate, beta_1=0.5, beta_2=0.999)
         return (optimizer)
 
     def _create_discriminator_optimizer(self, learning_rate):
+        # AttGAN - Adam optimizer - base_learning_rate=0.0002, beta_1=0.5, beta_2=0.999
         optimizer = Adam(learning_rate=learning_rate, beta_1=0.5, beta_2=0.999)
         return (optimizer)
 
