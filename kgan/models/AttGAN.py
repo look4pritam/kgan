@@ -80,10 +80,15 @@ class AttGAN(WGANGP):
     def _load_weights(self):
         status = True
 
-        self._discriminator.load_weights(self.discriminator_filename())
+        if (os.path.exists(self.discriminator_filename())):
+            self._discriminator.load_weights(self.discriminator_filename())
 
-        self._encoder.load_weights(self.encoder_filename())
-        self._decoder.load_weights(self.decoder_filename())
+        if (os.path.exists(self.encoder_filename())):
+            self._encoder.load_weights(self.encoder_filename())
+
+        if (os.path.exists(self.decoder_filename())):
+            self._decoder.load_weights(self.decoder_filename())
+
         return (status)
 
     def _normalize_dataset(self, image, attributes):

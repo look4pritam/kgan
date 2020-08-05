@@ -207,6 +207,9 @@ class AbstractGAN(object):
         # Create models.
         status = self._create_models() and status
 
+        # Load model weights.
+        status = self._load_weights() and status
+
         # Compute current step using start epoch and number of batches.
         self._current_step = start_epoch * number_of_batches + 1
 
@@ -249,7 +252,7 @@ class AbstractGAN(object):
 
             print('epoch', str(current_epoch), '- end')
 
-        return (True)
+        return (status)
 
     def _update_learning_rate(self, current_epoch, number_of_epochs):
         return (True)
