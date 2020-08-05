@@ -257,7 +257,3 @@ class AttGAN(WGANGP):
             # Update discriminator weights.
             discriminator_loss = self._update_discriminator(input_batch)
             return {'discriminator': discriminator_loss}
-
-    def _save_samples(self):
-        print('generating samples - start')
-        print('generating samples - end')
