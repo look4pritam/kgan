@@ -22,6 +22,9 @@ class AttGAN(WGANGP):
 
     def __init__(self, input_shape, latent_dimension):
         super(AttGAN, self).__init__(input_shape, latent_dimension)
+
+        self._number_of_samples = 1
+
         self._encoder = None
         self._decoder = None
 
