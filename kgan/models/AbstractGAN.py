@@ -65,6 +65,8 @@ class AbstractGAN(object):
         self._generator_optimizer = None
         self._discriminator_optimizer = None
 
+        self._validation_sample = None
+
     def cycle_number(self):
         return (self.discriminator_number() + self.generator_number())
 
@@ -172,6 +174,9 @@ class AbstractGAN(object):
 
         return (train_dataset, number_of_batches)
 
+    def _create_validation_sample(self, dataset):
+        raise NotImplementedError('Must be implemented by the subclass.')
+
     def train(self,
               dataset,
               batch_size,
@@ -183,6 +188,8 @@ class AbstractGAN(object):
         # Preprocess train dataset.
         train_dataset, number_of_batches = self._preprocess_train_dataset(
             dataset, batch_size)
+
+        self._validation_sample = self._create_validation_sample(dataset)
 
         # Set parameters used for model training.
         self.set_base_learning_rate(base_learning_rate)

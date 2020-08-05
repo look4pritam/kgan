@@ -70,6 +70,9 @@ class ImageGAN(AbstractGAN):
             [number_of_samples, self.latent_dimension()])
         return (generator_inputs)
 
+    def _create_validation_sample(self, dataset):
+        return (None)
+
     def generate_samples(self, generator_inputs):
         generated_images = self._generator.predict(generator_inputs)
         generated_images = generated_images.reshape(self.number_of_samples(),

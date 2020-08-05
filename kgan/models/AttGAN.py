@@ -37,6 +37,21 @@ class AttGAN(WGANGP):
     def discriminator_filename(self):
         return ('discriminator.h5')
 
+    def _create_validation_sample(self, dataset):
+        validation_filename = 'validation-image.jpg'
+        validation_attributes = [
+            -1., -1., 1., -1., -1., -1., -1., -1., -1., 1., -1., 1., -1., -1.,
+            -1., 2., -1., -1., -1., -1., -1., -1., -1., -1., 1., -1., 1., -1.,
+            -1., -1., -1., 1., 1., -1., -1., -1., -1., -1., -1., 1.
+        ]
+
+        validation_sample = dataset.preprocess_sample(validation_filename,
+                                                      validation_attributes)
+        return (validation_sample)
+
+    def _create_generator_inputs(self, number_of_samples):
+        return (self._validation_sample)
+
     def generate_samples(self, generator_inputs):
         input_image, image_attributes = generator_inputs
 
