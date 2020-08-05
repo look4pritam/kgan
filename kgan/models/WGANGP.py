@@ -150,7 +150,7 @@ class WGANGP(GAN):
 
     def _generator_loss(self, fake_predictions):
         # Compute generator loss.
-        generator_loss = tf.reduce_mean(-fake_predictions)
+        generator_loss = -tf.reduce_mean(fake_predictions)
         return (generator_loss)
 
     def _create_generator_inputs(self, input_batch, number_of_samples):
