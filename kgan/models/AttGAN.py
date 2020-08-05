@@ -146,12 +146,6 @@ class AttGAN(WGANGP):
         optimizer = Adam(learning_rate=learning_rate, beta_1=0.5, beta_2=0.999)
         return (optimizer)
 
-    def _decode_image(self, input_image):
-        generated_image = (input_image + 1.) / 2. * 255.
-        generated_image = generated_image.astype(np.uint8)
-        generated_image = cv2.cvtColor(generated_image, cv2.COLOR_RGB2BGR)
-        return (generated_image)
-
     def _update_discriminator(self, input_batch):
 
         # Extract input images and image attributes from current input batch.
