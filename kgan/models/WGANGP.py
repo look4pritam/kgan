@@ -143,8 +143,9 @@ class WGANGP(GAN):
 
     def _discriminator_loss(self, real_predictions, fake_predictions):
         # Compute discriminator loss.
-        discriminator_loss = tf.reduce_mean(
-            -real_predictions) + tf.reduce_mean(fake_predictions)
+        real_image_loss = -tf.reduce_mean(real_predictions)
+        fake_image_loss = tf.reduce_mean(fake_predictions)
+        discriminator_loss = real_image_loss + fake_image_loss
         return (discriminator_loss)
 
     def _generator_loss(self, fake_predictions):
