@@ -62,8 +62,9 @@ class ImageGAN(AbstractGAN):
         return (image, label)
 
     def _decode_image(self, input_image):
-        input_image = input_image * 127.5 + 127.5
-        return (input_image)
+        generated_image = (input_image + 1.) / 2. * 255.
+        generated_image = generated_image.astype(np.uint8)
+        return (generated_image)
 
     def _create_generator_inputs(self, number_of_samples):
         generator_inputs = tf.random.normal(
