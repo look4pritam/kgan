@@ -7,6 +7,8 @@ from kgan.models.AbstractGAN import AbstractGAN
 import tensorflow as tf
 cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
 
+import numpy as np
+
 
 class ImageGAN(AbstractGAN):
     def __init__(self, input_shape, latent_dimension):
