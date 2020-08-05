@@ -118,7 +118,8 @@ class AttGANDiscriminator(models.Model):
         ]
 
         if (batch_norm):
-            blocks.append(tfa.layers.InstanceNormalization(name='inorm'))
+            blocks.append(
+                tfa.layers.InstanceNormalization(epsilon=1e-6, name='inorm'))
 
         if (activation_fn is not None):
             if (activation_fn == tf.nn.leaky_relu):
