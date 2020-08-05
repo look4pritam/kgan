@@ -180,7 +180,7 @@ class AttGAN(WGANGP):
             image_features = self._encoder(real_images)
 
             # Reconstruct input image.
-            reconstructed_imags = self._decoder(
+            reconstructed_images = self._decoder(
                 [image_features, scaled_input_attributes])
 
             # Generate fake image using image features and target attributes.
@@ -201,7 +201,7 @@ class AttGAN(WGANGP):
 
             # Compute image reconstruction loss.
             image_reconstruction_loss = tf.compat.v1.losses.absolute_difference(
-                real_images, reconstructed_imags)
+                real_images, reconstructed_images)
 
             # Compute generator loss.
             generator_loss = fake_image_prediction_loss + fake_image_attributes_loss * self._encoder.attribute_loss_weight(
