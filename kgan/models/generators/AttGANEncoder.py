@@ -16,6 +16,11 @@ class AttGANEncoder(models.Model):
         encoder = AttGANEncoder(encoder_dimension, downsamplings_layers)
         return (encoder)
 
+    @classmethod
+    def create_256(cls, encoder_dimension=64, downsamplings_layers=5):
+        encoder = AttGANEncoder(encoder_dimension, downsamplings_layers)
+        return (encoder)
+
     def __init__(self,
                  encoder_dimension,
                  downsamplings_layers,
