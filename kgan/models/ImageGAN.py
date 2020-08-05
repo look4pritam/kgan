@@ -65,7 +65,7 @@ class ImageGAN(AbstractGAN):
         input_image = input_image * 127.5 + 127.5
         return (input_image)
 
-    def _create_generator_inputs(self, input_batch, number_of_samples):
+    def _create_generator_inputs(self, number_of_samples):
         generator_inputs = tf.random.normal(
             [number_of_samples, self.latent_dimension()])
         return (generator_inputs)

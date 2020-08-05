@@ -153,7 +153,7 @@ class WGANGP(GAN):
         generator_loss = -tf.reduce_mean(fake_predictions)
         return (generator_loss)
 
-    def _create_generator_inputs(self, input_batch, number_of_samples):
+    def _create_generator_inputs(self, number_of_samples):
         generator_inputs = tf.random.uniform(
             [number_of_samples, self.latent_dimension()], minval=-1, maxval=1)
         return (generator_inputs)
@@ -185,8 +185,7 @@ class WGANGP(GAN):
         real_images, _ = input_batch
 
         # Sample random points in the latent space.
-        generator_inputs = self._create_generator_inputs(
-            input_batch, self.batch_size())
+        generator_inputs = self._create_generator_inputs(self.batch_size())
 
         # Generate fake images using these random points.
         fake_images = self._generator(generator_inputs)

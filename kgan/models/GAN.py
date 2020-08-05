@@ -48,8 +48,7 @@ class GAN(ImageGAN):
         real_images, real_labels = input_batch
 
         # Sample random points in the latent space.
-        generator_inputs = self._create_generator_inputs(
-            input_batch, self.batch_size())
+        generator_inputs = self._create_generator_inputs(self.batch_size())
 
         # Generate fake images using these random points.
         generated_images = self._generator(generator_inputs)
@@ -75,8 +74,7 @@ class GAN(ImageGAN):
 
     def _update_generator(self, input_batch):
         # Sample random points in the latent space.
-        generator_inputs = self._create_generator_inputs(
-            input_batch, self.batch_size())
+        generator_inputs = self._create_generator_inputs(self.batch_size())
 
         # Train the generator.
         with tf.GradientTape() as tape:

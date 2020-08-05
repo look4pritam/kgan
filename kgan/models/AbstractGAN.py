@@ -276,13 +276,13 @@ class AbstractGAN(object):
     def generate_samples(self, generator_inputs):
         raise NotImplementedError('Must be implemented by the subclass.')
 
-    def _create_generator_inputs(self, input_batch, number_of_samples):
+    def _create_generator_inputs(self, number_of_samples):
         raise NotImplementedError('Must be implemented by the subclass.')
 
     def _save_samples(self):
         print('generating samples - start')
         generator_inputs = self._create_generator_inputs(
-            None, self.number_of_samples())
+            self.number_of_samples())
 
         generated_images = self.generate_samples(generator_inputs)
         for index, image in enumerate(generated_images):
