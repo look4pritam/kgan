@@ -66,7 +66,7 @@ class ImageGAN(AbstractGAN):
     def _decode_image(self, input_image):
         generated_image = (input_image + 1.) / 2. * 255.
         generated_image = generated_image.astype(np.uint8)
-        generated_image = generated_image[:, :, ::-1]
+        generated_image = generated_image[..., ::-1]
         return (generated_image)
 
     def _create_generator_inputs(self, number_of_samples):
