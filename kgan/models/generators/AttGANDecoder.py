@@ -51,6 +51,16 @@ class AttGANDecoder(models.Model):
                                 shortcut_layers, inject_layers)
         return (decoder)
 
+    @classmethod
+    def create_384(cls,
+                   decoder_dimension=48,
+                   upsamplings_layers=5,
+                   shortcut_layers=1,
+                   inject_layers=1):
+        decoder = AttGANDecoder(decoder_dimension, upsamplings_layers,
+                                shortcut_layers, inject_layers)
+        return (decoder)
+
     def __init__(self,
                  decoder_dimension,
                  upsamplings_layers,

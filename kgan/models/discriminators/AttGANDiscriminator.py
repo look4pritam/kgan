@@ -47,6 +47,23 @@ class AttGANDiscriminator(models.Model):
             input_images)
         return (discriminator)
 
+    @classmethod
+    def create_384(cls,
+                   input_shape,
+                   number_of_attributes=40,
+                   discriminator_dimension=48,
+                   dense_dimension=512,
+                   downsamplings_layers=5):
+        discriminator = AttGANDiscriminator(
+            number_of_attributes, discriminator_dimension, dense_dimension,
+            downsamplings_layers)
+
+        input_images = np.zeros((input_shape))
+        input_images = np.expand_dims(input_images, axis=0)
+        discriminator_prediction, classifier_predictions = discriminator.predict(
+            input_images)
+        return (discriminator)
+
     def __init__(self,
                  number_of_attributes,
                  discriminator_dimension,
