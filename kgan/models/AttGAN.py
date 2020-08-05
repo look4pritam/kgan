@@ -48,7 +48,8 @@ class AttGAN(WGANGP):
         return (generated_images)
 
     def _create_discriminator(self):
-        self._discriminator = AttGANDiscriminator.create(self.input_shape())
+        self._discriminator = AttGANDiscriminator.create_128(
+            self.input_shape())
         self._discriminator.summary()
         return (True)
 

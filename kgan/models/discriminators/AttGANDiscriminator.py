@@ -14,12 +14,12 @@ import numpy as np
 
 class AttGANDiscriminator(models.Model):
     @classmethod
-    def create(cls,
-               input_shape,
-               number_of_attributes=40,
-               discriminator_dimension=64,
-               dense_dimension=1024,
-               downsamplings_layers=5):
+    def create_128(cls,
+                   input_shape,
+                   number_of_attributes=40,
+                   discriminator_dimension=64,
+                   dense_dimension=1024,
+                   downsamplings_layers=5):
         discriminator = AttGANDiscriminator(
             number_of_attributes, discriminator_dimension, dense_dimension,
             downsamplings_layers)
