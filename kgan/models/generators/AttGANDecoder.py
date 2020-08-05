@@ -32,11 +32,21 @@ def concatenate(list_of_features, list_of_attributes, layer_name):
 
 class AttGANDecoder(models.Model):
     @classmethod
-    def create(cls,
-               decoder_dimension=64,
-               upsamplings_layers=5,
-               shortcut_layers=1,
-               inject_layers=1):
+    def create_128(cls,
+                   decoder_dimension=64,
+                   upsamplings_layers=5,
+                   shortcut_layers=1,
+                   inject_layers=1):
+        decoder = AttGANDecoder(decoder_dimension, upsamplings_layers,
+                                shortcut_layers, inject_layers)
+        return (decoder)
+
+    @classmethod
+    def create_256(cls,
+                   decoder_dimension=64,
+                   upsamplings_layers=5,
+                   shortcut_layers=1,
+                   inject_layers=1):
         decoder = AttGANDecoder(decoder_dimension, upsamplings_layers,
                                 shortcut_layers, inject_layers)
         return (decoder)

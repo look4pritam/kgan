@@ -57,7 +57,7 @@ class AttGAN(WGANGP):
         self._generator = None
 
         self._encoder = AttGANEncoder.create_128()
-        self._decoder = AttGANDecoder.create()
+        self._decoder = AttGANDecoder.create_128()
 
         input_images = np.zeros(self.input_shape())
         input_images = np.expand_dims(input_images, axis=0)
