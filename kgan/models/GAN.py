@@ -18,7 +18,12 @@ class GAN(ImageGAN):
 
     def __init__(self, input_shape, latent_dimension):
         super(GAN, self).__init__(input_shape, latent_dimension)
-        pass
+
+        self._random_seed = 7
+        tf.random.set_seed(self.random_seed())
+
+    def random_seed(self):
+        return (self._random_seed)
 
     def _create_discriminator(self):
         self._discriminator = DenseDiscriminator.create(self.input_shape())
