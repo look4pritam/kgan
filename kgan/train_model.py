@@ -53,13 +53,13 @@ def parse_arguments(argv):
         '--batch_size',
         type=int,
         help='Batch size used for training the model.',
-        default=64)
+        default=32)
 
     parser.add_argument(
         '--maximum_epochs',
         type=int,
         help='Maximum epochs used for training the model.',
-        default=100)
+        default=200)
 
     parser.add_argument(
         '--start_epoch',
