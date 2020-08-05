@@ -55,7 +55,7 @@ class AttGAN(WGANGP):
     def _create_generator(self):
         self._generator = None
 
-        self._encoder = AttGANEncoder.create()
+        self._encoder = AttGANEncoder.create_128()
         self._decoder = AttGANDecoder.create()
 
         input_images = np.zeros(self.input_shape())

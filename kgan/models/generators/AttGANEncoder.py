@@ -12,7 +12,7 @@ from functools import partial
 
 class AttGANEncoder(models.Model):
     @classmethod
-    def create(cls, encoder_dimension=64, downsamplings_layers=5):
+    def create_128(cls, encoder_dimension=64, downsamplings_layers=5):
         encoder = AttGANEncoder(encoder_dimension, downsamplings_layers)
         return (encoder)
 
