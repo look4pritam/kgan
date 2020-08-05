@@ -227,6 +227,7 @@ class AbstractGAN(object):
                 if self.loss_scan_frequency() and (
                         self.current_step() % self.loss_scan_frequency() == 0):
                     self._print_losses(current_losses)
+                    self._save_samples()
 
                 # Increment current step by 1.
                 self._current_step = self._current_step + 1
