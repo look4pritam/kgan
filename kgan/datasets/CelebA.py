@@ -122,6 +122,11 @@ class CelebA(AbstractDataset):
         cropped_image = tf.image.random_crop(image, size=self.image_shape())
         return (cropped_image)
 
+    def _resize_image(self, image):
+        image = tf.image.resize(image,
+                                [self._image_shape[0], self._image_shape[1]])
+        return (image)
+
     def _random_jitter(self, image):
         image = tf.image.resize(
             image, [self._image_load_shape[0], self._image_load_shape[1]])
@@ -169,6 +174,7 @@ class CelebA(AbstractDataset):
 
     def preprocess_sample(self, image_filename, image_attributes):
         image = self._load_image(image_filename)
+        image = self._resize_image(image)
         image = self._normalize_image(image)
 
         image_attributes = self._preprocess_attributes(image_attributes)
