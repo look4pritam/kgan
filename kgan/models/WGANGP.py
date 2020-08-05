@@ -177,7 +177,7 @@ class WGANGP(GAN):
         gradients = gp_tape.gradient(sample_predictions, sample_images)
         gradients_l2_norm = tf.sqrt(
             tf.reduce_sum(tf.square(gradients), axis=[1, 2, 3]))
-        gradient_penalty = tf.reduce_mean((gradients_l2_norm - 1)**2)
+        gradient_penalty = tf.reduce_mean((gradients_l2_norm - 1.)**2)
 
         return (gradient_penalty)
 
