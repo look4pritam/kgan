@@ -91,9 +91,19 @@ class AttGAN(WGANGP):
         generated_images = self._decoder.predict(
             [image_features, image_attributes])
         print('generated image shape -', generated_images.shape)
+
         self._encoder.summary()
         self._decoder.summary()
         return (True)
+
+    def _save_models(self):
+        status = True
+
+        self._discriminator.save_weights(self.discriminator_filename())
+        self._encoder.save_weights(self.encoder_filename())
+        self._decoder.save_weights(self.decoder_filename())
+
+        return (status)
 
     def _load_weights(self):
         status = True
