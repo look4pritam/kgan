@@ -88,8 +88,10 @@ class AttGANDecoder(models.Model):
     def _concatenate(self, list_of_features, list_of_attributes, layer_name):
         list_of_features = list(list_of_features) if isinstance(
             list_of_features, (list, tuple)) else [list_of_features]
+
         list_of_attributes = list(list_of_attributes) if isinstance(
             list_of_attributes, (list, tuple)) else [list_of_attributes]
+
         for index, attributes in enumerate(list_of_attributes):
             attributes = tf.reshape(
                 attributes, [-1, 1, 1, attributes.shape[-1]],
@@ -101,6 +103,7 @@ class AttGANDecoder(models.Model):
                 ],
                 name=layer_name + 'tile')
             list_of_attributes[index] = attributes
+
         return tf.concat(
             list_of_features + list_of_attributes,
             axis=-1,
