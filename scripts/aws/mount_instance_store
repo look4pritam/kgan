@@ -1,0 +1,31 @@
+echo "Check drives - nvme0n1 entry is missing."
+df -h
+
+
+echo "Check Instance Store volume - nvme0n1 is not mounted."
+lsblk
+
+
+echo "Format Instance Store volume."
+sudo mkfs -t ext4 /dev/nvme0n1
+
+
+echo "Create directory for mounting Instance Store volume."
+sudo mkdir /datasets
+
+
+echo "Mount Instance Store volume."
+sudo mount /dev/nvme0n1 /datasets/
+
+
+echo "Create directory for storing vggface2 dataset."
+sudo mkdir -p /datasets/celeba
+
+
+echo "Change owner to ubuntu.ubuntu."
+sudo chown -R ubuntu.ubuntu /datasets
+
+
+echo "Check drives - nvme0n1-datasets entry."
+lsblk
+df -h
