@@ -103,7 +103,7 @@ class AttGAN(WGANGP):
         self._decoder.summary()
         return (True)
 
-    def _save_models(self):
+    def _save_models(self, epoch_number):
         status = True
 
         self._discriminator.save_weights(self.discriminator_filename())
@@ -129,12 +129,12 @@ class AttGAN(WGANGP):
     def _normalize_dataset(self, image, attributes):
         return (image, attributes)
 
-    def _update_learning_rate(self, current_epoch, number_of_epochs):
+    def _update_learning_rate(self, epoch_number, number_of_epochs):
         start_decay_epoch = number_of_epochs // 2
-        if (current_epoch >= start_decay_epoch):
+        if (epoch_number >= start_decay_epoch):
             self._learning_rate = self.base_learning_rate() * (
                 1 - 1 / (number_of_epochs - start_decay_epoch + 1) *
-                (current_epoch - start_decay_epoch + 1))
+                (epoch_number - start_decay_epoch + 1))
         else:
             self._learning_rate = self.base_learning_rate()
 

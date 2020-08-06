@@ -206,8 +206,8 @@ class AbstractGAN(object):
         self._summary_writer = self._create_summary_writer()
 
         # Train the model starting from start_epoch upto number_of_epochs.
-        for current_epoch in range(start_epoch, number_of_epochs):
-            print('epoch', str(current_epoch), '- start')
+        for epoch_number in range(start_epoch, number_of_epochs):
+            print('epoch', str(epoch_number), '- start')
 
             # Create generator optimizer with learning rate using current epoch.
             self._generator_optimizer = self._create_generator_optimizer(
@@ -225,34 +225,33 @@ class AbstractGAN(object):
                 if self.loss_scan_frequency() and (
                         self.current_step() % self.loss_scan_frequency() == 0):
                     self._print_losses(current_losses)
-                    #self._save_samples()
 
                 # Increment current step by 1.
                 self._current_step = self._current_step + 1
 
             self._print_losses(current_losses)
-            self._save_samples()
+            self._save_samples(epoch_number)
 
             if self.save_frequency() and (
-                    current_epoch % self.save_frequency() == 0):
-                self.save_models()
+                    epoch_number % self.save_frequency() == 0):
+                self.save_models(epoch_number)
 
             # Update learning rate at end of each epoch.
-            self._update_learning_rate(current_epoch, number_of_epochs)
+            self._update_learning_rate(epoch_number, number_of_epochs)
 
-            print('epoch', str(current_epoch), '- end')
+            print('epoch', str(epoch_number), '- end')
 
         return (status)
 
-    def _update_learning_rate(self, current_epoch, number_of_epochs):
+    def _update_learning_rate(self, epoch_number, number_of_epochs):
         return (True)
 
-    def _save_models(self):
+    def _save_models(self, epoch_number):
         return (True)
 
-    def save_models(self):
+    def save_models(self, epoch_number):
         print('saving models - start')
-        self._save_models()
+        self._save_models(epoch_number)
         print('saving models - end')
 
     def load(self):
@@ -272,14 +271,15 @@ class AbstractGAN(object):
     def _convert_image(self, input_image):
         raise NotImplementedError('Must be implemented by the subclass.')
 
-    def _save_samples(self):
+    def _save_samples(self, epoch_number):
         print('generating samples - start')
         generator_inputs = self._create_generator_inputs(
             self.number_of_samples())
 
         generated_images = self.generate_samples(generator_inputs)
         for index, image in enumerate(generated_images):
-            filename = 'image-' + str(index) + '.png'
+            filename = 'image-epoch-' + str(epoch_number) + '-sample-' + str(
+                index) + '.png'
             image = self._convert_image(image)
             cv2.imwrite(filename, image)
         print('generating samples - end')
