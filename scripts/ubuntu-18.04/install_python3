@@ -45,9 +45,9 @@ echo "Add environment path to .bashrc file."
 
 tail /home/ubuntu/.bashrc
 
-echo "export PYTHONPATH=/home/ubuntu/Triplet:$PYTHONPATH" >> /home/ubuntu/.bashrc
+echo "export PYTHONPATH=/home/ubuntu/kgan:$PYTHONPATH" >> /home/ubuntu/.bashrc
 echo "source /home/ubuntu/tf-1.14/bin/activate" >> /home/ubuntu/.bashrc
-echo "cd /home/ubuntu/Triplet" >> /home/ubuntu/.bashrc
+echo "cd /home/ubuntu/kgan" >> /home/ubuntu/.bashrc
 
 tail /home/ubuntu/.bashrc
 
