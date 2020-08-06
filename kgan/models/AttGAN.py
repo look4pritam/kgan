@@ -116,13 +116,19 @@ class AttGAN(WGANGP):
         status = True
 
         if (os.path.exists(self.discriminator_filename())):
+            print('loading discriminator weights - start')
             self._discriminator.load_weights(self.discriminator_filename())
+            print('loading discriminator weights - end')
 
         if (os.path.exists(self.encoder_filename())):
+            print('loading encoder weights - start')
             self._encoder.load_weights(self.encoder_filename())
+            print('loading encoder weights - end')
 
         if (os.path.exists(self.decoder_filename())):
+            print('loading decoder weights - start')
             self._decoder.load_weights(self.decoder_filename())
+            print('loading decoder weights - end')
 
         return (status)
 
