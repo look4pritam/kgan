@@ -10,26 +10,6 @@ import tensorflow.keras.models as models
 from functools import partial
 
 
-def concatenate(list_of_features, list_of_attributes, layer_name):
-    list_of_features = list(list_of_features) if isinstance(
-        list_of_features, (list, tuple)) else [list_of_features]
-    list_of_attributes = list(list_of_attributes) if isinstance(
-        list_of_attributes, (list, tuple)) else [list_of_attributes]
-    for index, attributes in enumerate(list_of_attributes):
-        attributes = tf.reshape(
-            attributes, [-1, 1, 1, attributes.shape[-1]],
-            name=layer_name + 'reshape')
-        attributes = tf.tile(
-            attributes,
-            [1, list_of_features[0].shape[1], list_of_features[0].shape[2], 1],
-            name=layer_name + 'tile')
-        list_of_attributes[index] = attributes
-    return tf.concat(
-        list_of_features + list_of_attributes,
-        axis=-1,
-        name=layer_name + 'concat')
-
-
 class AttGANDecoder(models.Model):
     @classmethod
     def create_128(cls,
@@ -105,6 +85,27 @@ class AttGANDecoder(models.Model):
     def reconstruction_loss_weight(self):
         return (self._reconstruction_loss_weight)
 
+    def _concatenate(self, list_of_features, list_of_attributes, layer_name):
+        list_of_features = list(list_of_features) if isinstance(
+            list_of_features, (list, tuple)) else [list_of_features]
+        list_of_attributes = list(list_of_attributes) if isinstance(
+            list_of_attributes, (list, tuple)) else [list_of_attributes]
+        for index, attributes in enumerate(list_of_attributes):
+            attributes = tf.reshape(
+                attributes, [-1, 1, 1, attributes.shape[-1]],
+                name=layer_name + 'reshape')
+            attributes = tf.tile(
+                attributes, [
+                    1, list_of_features[0].shape[1],
+                    list_of_features[0].shape[2], 1
+                ],
+                name=layer_name + 'tile')
+            list_of_attributes[index] = attributes
+        return tf.concat(
+            list_of_features + list_of_attributes,
+            axis=-1,
+            name=layer_name + 'concat')
+
     def _deconvolution_block(self,
                              filters,
                              kernel_size,
@@ -143,7 +144,7 @@ class AttGANDecoder(models.Model):
         input_features, input_attributes = inputs
 
         layer_name = 'block-0-shortcut-'
-        layer_input = concatenate(
+        layer_input = self._concatenate(
             input_features[-1], input_attributes, layer_name=layer_name)
         for block_index in range(self._upsamplings_layers):
             layer_name = 'block-' + str(block_index + 1) + '-'
@@ -153,13 +154,13 @@ class AttGANDecoder(models.Model):
 
             if (self._shortcut_layers > block_index):
                 shortcut_name = layer_name + 'shortcut-'
-                layer_input = concatenate(
+                layer_input = self._concatenate(
                     [layer_input, input_features[-2 - block_index]], [],
                     layer_name=shortcut_name)
 
             if (self._inject_layers > block_index):
                 inject_name = layer_name + 'inject-'
-                layer_input = concatenate(
+                layer_input = self._concatenate(
                     layer_input, input_attributes, layer_name=inject_name)
 
         return (layer_input)
