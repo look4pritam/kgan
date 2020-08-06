@@ -43,7 +43,7 @@ class AttGAN(WGANGP):
     def _create_validation_sample(self, dataset):
         validation_filename = 'validation-image.jpg'
         validation_attributes = [
-            -1., -1., 1., -1., -1., -1., -1., -1., -1., 1., -1., 1., -1., -1.,
+            -1., -1., 1., -1., -1., -1., -1., -1., -1., -1., -1., 1., -1., -1.,
             -1., 2., -1., -1., -1., -1., -1., -1., -1., -1., 1., -1., 1., -1.,
             -1., -1., -1., 1., 1., -1., -1., -1., -1., -1., -1., 1.
         ]
