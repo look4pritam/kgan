@@ -1,0 +1,20 @@
+echo "Change directory to datasets root directory."
+cd /home/ubuntu/kgan
+
+echo "Download VGG Face-2 aligned train dataset 0-1 split."
+gdown --id 1diaLDdB-dNMsPhJX0uco4155ghi4KMXK # 1z5bpHVrciXmE8obe8NeYa3u9zWvdLWwS
+ls -al
+
+echo "Extract file."
+tar -xzf img_align_celeba.tar.gz
+ls -al
+
+echo "Remove file."
+rm -rf img_align_celeba.tar.gz
+ls -al
+
+echo "Check downloaded dataset split."
+ls -al
+ls -al img_align_celeba
+ls -l img_align_celeba/images | wc -l
+

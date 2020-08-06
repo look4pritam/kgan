@@ -18,8 +18,8 @@ echo "Mount Instance Store volume."
 sudo mount /dev/nvme0n1 /datasets/
 
 
-echo "Create directory for storing vggface2 dataset."
-sudo mkdir -p /datasets/celeba
+#echo "Create directory for storing CelebA dataset."
+#sudo mkdir -p /datasets/celeba
 
 
 echo "Change owner to ubuntu.ubuntu."
