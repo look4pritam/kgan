@@ -1,0 +1,19 @@
+echo "Install CUDA-10.0 and cuDNN-7.4."
+sudo apt-get install --no-install-recommends cuda-10-1 libcudnn7=7.6.5.32-1+cuda10.1 libcudnn7-dev=7.6.5.32-1+cuda10.1
+
+
+echo "Add CUDA path to .bashrc file."
+
+tail /home/ubuntu/.bashrc
+
+echo "export PATH=/usr/local/cuda-10.1/bin:$PATH" >> /home/ubuntu/.bashrc
+echo "export LD_LIBRARY_PATH=/usr/local/cuda-10.1/lib64:$LD_LIBRARY_PATH" >> /home/ubuntu/.bashrc
+
+tail /home/ubuntu/.bashrc
+
+source /home/ubuntu/.bashrc
+
+sudo ldconfig
+
+echo "Reboot the system and check that GPUs are visible using the command: nvcc -V."
+

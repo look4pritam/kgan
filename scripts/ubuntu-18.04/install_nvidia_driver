@@ -1,0 +1,35 @@
+echo "Check ubuntu version."
+cat /etc/os-release
+
+
+echo "Check existing CUDA versions."
+ls /usr/local/
+
+
+echo "Remove previous CUDA versions."
+sudo apt-get purge nvidia*
+sudo apt remove nvidia-*
+sudo rm /etc/apt/sources.list.d/cuda*
+sudo apt-get autoremove && sudo apt-get autoclean
+sudo rm -rf /usr/local/cuda*
+
+
+echo "Verify AWS gpu is cuda enable."
+lspci | grep -i nvidia
+
+
+echo "Add NVIDIA CUDA repository."
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-repo-ubuntu1804_10.1.243-1_amd64.deb
+sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
+sudo dpkg -i cuda-repo-ubuntu1804_10.1.243-1_amd64.deb
+sudo apt-get update
+
+echo "Add NVIDIA cuDNN repository."
+wget http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb
+sudo apt install ./nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb
+sudo apt-get update
+
+echo "Install NVIDIA driver."
+sudo apt-get install --no-install-recommends nvidia-driver-450
+echo "Reboot the system and check that GPUs are visible using the command - nvidia-smi."
+
