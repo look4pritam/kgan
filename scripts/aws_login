@@ -1,0 +1,4 @@
+cd /home/demo/
+
+ssh -i ".ssh/id_rsa.pem" ubuntu@ec2-3-7-58-172.ap-south-1.compute.amazonaws.com
+
